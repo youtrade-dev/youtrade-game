@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>YouTrade GAME</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0d0d1a; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; }
+.app { display: flex; flex-direction: column; height: 100vh; }
+.header { background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a4a; flex-shrink: 0; }
+.logo { font-size: 17px; font-weight: 700; color: #00d4aa; }
+.day-badge { font-size: 12px; color: #888; background: #ffffff11; padding: 4px 10px; border-radius: 20px; }
+.content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.balance-card { background: linear-gradient(135deg, rgba(0,212,170,0.1), rgba(0,119,255,0.1)); border: 1px solid rgba(0,212,170,0.3); border-radius: 20px; padding: 20px; margin: 14px; }
+.balance-label { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.balance-amount { font-size: 34px; font-weight: 800; color: #00d4aa; letter-spacing: -1px; }
+.balance-sub { font-size: 13px; color: #00d4aa; margin-top: 6px; opacity: 0.8; }
+.stats-row { display: flex; gap: 10px; margin: 0 14px; }
+.stat-card { flex: 1; background: #1a1a2e; border-radius: 14px; padding: 12px; border: 1px solid #2a2a4a; }
+.stat-label { font-size: 10px; color: #666; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+.stat-value { font-size: 15px; font-weight: 700; }
+.g { color: #00d4aa; } .r { color: #ff4444; } .y { color: #ffd700; }
+.section-title { font-size: 12px; font-weight: 700; color: #555; margin: 14px 14px 8px; text-transform: uppercase; letter-spacing: 0.8px; }
+.prog-wrap { margin: 14px; }
+.prog-bar { background: #1a1a2e; border-radius: 8px; height: 8px; overflow: hidden; margin: 6px 0; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, #00d4aa, #0077ff); border-radius: 8px; transition: width 0.5s ease; }
+.prog-labels { display: flex; justify-content: space-between; font-size: 11px; color: #666; }
+.position { background: #1a1a2e; border-radius: 14px; padding: 14px; border: 1px solid #2a2a4a; display: flex; justify-content: space-between; align-items: center; margin: 0 14px 8px; cursor: pointer; transition: border-color 0.2s; }
+.position:hover { border-color: #00d4aa44; }
+.pos-symbol { font-size: 15px; font-weight: 700; }
+.pos-detail { font-size: 12px; color: #666; margin-top: 3px; }
+.pos-pnl { font-size: 16px; font-weight: 700; }
+.screen { display: none; flex-direction: column; }
+.screen.active { display: flex; }
+.trade-wrap { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.input-label { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+.asset-row { display: flex; gap: 8px; }
+.asset-btn { flex: 1; padding: 11px 6px; background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; color: #888; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.asset-btn.active { background: rgba(0,212,170,0.12); border-color: #00d4aa; color: #00d4aa; }
+.price-card { background: #1a1a2e; border-radius: 14px; padding: 16px; border: 1px solid #2a2a4a; text-align: center; }
+.price-value { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+.price-change { font-size: 13px; color: #00d4aa; margin-top: 4px; }
+.lot-input { width: 100%; padding: 14px; background: #1a1a2e; border: 1.5px solid #2a2a4a; border-radius: 12px; color: #fff; font-size: 18px; text-align: center; font-weight: 700; -webkit-appearance: none; }
+.lot-input:focus { outline: none; border-color: #00d4aa; }
+.risk-box { background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.25); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #ff8888; line-height: 1.4; }
+.btn-row { display: flex; gap: 12px; }
+.btn-buy { flex: 1; padding: 16px; background: linear-gradient(135deg, #00d4aa, #00a87a); border: none; border-radius: 14px; color: #000; font-size: 17px; font-weight: 800; cursor: pointer; }
+.btn-sell { flex: 1; padding: 16px; background: linear-gradient(135deg, #ff4444, #cc2200); border: none; border-radius: 14px; color: #fff; font-size: 17px; font-weight: 800; cursor: pointer; }
+.leader-wrap { padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.my-rank { background: linear-gradient(135deg, rgba(0,119,255,0.12), rgba(0,212,170,0.12)); border: 1px solid rgba(0,119,255,0.3); border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.leader-card { background: #1a1a2e; border-radius: 14px; padding: 14px; border: 1px solid #2a2a4a; display: flex; align-items: center; gap: 12px; }
+.rank-badge { font-size: 22px; width: 36px; text-align: center; }
+.leader-info { flex: 1; }
+.leader-name { font-size: 14px; font-weight: 700; }
+.leader-stat { font-size: 12px; color: #666; margin-top: 2px; }
+.leader-pnl { font-size: 16px; font-weight: 700; color: #00d4aa; }
+.chal-wrap { padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+.chal-card { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,140,0,0.1)); border: 2px solid #ffd70066; border-radius: 20px; padding: 22px; text-align: center; }
+.chal-title { font-size: 20px; font-weight: 800; color: #ffd700; margin-bottom: 10px; }
+.chal-desc { font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 16px; }
+.btn-chal { width: 100%; padding: 16px; background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; border-radius: 14px; color: #000; font-size: 17px; font-weight: 800; cursor: pointer; margin-top: 14px; }
+.rules-card { background: #1a1a2e; border-radius: 14px; padding: 16px; border: 1px solid #2a2a4a; }
+.rules-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+.rule-item { font-size: 13px; color: #bbb; padding: 4px 0; }
+.nav { display: flex; background: #111122; border-top: 1px solid #2a2a4a; padding-bottom: env(safe-area-inset-bottom); flex-shrink: 0; }
+.nav-btn { flex: 1; padding: 10px 0; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; color: #555; font-size: 10px; cursor: pointer; transition: color 0.2s; font-weight: 600; }
+.nav-btn.active { color: #00d4aa; }
+.nav-icon { font-size: 22px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- DASHBOARD -->
+  <div class="screen active" id="s-dash">
+    <div class="header">
+      <div class="logo">🎮 YouTrade GAME</div>
+      <div class="day-badge" id="day-badge">День 3 из 30</div>
+    </div>
+    <div class="content">
+      <div class="balance-card">
+        <div class="balance-label">Виртуальный баланс</div>
+        <div class="balance-amount" id="bal">$10,245.50</div>
+        <div class="balance-sub" id="bal-ch">▲ +$245.50 (+2.45%) сегодня</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Дн. P&amp;L</div>
+          <div class="stat-value g" id="dpnl">+$245.50</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Лимит</div>
+          <div class="stat-value y">$500/день</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Сделок</div>
+          <div class="stat-value" id="tcnt">7</div>
+        </div>
+      </div>
+      <div class="prog-wrap">
+        <div class="stat-label">Прогресс к цели +8%</div>
+        <div class="prog-bar"><div class="prog-fill" id="prog" style="width:30%"></div></div>
+        <div class="prog-labels"><span id="ppct">+2.45%</span><span>Цель: +8%</span></div>
+      </div>
+      <div class="section-title">Открытые позиции</div>
+      <div class="position" onclick="goTrade('XAUUSD')">
+        <div><div class="pos-symbol">XAUUSD</div><div class="pos-detail">BUY 0.1 лот · Вход $2,645.20</div></div>
+        <div class="pos-pnl g">+$124.50</div>
+      </div>
+      <div class="position" onclick="goTrade('EURUSD')">
+        <div><div class="pos-symbol">EURUSD</div><div class="pos-detail">SELL 0.2 лот · Вход 1.08250</div></div>
+        <div class="pos-pnl g">+$121.00</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRADE -->
+  <div class="screen" id="s-trade">
+    <div class="header"><div class="logo">📊 Торговля</div></div>
+    <div class="content">
+      <div class="trade-wrap">
+        <div>
+          <div class="input-label">Инструмент</div>
+          <div class="asset-row">
+            <button class="asset-btn active" onclick="selAsset(this,'XAUUSD')">XAUUSD</button>
+            <button class="asset-btn" onclick="selAsset(this,'EURUSD')">EURUSD</button>
+            <button class="asset-btn" onclick="selAsset(this,'BTCUSD')">BTCUSD</button>
+          </div>
+        </div>
+        <div class="price-card">
+          <div class="stat-label">Текущая цена</div>
+          <div class="price-value" id="cprice">$2,648.75</div>
+          <div class="price-change" id="pchange">▲ +0.32% за день</div>
+        </div>
+        <div>
+          <div class="input-label">Объём (лоты)</div>
+          <input class="lot-input" type="number" id="lots" value="0.1" min="0.01" max="1" step="0.01" oninput="updRisk()">
+        </div>
+        <div class="risk-box" id="rwarn">⚠️ Риск: $264.88 (2.6% от баланса) · Дн. лимит: $500</div>
+        <div class="btn-row">
+          <button class="btn-buy" onclick="trade('BUY')">▲ BUY</button>
+          <button class="btn-sell" onclick="trade('SELL')">▼ SELL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div class="screen" id="s-lead">
+    <div class="header"><div class="logo">🏆 Лидерборд</div></div>
+    <div class="content">
+      <div class="leader-wrap">
+        <div class="my-rank">
+          <div><div class="stat-label">Твоя позиция</div><div style="font-size:22px;font-weight:800">#47 из 1,234</div></div>
+          <div style="text-align:right"><div class="stat-label">Доходность</div><div style="font-size:20px;font-weight:800;color:#00d4aa">+2.45%</div></div>
+        </div>
+        <div class="leader-card"><div class="rank-badge">🥇</div><div class="leader-info"><div class="leader-name">AlexTrader</div><div class="leader-stat">23 сделки · 5 дней</div></div><div class="leader-pnl">+18.3%</div></div>
+        <div class="leader-card"><div class="rank-badge">🥈</div><div class="leader-info"><div class="leader-name">MarketGuru</div><div class="leader-stat">31 сделка · 5 дней</div></div><div class="leader-pnl">+15.7%</div></div>
+        <div class="leader-card"><div class="rank-badge">🥉</div><div class="leader-info"><div class="leader-name">GoldHunter</div><div class="leader-stat">18 сделок · 5 дней</div></div><div class="leader-pnl">+12.1%</div></div>
+        <div class="leader-card"><div class="rank-badge" style="font-size:16px;font-weight:700;color:#666">4</div><div class="leader-info"><div class="leader-name">NQScalper</div><div class="leader-stat">42 сделки · 5 дней</div></div><div class="leader-pnl">+9.8%</div></div>
+        <div class="leader-card"><div class="rank-badge" style="font-size:16px;font-weight:700;color:#666">5</div><div class="leader-info"><div class="leader-name">EuroKing</div><div class="leader-stat">15 сделок · 5 дней</div></div><div class="leader-pnl">+8.2%</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHALLENGE -->
+  <div class="screen" id="s-chal">
+    <div class="header"><div class="logo">🚀 Challenge</div></div>
+    <div class="content">
+      <div class="chal-wrap">
+        <div class="chal-card">
+          <div class="chal-title">🎯 Ты почти готов!</div>
+          <div class="chal-desc">Набери +8% на виртуальном счёте — и получи скидку 20% на реальный YouTrade Prop Challenge</div>
+          <div class="prog-bar"><div class="prog-fill" style="width:30%"></div></div>
+          <div style="font-size:13px;color:#888;margin-top:8px">+2.45% из 8% — продолжай торговать!</div>
+          <button class="btn-chal" onclick="buyChal()">🔥 Купить Challenge −20%</button>
+        </div>
+        <div class="rules-card">
+          <div class="rules-title">Условия Prop Challenge</div>
+          <div class="rule-item">✅ Цель прибыли: +8%</div>
+          <div class="rule-item">✅ Дневной лимит потерь: −5%</div>
+          <div class="rule-item">✅ Максимальная просадка: −10%</div>
+          <div class="rule-item">✅ Минимум торговых дней: 5</div>
+          <div class="rule-item">✅ Выплата трейдеру: до 90% прибыли</div>
+          <div class="rule-item">✅ Инструменты: XAUUSD, EURUSD, индексы</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-btn active" onclick="show('dash',this)"><span class="nav-icon">📊</span>Счёт</button>
+    <button class="nav-btn" onclick="show('trade',this)"><span class="nav-icon">📈</span>Торговля</button>
+    <button class="nav-btn" onclick="show('lead',this)"><span class="nav-icon">🏆</span>Топ</button>
+    <button class="nav-btn" onclick="show('chal',this)"><span class="nav-icon">🚀</span>Challenge</button>
+  </nav>
+</div>
+
+<script>
+// Init Telegram WebApp
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+// State
+const S = {
+  bal: 10245.50, pnl: 245.50, cnt: 7,
+  asset: 'XAUUSD',
+  prices: { XAUUSD: 2648.75, EURUSD: 1.08312, BTCUSD: 67450 },
+  prevPrices: { XAUUSD: 2648.75, EURUSD: 1.08312, BTCUSD: 67450 }
+};
+
+function show(n, b) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+  document.getElementById('s-' + n).classList.add('active');
+  b.classList.add('active');
+}
+
+function goTrade(asset) {
+  const btn = document.querySelector('.asset-btn[onclick*="' + asset + '"]');
+  if (btn) selAsset(btn, asset);
+  show('trade', document.querySelector('.nav-btn:nth-child(2)'));
+}
+
+function selAsset(b, a) {
+  document.querySelectorAll('.asset-btn').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  S.asset = a;
+  updPrice();
+}
+
+function updPrice() {
+  const p = S.prices[S.asset];
+  const prev = S.prevPrices[S.asset];
+  const pEl = document.getElementById('cprice');
+  if (pEl) pEl.textContent = S.asset === 'EURUSD' ? p.toFixed(5) : '$' + p.toFixed(2);
+  const chEl = document.getElementById('pchange');
+  if (chEl) {
+    const chg = (p - prev) / prev * 100;
+    chEl.textContent = (chg >= 0 ? '▲ +' : '▼ ') + Math.abs(chg).toFixed(3) + '%';
+    chEl.style.color = chg >= 0 ? '#00d4aa' : '#ff4444';
+  }
+  updRisk();
+}
+
+function updRisk() {
+  const l = parseFloat(document.getElementById('lots').value || 0.1);
+  const p = S.prices[S.asset];
+  const pip = S.asset === 'EURUSD' ? 10 : S.asset === 'XAUUSD' ? 1 : 50;
+  const risk = l * pip * 100 * 0.002;
+  const el = document.getElementById('rwarn');
+  if (el) el.textContent = '⚠️ Риск: $' + risk.toFixed(2) + ' (' + (risk / S.bal * 100).toFixed(1) + '% от баланса) · Лимит: $500/день';
+}
+
+function trade(dir) {
+  const l = parseFloat(document.getElementById('lots').value || 0.1);
+  const pnl = (Math.random() - 0.38) * l * 80;
+  S.pnl += pnl; S.bal += pnl; S.cnt++;
+  
+  const balEl = document.getElementById('bal');
+  if (balEl) balEl.textContent = '$' + S.bal.toFixed(2);
+  
+  const dpEl = document.getElementById('dpnl');
+  if (dpEl) { dpEl.textContent = (S.pnl >= 0 ? '+' : '') + '$' + S.pnl.toFixed(2); dpEl.className = 'stat-value ' + (S.pnl >= 0 ? 'g' : 'r'); }
+  
+  const bchEl = document.getElementById('bal-ch');
+  if (bchEl) { const pct = S.pnl / 10000 * 100; bchEl.textContent = (S.pnl >= 0 ? '▲ +' : '▼ ') + '$' + Math.abs(S.pnl).toFixed(2) + ' (' + Math.abs(pct).toFixed(2) + '%)'; }
+  
+  const tcEl = document.getElementById('tcnt');
+  if (tcEl) tcEl.textContent = S.cnt;
+  
+  const pct = S.pnl / 10000 * 100;
+  const progEl = document.getElementById('prog');
+  if (progEl) progEl.style.width = Math.min(Math.max(pct / 8 * 100, 0), 100) + '%';
+  const ppEl = document.getElementById('ppct');
+  if (ppEl) ppEl.textContent = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+  
+  const msg = dir + ' ' + l + ' лот ' + S.asset + '\nP&L: ' + (pnl >= 0 ? '+' : '') + pnl.toFixed(2) + '$\nБаланс: $' + S.bal.toFixed(2);
+  if (tg) tg.showAlert(msg); else alert(msg);
+}
+
+function buyChal() {
+  const url = 'https://youtrade.com/challenge?ref=game&discount=20';
+  if (tg) tg.openLink(url); else window.open(url, '_blank');
+}
+
+// Live price simulation
+setInterval(function() {
+  Object.keys(S.prices).forEach(function(a) {
+    S.prevPrices[a] = S.prices[a];
+    S.prices[a] *= (1 + (Math.random() - 0.5) * 0.0006);
+  });
+  updPrice();
+}, 2500);
+
+updPrice();
+</script>
+</body>
+</html>

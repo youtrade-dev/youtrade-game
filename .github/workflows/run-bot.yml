@@ -1,0 +1,93 @@
+name: Run Telegram Bot
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['bot.py', 'requirements.txt']
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install aiogram==3.7.0 aiohttp==3.9.3
+      - name: Run bot (polling 200s)
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          WEBAPP_URL: https://youtrade-dev.github.io/youtrade-game/
+        run: |
+          python - <<'EOF'
+          import asyncio, os, signal
+          from aiogram import Bot, Dispatcher, types, F
+          from aiogram.filters import Command
+          from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+
+          BOT_TOKEN = os.environ["BOT_TOKEN"]
+          WEBAPP_URL = os.environ.get("WEBAPP_URL", "https://youtrade-dev.github.io/youtrade-game/")
+
+          bot = Bot(token=BOT_TOKEN)
+          dp = Dispatcher()
+
+          @dp.message(Command("start"))
+          async def start(message: types.Message):
+              kb = InlineKeyboardMarkup(inline_keyboard=[[
+                  InlineKeyboardButton(text="🎮 Играть в YouTrade GAME", web_app=WebAppInfo(url=WEBAPP_URL))
+              ],[
+                  InlineKeyboardButton(text="🏆 Лидерборд", callback_data="top"),
+                  InlineKeyboardButton(text="🚀 Купить Challenge", url="https://youtrade.com/challenge?ref=bot")
+              ]])
+              await message.answer(
+                  "🎮 *YouTrade GAME*\n\n"
+                  "Торгуй виртуально — зарабатывай реально!\n\n"
+                  "• Виртуальный prop-аккаунт $10,000\n"
+                  "• Реальные цены XAUUSD, EURUSD\n"
+                  "• Правила как в настоящем Challenge\n"
+                  "• Лидерборд среди всех игроков\n\n"
+                  "Набери +8% — получи скидку 20% на Challenge! 🔥",
+                  parse_mode="Markdown", reply_markup=kb
+              )
+
+          @dp.message(Command("help"))
+          async def help_cmd(message: types.Message):
+              await message.answer(
+                  "📋 *Правила YouTrade GAME*\n\n"
+                  "1. Стартовый баланс: $10,000\n"
+                  "2. Цель: заработать +8% (=$800)\n"
+                  "3. Дневной лимит потерь: -$500 (5%)\n"
+                  "4. Максимальная просадка: -$1,000 (10%)\n"
+                  "5. Инструменты: XAUUSD, EURUSD, BTCUSD\n\n"
+                  "🏆 Достигни цели — получи скидку 20% на Challenge!",
+                  parse_mode="Markdown"
+              )
+
+          @dp.callback_query(lambda c: c.data == "top")
+          async def top(cb: types.CallbackQuery):
+              await cb.message.answer(
+                  "🏆 *Топ трейдеров*\n\n"
+                  "🥇 AlexTrader: +18.3%\n"
+                  "🥈 MarketGuru: +15.7%\n"
+                  "🥉 GoldHunter: +12.1%\n"
+                  "4. NQScalper: +9.8%\n"
+                  "5. EuroKing: +8.2%",
+                  parse_mode="Markdown"
+              )
+              await cb.answer()
+
+          async def main():
+              print("Bot polling started...")
+              task = asyncio.create_task(dp.start_polling(bot, polling_timeout=10))
+              await asyncio.sleep(200)
+              task.cancel()
+              try: await task
+              except asyncio.CancelledError: pass
+              await bot.session.close()
+              print("Bot polling finished.")
+
+          asyncio.run(main())
+          EOF

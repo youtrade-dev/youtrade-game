@@ -1,0 +1,17 @@
+name: Setup Telegram Bot
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/setup-bot.yml']
+jobs:
+  setup-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Menu Button
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.BOT_TOKEN }}/setChatMenuButton" -H "Content-Type: application/json" -d '{"menu_button":{"type":"web_app","text":"Играть","web_app":{"url":"https://youtrade-dev.github.io/youtrade-game/"}}}'
+      - name: Set Commands
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.BOT_TOKEN }}/setMyCommands" -H "Content-Type: application/json" -d '{"commands":[{"command":"start","description":"Запустить игру"},{"command":"help","description":"Правила"}]}'
+          echo "Bot configured!"

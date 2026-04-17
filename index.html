@@ -61,7 +61,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .ag-head{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:6px 0 4px}
 /* Price display */
 .chart-card{background:var(--bg2);border-radius:12px;padding:10px;border:1px solid var(--border);position:relative}
-.chart-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:0 2px}
+.chart-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding:0 2px}
+.tf-row{display:flex;gap:4px;margin-bottom:6px}
+.tf-btn{padding:3px 8px;font-size:10px;border:1px solid var(--border);background:transparent;color:var(--text2);border-radius:6px;cursor:pointer;transition:all .2s}
+.tf-btn.active{background:var(--green);color:#000;border-color:var(--green);font-weight:700}
 .price-val{font-size:26px;font-weight:800;letter-spacing:-.5px}
 .price-ch{font-size:12px;margin-top:3px}
 .price-live{position:absolute;top:8px;right:8px;font-size:9px;color:var(--green);display:flex;align-items:center;gap:3px}
@@ -207,7 +210,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           </div>
           <div class="price-live"><span class="live-dot"></span>LIVE</div>
         </div>
-        <div id="tv-chart" style="width:100%;height:200px;border-radius:10px;overflow:hidden;background:#0d1117"></div>
+        <div class="tf-row" id="tf-row">
+          <button class="tf-btn active" onclick="setTF('1m',this)">1М</button>
+          <button class="tf-btn" onclick="setTF('5m',this)">5М</button>
+          <button class="tf-btn" onclick="setTF('15m',this)">15М</button>
+          <button class="tf-btn" onclick="setTF('1h',this)">1Ч</button>
+          <button class="tf-btn" onclick="setTF('4h',this)">4Ч</button>
+          <button class="tf-btn" onclick="setTF('1d',this)">1Д</button>
+        </div>
+        <div id="tv-chart" style="width:100%;height:220px;border-radius:10px;overflow:hidden;background:#0d1117"></div>
       </div>
       
       <div>
@@ -524,6 +535,7 @@ function trade(dir) {
   renderHistory();
   // Add entry marker to chart
   if(_chart && _chartSym === sym) drawEntryLines();
+  saveStateAfterAction();
 }
 
 // ============ CLOSE TRADE ============
@@ -551,6 +563,7 @@ function closeTrade(tradeId) {
   updateDashboard();
   renderHistory();
   if(_chart && _chartSym === t.sym) drawEntryLines();
+  saveStateAfterAction();
 }
 
 // ============ OPEN P&L UPDATE ============
@@ -724,64 +737,62 @@ function buyChal() {
 }
 
 
-// ============ CHART (TradingView Lightweight Charts) ============
+// ============ CHART (TradingView Lightweight Charts - Candlestick) ============
 var _chart = null;
-var _lineSeries = null;
-var _entryLine = null;
+var _candleSeries = null;
 var _chartSym = null;
-var _chartData = {};   // sym -> [{time, value}]
+var _chartTF = '1m';  // current timeframe
+var _candleData = {}; // sym_tf -> [{time,open,high,low,close}]
+var _tfSeconds = {
+  '1m': 60, '5m': 300, '15m': 900, '1h': 3600, '4h': 14400, '1d': 86400
+};
+var _tfCandles = {
+  '1m': 80, '5m': 80, '15m': 60, '1h': 60, '4h': 48, '1d': 60
+};
+
+function setTF(tf, btn) {
+  _chartTF = tf;
+  document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  // Rebuild chart with new timeframe
+  _chartSym = null; // force rebuild
+  initChart(S.asset);
+}
 
 function initChart(sym) {
-  // If same symbol already inited, just refresh entry lines
-  if(_chartSym === sym && _chart) {
-    drawEntryLines();
-    return;
-  }
   _chartSym = sym;
-
-  // Destroy old chart
   var container = document.getElementById('tv-chart');
   if(!container) return;
   container.innerHTML = '';
-
   if(typeof LightweightCharts === 'undefined') return;
 
   _chart = LightweightCharts.createChart(container, {
     width: container.clientWidth || 320,
-    height: 200,
-    layout: {
-      background: { color: '#0d1117' },
-      textColor: '#888',
-      fontSize: 11
-    },
-    grid: {
-      vertLines: { color: '#1a1a2e' },
-      horzLines: { color: '#1a1a2e' }
-    },
+    height: 220,
+    layout: { background: { color: '#0d1117' }, textColor: '#8892a4', fontSize: 11 },
+    grid: { vertLines: { color: '#1a1a2e' }, horzLines: { color: '#1a1a2e' } },
     crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-    rightPriceScale: { borderColor: '#2a2a4a', scaleMargins: { top: 0.1, bottom: 0.1 } },
+    rightPriceScale: { borderColor: '#2a2a4a', scaleMargins: { top: 0.05, bottom: 0.05 } },
     timeScale: { borderColor: '#2a2a4a', timeVisible: true, secondsVisible: false }
   });
 
-  _lineSeries = _chart.addLineSeries({
-    color: '#00d4aa',
-    lineWidth: 2,
-    crosshairMarkerVisible: true,
-    crosshairMarkerRadius: 4,
-    lastValueVisible: true,
-    priceLineVisible: false
+  _candleSeries = _chart.addCandlestickSeries({
+    upColor: '#00d4aa',
+    downColor: '#ff4444',
+    borderUpColor: '#00d4aa',
+    borderDownColor: '#ff4444',
+    wickUpColor: '#00d4aa',
+    wickDownColor: '#ff4444'
   });
 
-  // Build or restore history for this symbol
-  if(!_chartData[sym]) {
-    _chartData[sym] = _buildInitialHistory(sym);
+  var key = sym + '_' + _chartTF;
+  if(!_candleData[key]) {
+    _candleData[key] = _buildCandleHistory(sym, _chartTF);
   }
-  _lineSeries.setData(_chartData[sym]);
+  _candleSeries.setData(_candleData[key]);
   _chart.timeScale().fitContent();
-
   drawEntryLines();
 
-  // Handle resize
   var ro = new ResizeObserver(() => {
     if(_chart && container.clientWidth > 0) {
       _chart.applyOptions({ width: container.clientWidth });
@@ -790,89 +801,189 @@ function initChart(sym) {
   ro.observe(container);
 }
 
-function _buildInitialHistory(sym) {
+function _buildCandleHistory(sym, tf) {
   var data = S.prices[sym];
   var basePrice = data ? data.price : 1;
+  var tfSec = _tfSeconds[tf] || 60;
+  var count = _tfCandles[tf] || 80;
+  var vol = _getVolatility(sym);
+  var dec = _getDecimals(sym);
+  var candles = [];
   var now = Math.floor(Date.now() / 1000);
-  var pts = [];
+  now = Math.floor(now / tfSec) * tfSec;
   var price = basePrice;
-  // Build 60 candles of 1-minute history going back
-  var volatility = _getVolatility(sym);
-  for(var i = 59; i >= 0; i--) {
-    var t = now - i * 60;
-    // round to minute boundary
-    t = Math.floor(t / 60) * 60;
-    price = price * (1 + (Math.random() - 0.5) * volatility);
-    pts.push({ time: t, value: parseFloat(price.toFixed(_getDecimals(sym))) });
+
+  for(var i = count - 1; i >= 0; i--) {
+    var t = now - i * tfSec;
+    var open = price;
+    // generate realistic candle
+    var bodyMove = (Math.random() - 0.48) * vol * open;
+    var close = open + bodyMove;
+    var highWick = Math.random() * vol * open * 0.5;
+    var lowWick = Math.random() * vol * open * 0.5;
+    var high = Math.max(open, close) + highWick;
+    var low = Math.min(open, close) - lowWick;
+    candles.push({
+      time: t,
+      open: parseFloat(open.toFixed(dec)),
+      high: parseFloat(high.toFixed(dec)),
+      low: parseFloat(low.toFixed(dec)),
+      close: parseFloat(close.toFixed(dec))
+    });
+    price = close;
   }
-  // Set last point to actual current price
-  pts[pts.length - 1].value = parseFloat(basePrice.toFixed(_getDecimals(sym)));
-  return pts;
+  // Fix last candle close to actual current price
+  if(candles.length > 0) {
+    var last = candles[candles.length - 1];
+    last.close = parseFloat(basePrice.toFixed(dec));
+    last.high = parseFloat(Math.max(last.high, last.close).toFixed(dec));
+    last.low = parseFloat(Math.min(last.low, last.close).toFixed(dec));
+  }
+  return candles;
 }
 
 function _getVolatility(sym) {
-  if(sym === 'BTC-USD') return 0.003;
-  if(sym === 'ETH-USD') return 0.004;
-  if(sym === 'GC=F' || sym === 'SI=F') return 0.002;
-  if(['^GSPC','^IXIC','^GDAXI'].includes(sym)) return 0.002;
-  return 0.0008; // forex
+  if(sym === 'BTC-USD') return 0.006;
+  if(sym === 'ETH-USD') return 0.008;
+  if(sym === 'GC=F' || sym === 'SI=F') return 0.004;
+  if(['^GSPC','^IXIC','^GDAXI'].includes(sym)) return 0.004;
+  return 0.0015;
 }
 
 function _getDecimals(sym) {
-  var inst = INSTRUMENTS[sym];
-  return inst ? inst.dec : 5;
+  return INSTRUMENTS[sym] ? INSTRUMENTS[sym].dec : 5;
 }
 
 function updateChartTick(sym, price) {
   if(!_chart || _chartSym !== sym) return;
+  var tfSec = _tfSeconds[_chartTF] || 60;
   var now = Math.floor(Date.now() / 1000);
-  now = Math.floor(now / 60) * 60;
+  now = Math.floor(now / tfSec) * tfSec;
   var dec = _getDecimals(sym);
   var val = parseFloat(price.toFixed(dec));
-  if(!_chartData[sym]) _chartData[sym] = [];
-  var arr = _chartData[sym];
-  // Update last candle if same minute, else push new
-  if(arr.length > 0 && arr[arr.length-1].time === now) {
-    arr[arr.length-1].value = val;
+  var key = sym + '_' + _chartTF;
+  if(!_candleData[key]) _candleData[key] = _buildCandleHistory(sym, _chartTF);
+  var arr = _candleData[key];
+  if(arr.length > 0 && arr[arr.length - 1].time === now) {
+    // Update current candle
+    var c = arr[arr.length - 1];
+    c.close = val;
+    c.high = Math.max(c.high, val);
+    c.low = Math.min(c.low, val);
+    _candleSeries.update({ time: now, open: c.open, high: parseFloat(c.high.toFixed(dec)), low: parseFloat(c.low.toFixed(dec)), close: val });
   } else {
-    arr.push({ time: now, value: val });
-    if(arr.length > 200) arr.shift();
+    // New candle
+    var prev = arr.length > 0 ? arr[arr.length-1].close : val;
+    var newCandle = { time: now, open: prev, high: Math.max(prev,val), low: Math.min(prev,val), close: val };
+    arr.push(newCandle);
+    if(arr.length > 300) arr.shift();
+    _candleSeries.update(newCandle);
   }
-  _lineSeries.update({ time: now, value: val });
   drawEntryLines();
 }
 
 function drawEntryLines() {
-  if(!_lineSeries || !_chart) return;
-  // Remove previous markers
-  _lineSeries.setMarkers([]);
+  if(!_candleSeries || !_chart) return;
+  _candleSeries.setMarkers([]);
   var markers = [];
-  // Add entry markers for all open trades on current symbol
   S.openTrades.forEach(function(t) {
     if(t.sym !== _chartSym) return;
     var color = t.dir === 'BUY' ? '#00d4aa' : '#ff4444';
-    var label = t.dir === 'BUY' ? '▲ BUY' : '▼ SELL';
     var pnlStr = t.floatingPnl !== undefined ? (t.floatingPnl >= 0 ? '+' : '') + t.floatingPnl.toFixed(2) + '$' : '';
     markers.push({
-      time: Math.floor(t.openTimestamp / 1000),
+      time: Math.floor((t.openTimestamp || Date.now()) / 1000),
       position: t.dir === 'BUY' ? 'belowBar' : 'aboveBar',
       color: color,
       shape: t.dir === 'BUY' ? 'arrowUp' : 'arrowDown',
-      text: label + (pnlStr ? ' ' + pnlStr : '')
+      text: (t.dir === 'BUY' ? '▲ BUY' : '▼ SELL') + (pnlStr ? ' ' + pnlStr : '')
     });
   });
-  if(markers.length > 0) {
-    _lineSeries.setMarkers(markers);
+  if(markers.length > 0) _candleSeries.setMarkers(markers);
+}
+
+// ============ CLOUD STORAGE (Telegram CloudStorage) ============
+// Saves user state per Telegram user ID across sessions
+
+function saveState() {
+  var storage = tg && tg.CloudStorage;
+  if(!storage) {
+    // Fallback: localStorage
+    try {
+      var payload = JSON.stringify({
+        bal: S.bal, startBal: S.startBal, dayPnl: S.dayPnl,
+        totalPnl: S.totalPnl, tradeCount: S.tradeCount, day: S.day,
+        openTrades: S.openTrades, closedTrades: S.closedTrades.slice(0, 50)
+      });
+      localStorage.setItem('ytg_state', payload);
+    } catch(e) {}
+    return;
   }
+  // Telegram CloudStorage (works in real Telegram app)
+  try {
+    var payload = JSON.stringify({
+      bal: S.bal, startBal: S.startBal, dayPnl: S.dayPnl,
+      totalPnl: S.totalPnl, tradeCount: S.tradeCount, day: S.day,
+      openTrades: S.openTrades, closedTrades: S.closedTrades.slice(0, 50)
+    });
+    storage.setItem('ytg_state', payload, function(err) {
+      if(err) console.log('CloudStorage save error:', err);
+    });
+  } catch(e) { console.log('CloudStorage err:', e); }
+}
+
+function loadState(callback) {
+  // Try Telegram CloudStorage first
+  var storage = tg && tg.CloudStorage;
+  if(storage) {
+    try {
+      storage.getItem('ytg_state', function(err, val) {
+        if(!err && val) {
+          _applyState(val);
+        }
+        if(callback) callback();
+      });
+      return;
+    } catch(e) {}
+  }
+  // Fallback: localStorage
+  try {
+    var val = localStorage.getItem('ytg_state');
+    if(val) _applyState(val);
+  } catch(e) {}
+  if(callback) callback();
+}
+
+function _applyState(jsonStr) {
+  try {
+    var saved = JSON.parse(jsonStr);
+    if(!saved || typeof saved.bal !== 'number') return;
+    S.bal = saved.bal;
+    S.startBal = saved.startBal || 10000;
+    S.dayPnl = saved.dayPnl || 0;
+    S.totalPnl = saved.totalPnl || 0;
+    S.tradeCount = saved.tradeCount || 0;
+    S.day = saved.day || 1;
+    S.openTrades = saved.openTrades || [];
+    S.closedTrades = saved.closedTrades || [];
+    // Ensure floatingPnl exists on open trades
+    S.openTrades.forEach(function(t) { if(!t.floatingPnl) t.floatingPnl = 0; });
+    console.log('State loaded: bal=' + S.bal + ' openTrades=' + S.openTrades.length);
+  } catch(e) { console.log('State parse error:', e); }
+}
+
+// Auto-save after every trade action
+function saveStateAfterAction() {
+  setTimeout(saveState, 200);
 }
 
 // ============ INIT ============
-// Load first asset price on startup
-loadCurrentPrice().then(() => {
-  // Init chart after first price loaded
-  setTimeout(() => initChart(S.asset), 500);
+// Load saved user state, then start
+loadState(function() {
+  updateDashboard();
+  loadCurrentPrice().then(() => {
+    setTimeout(() => initChart(S.asset), 500);
+  });
 });
-updateDashboard();
 
 </script>
 </body>

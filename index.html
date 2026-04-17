@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>YouTrade GAME</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0d0d1a;--bg2:#1a1a2e;--bg3:#16213e;--border:#2a2a4a;--green:#00d4aa;--red:#ff4444;--gold:#ffd700;--blue:#0077ff;--text:#fff;--text2:#888;--text3:#555}
@@ -59,7 +60,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 /* Asset group headers */
 .ag-head{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:6px 0 4px}
 /* Price display */
-.price-card{background:var(--bg2);border-radius:12px;padding:14px;border:1px solid var(--border);text-align:center;position:relative}
+.chart-card{background:var(--bg2);border-radius:12px;padding:10px;border:1px solid var(--border);position:relative}
+.chart-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:0 2px}
 .price-val{font-size:26px;font-weight:800;letter-spacing:-.5px}
 .price-ch{font-size:12px;margin-top:3px}
 .price-live{position:absolute;top:8px;right:8px;font-size:9px;color:var(--green);display:flex;align-items:center;gap:3px}
@@ -197,11 +199,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         </div>
       </div>
       
-      <div class="price-card" id="price-card">
-        <div class="price-live"><span class="live-dot"></span>LIVE</div>
-        <div class="il" id="price-sym-label">EUR/USD</div>
-        <div class="price-val" id="cprice"><span class="spin"></span>загрузка...</div>
-        <div class="price-ch" id="pchange">—</div>
+      <div class="chart-card" id="chart-card">
+        <div class="chart-top">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="price-val" id="cprice"><span class="spin"></span>загрузка...</div>
+            <div class="price-ch" id="pchange">—</div>
+          </div>
+          <div class="price-live"><span class="live-dot"></span>LIVE</div>
+        </div>
+        <div id="tv-chart" style="width:100%;height:200px;border-radius:10px;overflow:hidden;background:#0d1117"></div>
       </div>
       
       <div>
@@ -406,6 +412,7 @@ async function loadCurrentPrice() {
     updatePriceDisplay();
     updRisk();
     updateOpenPnl();
+    updateChartTick(sym, data.price);
   } else {
     document.getElementById('cprice').textContent = 'Нет данных';
     document.getElementById('pchange').textContent = 'Проверьте соединение';
@@ -448,8 +455,8 @@ function selAsset(btn, sym, name) {
   btn.classList.add('active');
   S.asset = sym;
   S.assetName = INSTRUMENTS[sym] ? INSTRUMENTS[sym].name : name;
-  document.getElementById('price-sym-label').textContent = S.assetName;
   loadCurrentPrice();
+  initChart(sym);
 }
 
 // ============ LOT ADJUSTMENT ============
@@ -500,10 +507,12 @@ function trade(dir) {
   const lots = parseFloat(document.getElementById('lots').value || 0.1);
   const entry = data.price;
   
+  const nowTs = Date.now();
   const newTrade = {
-    id: Date.now(),
+    id: nowTs,
     sym, name: S.assetName, dir, lots, entry,
-    openTime: new Date().toLocaleTimeString('ru', {hour:'2-digit',minute:'2-digit'})
+    openTime: new Date().toLocaleTimeString('ru', {hour:'2-digit',minute:'2-digit'}),
+    openTimestamp: nowTs
   };
   S.openTrades.push(newTrade);
   S.tradeCount++;
@@ -513,51 +522,35 @@ function trade(dir) {
   
   updateDashboard();
   renderHistory();
-  
-  // Auto-close after 3-30 min simulation (random)
-  const closeDelay = 10000 + Math.random() * 20000;
-  setTimeout(() => autoCloseTrade(newTrade.id), closeDelay);
+  // Add entry marker to chart
+  if(_chart && _chartSym === sym) drawEntryLines();
 }
 
-// Simulate trade closing with realistic P&L
-function autoCloseTrade(tradeId) {
+// ============ CLOSE TRADE ============
+function closeTrade(tradeId) {
   const idx = S.openTrades.findIndex(t => t.id === tradeId);
   if(idx === -1) return;
   const t = S.openTrades[idx];
   const inst = INSTRUMENTS[t.sym];
   const data = S.prices[t.sym];
-  
-  // Calculate P&L based on current price vs entry
-  const curPrice = data ? data.price : t.entry;
-  const priceDiff = (curPrice - t.entry) * (t.dir === 'BUY' ? 1 : -1);
+  const exitPrice = data ? data.price : t.entry;
+  const priceDiff = (exitPrice - t.entry) * (t.dir === 'BUY' ? 1 : -1);
   const pips = priceDiff / inst.pip;
-  let pnl = pips * inst.pipVal * t.lots;
-  
-  // Add some randomness to simulate market movement
-  pnl += (Math.random() - 0.45) * t.lots * 15;
-  pnl = parseFloat(pnl.toFixed(2));
-  
-  const exitPrice = curPrice + (Math.random() - 0.5) * inst.pip * 10;
-  
+  const pnl = parseFloat((pips * inst.pipVal * t.lots).toFixed(2));
   const closed = {
-    ...t, exit: parseFloat(exitPrice.toFixed(inst.dec)), pnl,
+    ...t,
+    exit: parseFloat(exitPrice.toFixed(inst.dec)),
+    pnl,
     closeTime: new Date().toLocaleTimeString('ru', {hour:'2-digit',minute:'2-digit'})
   };
-  
   S.openTrades.splice(idx, 1);
   S.closedTrades.unshift(closed);
-  
   S.dayPnl += pnl;
   S.totalPnl += pnl;
   S.bal = S.startBal + S.totalPnl;
-  
   updateDashboard();
   renderHistory();
-}
-
-// ============ CLOSE TRADE MANUALLY ============
-function closeTrade(tradeId) {
-  autoCloseTrade(tradeId);
+  if(_chart && _chartSym === t.sym) drawEntryLines();
 }
 
 // ============ OPEN P&L UPDATE ============
@@ -730,9 +723,155 @@ function buyChal() {
   if(tg) tg.openLink(url); else window.open(url,'_blank');
 }
 
+
+// ============ CHART (TradingView Lightweight Charts) ============
+var _chart = null;
+var _lineSeries = null;
+var _entryLine = null;
+var _chartSym = null;
+var _chartData = {};   // sym -> [{time, value}]
+
+function initChart(sym) {
+  // If same symbol already inited, just refresh entry lines
+  if(_chartSym === sym && _chart) {
+    drawEntryLines();
+    return;
+  }
+  _chartSym = sym;
+
+  // Destroy old chart
+  var container = document.getElementById('tv-chart');
+  if(!container) return;
+  container.innerHTML = '';
+
+  if(typeof LightweightCharts === 'undefined') return;
+
+  _chart = LightweightCharts.createChart(container, {
+    width: container.clientWidth || 320,
+    height: 200,
+    layout: {
+      background: { color: '#0d1117' },
+      textColor: '#888',
+      fontSize: 11
+    },
+    grid: {
+      vertLines: { color: '#1a1a2e' },
+      horzLines: { color: '#1a1a2e' }
+    },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: '#2a2a4a', scaleMargins: { top: 0.1, bottom: 0.1 } },
+    timeScale: { borderColor: '#2a2a4a', timeVisible: true, secondsVisible: false }
+  });
+
+  _lineSeries = _chart.addLineSeries({
+    color: '#00d4aa',
+    lineWidth: 2,
+    crosshairMarkerVisible: true,
+    crosshairMarkerRadius: 4,
+    lastValueVisible: true,
+    priceLineVisible: false
+  });
+
+  // Build or restore history for this symbol
+  if(!_chartData[sym]) {
+    _chartData[sym] = _buildInitialHistory(sym);
+  }
+  _lineSeries.setData(_chartData[sym]);
+  _chart.timeScale().fitContent();
+
+  drawEntryLines();
+
+  // Handle resize
+  var ro = new ResizeObserver(() => {
+    if(_chart && container.clientWidth > 0) {
+      _chart.applyOptions({ width: container.clientWidth });
+    }
+  });
+  ro.observe(container);
+}
+
+function _buildInitialHistory(sym) {
+  var data = S.prices[sym];
+  var basePrice = data ? data.price : 1;
+  var now = Math.floor(Date.now() / 1000);
+  var pts = [];
+  var price = basePrice;
+  // Build 60 candles of 1-minute history going back
+  var volatility = _getVolatility(sym);
+  for(var i = 59; i >= 0; i--) {
+    var t = now - i * 60;
+    // round to minute boundary
+    t = Math.floor(t / 60) * 60;
+    price = price * (1 + (Math.random() - 0.5) * volatility);
+    pts.push({ time: t, value: parseFloat(price.toFixed(_getDecimals(sym))) });
+  }
+  // Set last point to actual current price
+  pts[pts.length - 1].value = parseFloat(basePrice.toFixed(_getDecimals(sym)));
+  return pts;
+}
+
+function _getVolatility(sym) {
+  if(sym === 'BTC-USD') return 0.003;
+  if(sym === 'ETH-USD') return 0.004;
+  if(sym === 'GC=F' || sym === 'SI=F') return 0.002;
+  if(['^GSPC','^IXIC','^GDAXI'].includes(sym)) return 0.002;
+  return 0.0008; // forex
+}
+
+function _getDecimals(sym) {
+  var inst = INSTRUMENTS[sym];
+  return inst ? inst.dec : 5;
+}
+
+function updateChartTick(sym, price) {
+  if(!_chart || _chartSym !== sym) return;
+  var now = Math.floor(Date.now() / 1000);
+  now = Math.floor(now / 60) * 60;
+  var dec = _getDecimals(sym);
+  var val = parseFloat(price.toFixed(dec));
+  if(!_chartData[sym]) _chartData[sym] = [];
+  var arr = _chartData[sym];
+  // Update last candle if same minute, else push new
+  if(arr.length > 0 && arr[arr.length-1].time === now) {
+    arr[arr.length-1].value = val;
+  } else {
+    arr.push({ time: now, value: val });
+    if(arr.length > 200) arr.shift();
+  }
+  _lineSeries.update({ time: now, value: val });
+  drawEntryLines();
+}
+
+function drawEntryLines() {
+  if(!_lineSeries || !_chart) return;
+  // Remove previous markers
+  _lineSeries.setMarkers([]);
+  var markers = [];
+  // Add entry markers for all open trades on current symbol
+  S.openTrades.forEach(function(t) {
+    if(t.sym !== _chartSym) return;
+    var color = t.dir === 'BUY' ? '#00d4aa' : '#ff4444';
+    var label = t.dir === 'BUY' ? '▲ BUY' : '▼ SELL';
+    var pnlStr = t.floatingPnl !== undefined ? (t.floatingPnl >= 0 ? '+' : '') + t.floatingPnl.toFixed(2) + '$' : '';
+    markers.push({
+      time: Math.floor(t.openTimestamp / 1000),
+      position: t.dir === 'BUY' ? 'belowBar' : 'aboveBar',
+      color: color,
+      shape: t.dir === 'BUY' ? 'arrowUp' : 'arrowDown',
+      text: label + (pnlStr ? ' ' + pnlStr : '')
+    });
+  });
+  if(markers.length > 0) {
+    _lineSeries.setMarkers(markers);
+  }
+}
+
 // ============ INIT ============
 // Load first asset price on startup
-loadCurrentPrice();
+loadCurrentPrice().then(() => {
+  // Init chart after first price loaded
+  setTimeout(() => initChart(S.asset), 500);
+});
 updateDashboard();
 
 </script>

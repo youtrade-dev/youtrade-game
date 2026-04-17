@@ -518,7 +518,7 @@ function trade(dir) {
   S.tradeCount++;
   
   const msg = `${dir === 'BUY' ? '▲' : '▼'} ${dir} ${lots} лот ${S.assetName}\nЦена входа: ${entry.toFixed(inst.dec)}`;
-  if(tg) tg.showAlert(msg); else alert(msg);
+  try { if(tg && tg.showAlert) tg.showAlert(msg); else alert(msg); } catch(e) { alert(msg); }
   
   updateDashboard();
   renderHistory();

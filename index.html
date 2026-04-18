@@ -740,6 +740,7 @@ function buyChal() {
 // ============ CHART (TradingView Lightweight Charts - Candlestick) ============
 var _chart = null;
 var _candleSeries = null;
+var _volSeries = null;
 var _chartSym = null;
 var _chartTF = '1m';  // current timeframe
 var _candleData = {}; // sym_tf -> [{time,open,high,low,close}]
@@ -754,9 +755,12 @@ function setTF(tf, btn) {
   _chartTF = tf;
   document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  // Rebuild chart with new timeframe
-  _chartSym = null; // force rebuild
-  initChart(S.asset);
+  if(_chart && _chartSym) {
+    _loadRealCandles(_chartSym, tf);
+  } else {
+    _chartSym = null;
+    initChart(S.asset);
+  }
 }
 
 function initChart(sym) {
@@ -766,82 +770,159 @@ function initChart(sym) {
   container.innerHTML = '';
   if(typeof LightweightCharts === 'undefined') return;
 
+  if(_chart) { try { _chart.remove(); } catch(e){} _chart = null; }
+
   _chart = LightweightCharts.createChart(container, {
-    width: container.clientWidth || 320,
-    height: 220,
-    layout: { background: { color: '#0d1117' }, textColor: '#8892a4', fontSize: 11 },
-    grid: { vertLines: { color: '#1a1a2e' }, horzLines: { color: '#1a1a2e' } },
-    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-    rightPriceScale: { borderColor: '#2a2a4a', scaleMargins: { top: 0.05, bottom: 0.05 } },
-    timeScale: { borderColor: '#2a2a4a', timeVisible: true, secondsVisible: false }
+    width: container.clientWidth,
+    height: container.clientHeight || 300,
+    layout: {
+      background: { color: '#0d1117' },
+      textColor: '#d1d4dc',
+      fontSize: 12,
+      fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif'
+    },
+    grid: {
+      vertLines: { color: '#1e2230', style: 1 },
+      horzLines: { color: '#1e2230', style: 1 }
+    },
+    crosshair: {
+      mode: LightweightCharts.CrosshairMode.Normal,
+      vertLine: { color: '#758696', labelBackgroundColor: '#2b2b43' },
+      horzLine: { color: '#758696', labelBackgroundColor: '#2b2b43' }
+    },
+    rightPriceScale: {
+      borderColor: '#2a2a4a',
+      scaleMargins: { top: 0.08, bottom: 0.15 }
+    },
+    timeScale: {
+      borderColor: '#2a2a4a',
+      timeVisible: true,
+      secondsVisible: false,
+      rightOffset: 5,
+      barSpacing: 8,
+      minBarSpacing: 3
+    }
   });
 
   _candleSeries = _chart.addCandlestickSeries({
-    upColor: '#00d4aa',
-    downColor: '#ff4444',
-    borderUpColor: '#00d4aa',
-    borderDownColor: '#ff4444',
-    wickUpColor: '#00d4aa',
-    wickDownColor: '#ff4444'
+    upColor: '#26a69a',
+    downColor: '#ef5350',
+    borderUpColor: '#26a69a',
+    borderDownColor: '#ef5350',
+    wickUpColor: '#26a69a',
+    wickDownColor: '#ef5350'
   });
 
-  var key = sym + '_' + _chartTF;
-  if(!_candleData[key]) {
-    _candleData[key] = _buildCandleHistory(sym, _chartTF);
-  }
-  _candleSeries.setData(_candleData[key]);
-  _chart.timeScale().fitContent();
-  drawEntryLines();
+  _volSeries = _chart.addHistogramSeries({
+    priceFormat: { type: 'volume' },
+    priceScaleId: 'vol'
+  });
+  _chart.priceScale('vol').applyOptions({
+    scaleMargins: { top: 0.85, bottom: 0 }
+  });
 
-  var ro = new ResizeObserver(() => {
-    if(_chart && container.clientWidth > 0) {
-      _chart.applyOptions({ width: container.clientWidth });
+  var ro = new ResizeObserver(function() {
+    if(_chart && container) {
+      _chart.applyOptions({ width: container.clientWidth, height: container.clientHeight || 300 });
     }
   });
   ro.observe(container);
+
+  _loadRealCandles(sym, _chartTF);
 }
 
-function _buildCandleHistory(sym, tf) {
-  var data = S.prices[sym];
-  var basePrice = data ? data.price : 1;
-  var tfSec = _tfSeconds[tf] || 60;
-  var count = _tfCandles[tf] || 80;
-  var vol = _getVolatility(sym);
-  var dec = _getDecimals(sym);
-  var candles = [];
-  var now = Math.floor(Date.now() / 1000);
-  now = Math.floor(now / tfSec) * tfSec;
-  var price = basePrice;
+function _getBinanceTF(tf) {
+  return { '1m':'1m','5m':'5m','15m':'15m','1h':'1h','4h':'4h','1d':'1d' }[tf] || '15m';
+}
 
-  for(var i = count - 1; i >= 0; i--) {
-    var t = now - i * tfSec;
-    var open = price;
-    // generate realistic candle
-    var bodyMove = (Math.random() - 0.48) * vol * open;
-    var close = open + bodyMove;
-    var highWick = Math.random() * vol * open * 0.5;
-    var lowWick = Math.random() * vol * open * 0.5;
-    var high = Math.max(open, close) + highWick;
-    var low = Math.min(open, close) - lowWick;
-    candles.push({
-      time: t,
-      open: parseFloat(open.toFixed(dec)),
-      high: parseFloat(high.toFixed(dec)),
-      low: parseFloat(low.toFixed(dec)),
-      close: parseFloat(close.toFixed(dec))
-    });
-    price = close;
+function _getYahooInterval(tf) {
+  return { '1m':'1m','5m':'5m','15m':'15m','1h':'60m','4h':'60m','1d':'1d' }[tf] || '15m';
+}
+
+function _getYahooRange(tf) {
+  return { '1m':'1d','5m':'5d','15m':'10d','1h':'60d','4h':'60d','1d':'1y' }[tf] || '5d';
+}
+
+async function _loadRealCandles(sym, tf) {
+  if(!_candleSeries) return;
+  var cryptoMap = { 'BTC-USD':'BTCUSDT','ETH-USD':'ETHUSDT','BNB-USD':'BNBUSDT','SOL-USD':'SOLUSDT' };
+  var binSym = cryptoMap[sym] || null;
+
+  var loadingEl = document.createElement('div');
+  loadingEl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:12px;pointer-events:none;';
+  loadingEl.textContent = 'Loading...';
+  var container = document.getElementById('tv-chart');
+  if(container) container.appendChild(loadingEl);
+
+  try {
+    var candles;
+    if(binSym) {
+      candles = await _fetchBinance(binSym, _getBinanceTF(tf));
+    } else {
+      candles = await _fetchYahoo(sym, tf);
+    }
+
+    if(loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
+
+    if(candles && candles.length > 0) {
+      _candleSeries.setData(candles);
+      var volData = candles.map(function(c) {
+        return { time: c.time, value: c.volume || 0,
+          color: c.close >= c.open ? 'rgba(38,166,154,0.5)' : 'rgba(239,83,80,0.5)' };
+      });
+      if(_volSeries) _volSeries.setData(volData);
+      _chart.timeScale().fitContent();
+    }
+  } catch(e) {
+    if(loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
+    console.warn('Chart load error:', sym, tf, e.message);
   }
-  // Fix last candle close to actual current price
-  if(candles.length > 0) {
-    var last = candles[candles.length - 1];
-    last.close = parseFloat(basePrice.toFixed(dec));
-    last.high = parseFloat(Math.max(last.high, last.close).toFixed(dec));
-    last.low = parseFloat(Math.min(last.low, last.close).toFixed(dec));
+}
+
+async function _fetchBinance(symbol, interval) {
+  var url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval + '&limit=200';
+  var r = await fetch(url);
+  if(!r.ok) throw new Error('Binance ' + r.status);
+  var data = await r.json();
+  return data.map(function(k) {
+    return {
+      time: Math.floor(k[0] / 1000),
+      open: parseFloat(k[1]), high: parseFloat(k[2]),
+      low: parseFloat(k[3]), close: parseFloat(k[4]),
+      volume: parseFloat(k[5])
+    };
+  });
+}
+
+async function _fetchYahoo(sym, tf) {
+  var interval = _getYahooInterval(tf);
+  var range = _getYahooRange(tf);
+  var proxy = 'https://corsproxy.io/?';
+  var yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(sym) + '?interval=' + interval + '&range=' + range + '&events=none';
+  var r = await fetch(proxy + encodeURIComponent(yahooUrl));
+  if(!r.ok) throw new Error('Yahoo ' + r.status);
+  var data = await r.json();
+  var result = data && data.chart && data.chart.result && data.chart.result[0];
+  if(!result) throw new Error('No data');
+  var timestamps = result.timestamp || [];
+  var q = result.indicators && result.indicators.quote && result.indicators.quote[0];
+  if(!q) throw new Error('No quotes');
+  var inst = INSTRUMENTS[sym];
+  var dec = inst ? inst.dec : 5;
+  var candles = [];
+  for(var i = 0; i < timestamps.length; i++) {
+    if(q.open[i]==null || isNaN(q.open[i])) continue;
+    candles.push({
+      time: timestamps[i],
+      open: parseFloat(q.open[i].toFixed(dec)),
+      high: parseFloat(q.high[i].toFixed(dec)),
+      low: parseFloat(q.low[i].toFixed(dec)),
+      close: parseFloat(q.close[i].toFixed(dec)),
+      volume: q.volume ? (q.volume[i] || 0) : 0
+    });
   }
   return candles;
 }
-
 function _getVolatility(sym) {
   if(sym === 'BTC-USD') return 0.006;
   if(sym === 'ETH-USD') return 0.008;

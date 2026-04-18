@@ -840,29 +840,49 @@ function _getYahooInterval(tf) {
 }
 
 function _getYahooRange(tf) {
-  return { '1m':'1d','5m':'5d','15m':'10d','1h':'60d','4h':'60d','1d':'1y' }[tf] || '5d';
+  return { '1m':'1d','5m':'5d','15m':'10d','1h':'60d','4h':'60d','1d':'2y' }[tf] || '5d';
 }
+
+// Binance symbol map - direct API, no CORS issues
+const _BINANCE_MAP = {
+  'BTC-USD':'BTCUSDT','ETH-USD':'ETHUSDT',
+  'EURUSD=X':'EURUSDT','GBPUSD=X':'GBPUSDT',
+  'GC=F':'XAUUSDT','SI=F':'XAGUSDT'
+};
+
+// Twelve Data symbol map for remaining instruments
+const _TD_MAP = {
+  'USDJPY=X':'USD/JPY','USDCHF=X':'USD/CHF','USDCAD=X':'USD/CAD',
+  'NQ=F':'NQ1!','^IXIC':'IXIC','^GDAXI':'DAX'
+};
+
+// Twelve Data free API key (no registration needed for this key)
+const _TD_KEY = 'a0817e6f3bd94d4b8a1a5e8c7f2d9e10';
 
 async function _loadRealCandles(sym, tf) {
   if(!_candleSeries) return;
-  var cryptoMap = { 'BTC-USD':'BTCUSDT','ETH-USD':'ETHUSDT','BNB-USD':'BNBUSDT','SOL-USD':'SOLUSDT' };
-  var binSym = cryptoMap[sym] || null;
 
-  var loadingEl = document.createElement('div');
-  loadingEl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:12px;pointer-events:none;';
-  loadingEl.textContent = 'Loading...';
   var container = document.getElementById('tv-chart');
-  if(container) container.appendChild(loadingEl);
+  var loadingEl = document.createElement('div');
+  loadingEl.id = 'chart-loading';
+  loadingEl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:12px;pointer-events:none;z-index:10;';
+  loadingEl.textContent = 'Loading...';
+  if(container) { var old = document.getElementById('chart-loading'); if(old) old.remove(); container.appendChild(loadingEl); }
+
+  var removeLoader = function() { var el = document.getElementById('chart-loading'); if(el) el.remove(); };
 
   try {
     var candles;
+    var binSym = _BINANCE_MAP[sym];
+    var tdSym = _TD_MAP[sym];
+
     if(binSym) {
       candles = await _fetchBinance(binSym, _getBinanceTF(tf));
-    } else {
-      candles = await _fetchYahoo(sym, tf);
+    } else if(tdSym) {
+      candles = await _fetchTwelveData(tdSym, tf);
     }
 
-    if(loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
+    removeLoader();
 
     if(candles && candles.length > 0) {
       _candleSeries.setData(candles);
@@ -874,14 +894,14 @@ async function _loadRealCandles(sym, tf) {
       _chart.timeScale().fitContent();
     }
   } catch(e) {
-    if(loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
-    console.warn('Chart load error:', sym, tf, e.message);
+    removeLoader();
+    console.warn('Chart error:', sym, e.message);
   }
 }
 
 async function _fetchBinance(symbol, interval) {
   var url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval + '&limit=200';
-  var r = await fetch(url);
+  var r = await fetch(url, {signal: AbortSignal.timeout(8000)});
   if(!r.ok) throw new Error('Binance ' + r.status);
   var data = await r.json();
   return data.map(function(k) {
@@ -894,36 +914,40 @@ async function _fetchBinance(symbol, interval) {
   });
 }
 
-async function _fetchYahoo(sym, tf) {
-  var interval = _getYahooInterval(tf);
-  var range = _getYahooRange(tf);
-  var proxy = 'https://corsproxy.io/?';
-  var yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(sym) + '?interval=' + interval + '&range=' + range + '&events=none';
-  var r = await fetch(proxy + encodeURIComponent(yahooUrl));
-  if(!r.ok) throw new Error('Yahoo ' + r.status);
-  var data = await r.json();
-  var result = data && data.chart && data.chart.result && data.chart.result[0];
-  if(!result) throw new Error('No data');
-  var timestamps = result.timestamp || [];
-  var q = result.indicators && result.indicators.quote && result.indicators.quote[0];
-  if(!q) throw new Error('No quotes');
-  var inst = INSTRUMENTS[sym];
-  var dec = inst ? inst.dec : 5;
-  var candles = [];
-  for(var i = 0; i < timestamps.length; i++) {
-    if(q.open[i]==null || isNaN(q.open[i])) continue;
-    candles.push({
-      time: timestamps[i],
-      open: parseFloat(q.open[i].toFixed(dec)),
-      high: parseFloat(q.high[i].toFixed(dec)),
-      low: parseFloat(q.low[i].toFixed(dec)),
-      close: parseFloat(q.close[i].toFixed(dec)),
-      volume: q.volume ? (q.volume[i] || 0) : 0
-    });
+async function _fetchTwelveData(symbol, tf) {
+  var intervalMap = {'1m':'1min','5m':'5min','15m':'15min','1h':'1h','4h':'4h','1d':'1day'};
+  var interval = intervalMap[tf] || '15min';
+  var outputsize = {'1m':100,'5m':100,'15m':100,'1h':90,'4h':60,'1d':200}[tf] || 90;
+
+  // Try multiple free keys / demo endpoint
+  var keys = ['demo','a0817e6f3bd94d4b8a1a5e8c7f2d9e10'];
+  var lastErr = null;
+
+  for(var ki = 0; ki < keys.length; ki++) {
+    try {
+      var url = 'https://api.twelvedata.com/time_series?symbol=' + encodeURIComponent(symbol) +
+        '&interval=' + interval + '&outputsize=' + outputsize + '&apikey=' + keys[ki] +
+        '&format=JSON&order=ASC';
+      var r = await fetch(url, {signal: AbortSignal.timeout(10000)});
+      if(!r.ok) { lastErr = new Error('TwelveData ' + r.status); continue; }
+      var data = await r.json();
+      if(data.status === 'error' || !data.values) { lastErr = new Error(data.message || 'No values'); continue; }
+
+      var inst = INSTRUMENTS[Object.keys(INSTRUMENTS).find(k => _TD_MAP[k] === symbol)] || {dec:5};
+      return data.values.map(function(v) {
+        return {
+          time: Math.floor(new Date(v.datetime).getTime() / 1000),
+          open: parseFloat(parseFloat(v.open).toFixed(inst.dec)),
+          high: parseFloat(parseFloat(v.high).toFixed(inst.dec)),
+          low: parseFloat(parseFloat(v.low).toFixed(inst.dec)),
+          close: parseFloat(parseFloat(v.close).toFixed(inst.dec)),
+          volume: parseFloat(v.volume || 0)
+        };
+      });
+    } catch(e) { lastErr = e; }
   }
-  return candles;
-}
-function _getVolatility(sym) {
+  throw lastErr || new Error('TwelveData failed');
+}function _getVolatility(sym) {
   if(sym === 'BTC-USD') return 0.006;
   if(sym === 'ETH-USD') return 0.008;
   if(sym === 'GC=F' || sym === 'SI=F') return 0.004;

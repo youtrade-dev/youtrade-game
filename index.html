@@ -918,43 +918,61 @@ async function _fetchTwelveData(symbol, tf) {
   var intervalMap = {'1m':'1min','5m':'5min','15m':'15min','1h':'1h','4h':'4h','1d':'1day'};
   var interval = intervalMap[tf] || '15min';
   var outputsize = {'1m':100,'5m':100,'15m':100,'1h':90,'4h':60,'1d':200}[tf] || 90;
+  var origSym = Object.keys(_TD_MAP).find(function(k){ return _TD_MAP[k]===symbol; });
+  var inst = INSTRUMENTS[origSym] || {dec:5};
 
-  // Try multiple free keys / demo endpoint
-  var keys = ['demo','a0817e6f3bd94d4b8a1a5e8c7f2d9e10'];
-  var lastErr = null;
+  // 1) Twelve Data demo key
+  try {
+    var tdUrl = 'https://api.twelvedata.com/time_series?symbol=' + encodeURIComponent(symbol) +
+      '&interval=' + interval + '&outputsize=' + outputsize + '&apikey=demo&format=JSON&order=ASC';
+    var r = await fetch(tdUrl, {signal: AbortSignal.timeout(8000)});
+    if(r.ok) {
+      var d = await r.json();
+      if(d.values && d.values.length > 1) {
+        return d.values.map(function(v) {
+          return { time: Math.floor(new Date(v.datetime).getTime()/1000),
+            open: parseFloat(parseFloat(v.open).toFixed(inst.dec)),
+            high: parseFloat(parseFloat(v.high).toFixed(inst.dec)),
+            low: parseFloat(parseFloat(v.low).toFixed(inst.dec)),
+            close: parseFloat(parseFloat(v.close).toFixed(inst.dec)),
+            volume: parseFloat(v.volume||0) };
+        });
+      }
+    }
+  } catch(e) {}
 
-  for(var ki = 0; ki < keys.length; ki++) {
-    try {
-      var url = 'https://api.twelvedata.com/time_series?symbol=' + encodeURIComponent(symbol) +
-        '&interval=' + interval + '&outputsize=' + outputsize + '&apikey=' + keys[ki] +
-        '&format=JSON&order=ASC';
-      var r = await fetch(url, {signal: AbortSignal.timeout(10000)});
-      if(!r.ok) { lastErr = new Error('TwelveData ' + r.status); continue; }
-      var data = await r.json();
-      if(data.status === 'error' || !data.values) { lastErr = new Error(data.message || 'No values'); continue; }
+  // 2) Yahoo Finance query1 direct (works from GitHub Pages)
+  try {
+    var y1Url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(origSym||symbol) +
+      '?interval=' + _getYahooInterval(tf) + '&range=' + _getYahooRange(tf) + '&events=none';
+    var r1 = await fetch(y1Url, {signal: AbortSignal.timeout(8000)});
+    if(r1.ok) {
+      var y1 = await r1.json();
+      var res1 = y1 && y1.chart && y1.chart.result && y1.chart.result[0];
+      if(res1 && res1.timestamp && res1.timestamp.length > 1) {
+        var q1 = res1.indicators && res1.indicators.quote && res1.indicators.quote[0];
+        if(q1) { var c1=[]; for(var i=0;i<res1.timestamp.length;i++){if(q1.open[i]==null||isNaN(q1.open[i]))continue; c1.push({time:res1.timestamp[i],open:parseFloat(q1.open[i].toFixed(inst.dec)),high:parseFloat(q1.high[i].toFixed(inst.dec)),low:parseFloat(q1.low[i].toFixed(inst.dec)),close:parseFloat(q1.close[i].toFixed(inst.dec)),volume:q1.volume?(q1.volume[i]||0):0});} if(c1.length>1)return c1; }
+      }
+    }
+  } catch(e) {}
 
-      var inst = INSTRUMENTS[Object.keys(INSTRUMENTS).find(k => _TD_MAP[k] === symbol)] || {dec:5};
-      return data.values.map(function(v) {
-        return {
-          time: Math.floor(new Date(v.datetime).getTime() / 1000),
-          open: parseFloat(parseFloat(v.open).toFixed(inst.dec)),
-          high: parseFloat(parseFloat(v.high).toFixed(inst.dec)),
-          low: parseFloat(parseFloat(v.low).toFixed(inst.dec)),
-          close: parseFloat(parseFloat(v.close).toFixed(inst.dec)),
-          volume: parseFloat(v.volume || 0)
-        };
-      });
-    } catch(e) { lastErr = e; }
-  }
-  throw lastErr || new Error('TwelveData failed');
-}function _getVolatility(sym) {
-  if(sym === 'BTC-USD') return 0.006;
-  if(sym === 'ETH-USD') return 0.008;
-  if(sym === 'GC=F' || sym === 'SI=F') return 0.004;
-  if(['^GSPC','^IXIC','^GDAXI'].includes(sym)) return 0.004;
-  return 0.0015;
+  // 3) Yahoo Finance query2 direct
+  try {
+    var y2Url = 'https://query2.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(origSym||symbol) +
+      '?interval=' + _getYahooInterval(tf) + '&range=' + _getYahooRange(tf) + '&events=none';
+    var r2 = await fetch(y2Url, {signal: AbortSignal.timeout(8000)});
+    if(r2.ok) {
+      var y2 = await r2.json();
+      var res2 = y2 && y2.chart && y2.chart.result && y2.chart.result[0];
+      if(res2 && res2.timestamp && res2.timestamp.length > 1) {
+        var q2 = res2.indicators && res2.indicators.quote && res2.indicators.quote[0];
+        if(q2) { var c2=[]; for(var j=0;j<res2.timestamp.length;j++){if(q2.open[j]==null||isNaN(q2.open[j]))continue; c2.push({time:res2.timestamp[j],open:parseFloat(q2.open[j].toFixed(inst.dec)),high:parseFloat(q2.high[j].toFixed(inst.dec)),low:parseFloat(q2.low[j].toFixed(inst.dec)),close:parseFloat(q2.close[j].toFixed(inst.dec)),volume:q2.volume?(q2.volume[j]||0):0});} if(c2.length>1)return c2; }
+      }
+    }
+  } catch(e) {}
+
+  throw new Error('All sources failed for ' + symbol);
 }
-
 function _getDecimals(sym) {
   return INSTRUMENTS[sym] ? INSTRUMENTS[sym].dec : 5;
 }

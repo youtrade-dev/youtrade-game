@@ -988,7 +988,7 @@ async function fetchPrice(symbol) {
 async function loadCurrentPrice() {
   const sym = S.asset;
   const inst = INSTRUMENTS[sym];
-  document.getElementById('cprice').innerHTML = '<span class="spin"></span>загрузка...';
+  var _cpe = document.getElementById('cprice'); if(_cpe) { document.getElementById('cprice').innerHTML = '<span class="spin"></span>загрузка...'; }
   document.getElementById('pchange').textContent = '—';
   document.getElementById('trade-header-price').textContent = '—';
   
@@ -1477,7 +1477,7 @@ async function _loadRealCandles(sym, tf) {
         _candleSeries.setData(synCandles);
         var volData = synCandles.map(function(c){return{time:c.time,value:c.volume||0,color:c.close>=c.open?'rgba(16,185,129,0.5)':'rgba(239,68,68,0.5)'};});
         if(_volSeries) _volSeries.setData(volData);
-        _candleChart && _candleChart.timeScale().fitContent();
+        _chart && _chart.timeScale().fitContent();
       }
     } catch(e2) { console.warn('Synthetic fallback failed', e2.message); }
   }

@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>YouTrade GAME</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  var _pc1 = document.getElementById('pchange'); if(_pc1) _pc1.textContent = ''; if(_pc2) _pc2.textContent = ' ';500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <style>
@@ -1013,7 +1005,7 @@ function updatePriceDisplay() {
   
   const p = data.price;
   const pEl = document.getElementById('cprice');
-  const chEl = document.getElementById('pchange');
+  const chEl = document.getElementById('pchange') || {textContent:'',style:{}};
   const hdEl = document.getElementById('trade-header-price');
   
   const priceStr = p.toFixed(inst.dec);

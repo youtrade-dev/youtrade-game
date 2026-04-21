@@ -673,7 +673,9 @@ nav{
   color:var(--text);
   letter-spacing:.3px;
 }
-</style>
+
+.reset-btn{display:block;width:100%;margin-top:20px;padding:12px;background:transparent;border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.5px;transition:background 0.2s}
+.reset-btn:hover{background:rgba(239,68,68,0.1)}</style>
 </head><body>
 <div class="app">
 
@@ -717,6 +719,7 @@ nav{
         <span style="font-size:12px;color:var(--red)" id="drawdown-used">$0 / $1000</span>
       </div>
     </div>
+  <button class="reset-btn" onclick="resetAccount()">Сбросить счёт</button>
   </div>
 </div>
 
@@ -1725,6 +1728,25 @@ function _applyState(jsonStr) {
 function saveStateAfterAction() {
   setTimeout(saveState, 200);
 }
+
+function resetAccount() {
+  if (!confirm('Сбросить счёт? Баланс вернётся к $10 000, все сделки и история будут удалены.')) return;
+  // Close all open trades without PnL
+  S.openTrades = [];
+  S.closedTrades = [];
+  S.bal = 10000;
+  S.startBal = 10000;
+  S.dayPnl = 0;
+  S.totalPnl = 0;
+  S.tradeCount = 0;
+  S.day = 1;
+  updateDashboard();
+  renderOpenPositionsDash();
+  renderHistory();
+  saveState();
+  alert('Счёт сброшен! Баланс: $10 000');
+}
+
 
 // ============ INIT ============
 // Load saved user state, then start

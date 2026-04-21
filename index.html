@@ -720,9 +720,9 @@ nav{
 </div>
 
 <!-- TRADE SCREEN -->
-<div c<div class="screen" id="s-trade">
+<div class="screen" id="s-trade">
   <div class="header">
-    <div c<div class="logo">Торговля</div>
+    <div class="logo">Торговля</div>
     <div id="trade-header-price" class="trade-price-badge"></div>
   </div>
   <div class="content" style="display:flex;flex-direction:column;overflow:hidden;height:100%">
@@ -781,6 +781,8 @@ nav{
       <button class="btn-sell" onclick="trade('sell')">SELL</button>
     </div>
     <div id="rwarn" class="order-info-bar"></div>
+    <div id="cprice" style="display:none"></div>
+    <div id="pchange" style="display:none"></div>
   </div>
 </div>
 <div class="screen" id="s-hist">
@@ -989,7 +991,7 @@ async function loadCurrentPrice() {
   const sym = S.asset;
   const inst = INSTRUMENTS[sym];
   var _cpe = document.getElementById('cprice'); if(_cpe) { document.getElementById('cprice').innerHTML = '<span class="spin"></span>загрузка...'; }
-  document.getElementById('pchange').textContent = '—';
+  var _pc4=document.getElementById('pchange'); if(_pc4) _pc4.textContent = '—';
   document.getElementById('trade-header-price').textContent = '—';
   
   const data = await fetchPrice(sym);
@@ -1000,8 +1002,7 @@ async function loadCurrentPrice() {
     updateOpenPnl();
     updateChartTick(sym, data.price);
   } else {
-    document.getElementById('cprice').textContent = 'Нет данных';
-    document.getElementById('pchange').textContent = 'Проверьте соединение';
+    var _cpe2=document.getElementById('cprice'); if(_cpe2) _cpe2.textContent = 'Нет данных';    var _pc3=document.getElementById('pchange'); if(_pc3) _pc3.textContent = 'Проверьте соединение';
   }
 }
 

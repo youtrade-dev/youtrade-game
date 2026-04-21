@@ -391,7 +391,7 @@ nav{
 .nb:hover{background:rgba(255,255,255,0.04);color:var(--text2)}
 .nb.active{color:var(--primary-hover)}
 .ni{font-size:18px;line-height:1}
-.ni-logo{height:24px;width:40px;border-radius:6px;background:#4E35C6;padding:2px;object-fit:contain}
+.header-logo{height:28px;width:auto;object-fit:contain;display:block}
 
 /* === TOAST === */
 .toast{
@@ -680,7 +680,7 @@ nav{
 <!-- DASHBOARD -->
 <div class="screen active" id="s-dash">
   <div class="header">
-    <div class="logo"><svg width="20" height="20" viewBox="0 0 40 40" fill="none" style="flex-shrink:0;margin-right:6px"><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" fill="rgba(78,53,198,0.35)" stroke="#4E35C6" stroke-width="1.5"/><path d="M14 20L18 24L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span><span class="logo-accent">You</span>Trade GAME</span></div>
+    <div class="logo"><img src="logo.png" class="header-logo" alt=""><span><span class="logo-accent">You</span>Trade GAME</span></div>
     <div class="day-badge" id="day-badge">День 1 · 30 дн.</div>
   </div>
   <div class="content">
@@ -887,7 +887,7 @@ nav{
   </div>
 </div>
 <nav class="nav">
-  <button class="nb active" onclick="show('dash',this)"><img src="logo.png" class="ni-logo" alt="">Счёт</button>
+  <button class="nb active" onclick="show('dash',this)">Счёт</button>
   <button class="nb" onclick="show('trade',this)">Торговля</button>
   <button class="nb" onclick="show('hist',this)">История</button>
   <button class="nb" onclick="show('lead',this)">Топ</button>

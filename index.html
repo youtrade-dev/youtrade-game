@@ -1336,7 +1336,7 @@ var _tfCandles = {
 
 function setTF(tf, btn) {
   _chartTF = tf;
-  document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tf').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
   if(_chart && _chartSym) {
     _loadRealCandles(_chartSym, tf);

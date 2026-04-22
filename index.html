@@ -1437,7 +1437,7 @@ function buyChal() {
   var price = (_chalData[_chalPlan] && _chalData[_chalPlan].prices && _chalData[_chalPlan].prices[_chalBal])
     ? _chalData[_chalPlan].prices[_chalBal]
     : '';
-  var priceStr = price ? ' (' + price + ')' : '';
+  var priceStr = price ? ' за ' + price : '';
   var msg = _chalPlan === 'instant'
     ? 'Привет! Хочу купить Инстант ' + _chalBal + priceStr + ' — как это сделать?'
     : 'Привет! Хочу купить Challenge ' + planLabel + ' ' + _chalBal + priceStr + ' — как это сделать?';

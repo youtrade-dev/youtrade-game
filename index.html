@@ -845,7 +845,7 @@ nav{
         <div class="chal-plan-tabs">
           <button class="chal-plan-tab active" onclick="chalSetPlan('1step',this)">1 этап</button>
           <button class="chal-plan-tab" onclick="chalSetPlan('2step',this)">2 этапа</button>
-          <button class="chal-plan-tab" onclick="chalSetPlan('instant',this)">Мгновенное</button>
+          <button class="chal-plan-tab" onclick="chalSetPlan('instant',this)">Инстант</button>
         </div>
       </div>
 
@@ -1352,7 +1352,7 @@ var _chalData = {
     best: '$50K'
   },
   'instant': {
-    label: 'Мгновенное',
+    label: 'Инстант',
     cols: ['Мгновенный'],
     rows: [
       ['Цель прибыли','—'],
@@ -1438,7 +1438,7 @@ function buyChal() {
     ? _chalData[_chalPlan].prices[_chalBal]
     : '';
   var priceStr = price ? ' (' + price + ')' : '';
-  var msg = 'Привет! Я из YOUTRADE GAME и хочу приобрести Challenge ' + planLabel + ' — ' + _chalBal + priceStr + '. Как оформить?';
+  var msg = 'Привет! Хочу купить Challenge ' + planLabel + ' ' + _chalBal + priceStr + ' — как это сделать?';
   var url = 'https://wa.me/77081906251?text=' + encodeURIComponent(msg);
   window.open(url, '_blank');
 }

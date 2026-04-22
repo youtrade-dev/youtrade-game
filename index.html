@@ -674,6 +674,47 @@ nav{
   letter-spacing:.3px;
 }
 
+
+/* ===== DASHBOARD REDESIGN ===== */
+.dash-info-strip{display:flex;align-items:stretch;background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin:12px 12px 0;overflow:hidden}
+.dis-item{flex:1;padding:10px 10px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.dis-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;text-align:center}
+.dis-val{font-size:12px;font-weight:700;color:var(--text);text-align:center}
+.dis-val.accent{color:var(--primary)}
+.dis-divider{width:1px;background:var(--border);flex-shrink:0}
+.dash-section-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;padding:0 12px;margin:12px 0 8px}
+.dash-goals{margin:0 12px;display:flex;flex-direction:column;gap:8px}
+.goal-row{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.goal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.goal-left{display:flex;align-items:center;gap:6px}
+.goal-name{font-size:12px;color:var(--text2);font-weight:500}
+.goal-status{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
+.goal-status.working{background:rgba(78,53,198,0.15);color:var(--primary)}
+.goal-status.passed{background:rgba(16,185,129,0.15);color:var(--green)}
+.goal-status.failed{background:rgba(239,68,68,0.15);color:var(--red)}
+.goal-val{font-size:13px;font-weight:700;color:var(--text)}
+.goal-val.red{color:var(--red)}
+.goal-bar-wrap{height:6px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-bottom:4px}
+.goal-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.goal-bar-fill.green{background:linear-gradient(90deg,#10B981,#34D399)}
+.goal-bar-fill.red{background:linear-gradient(90deg,#10B981,#F59E0B,#EF4444)}
+.goal-pct{font-size:10px;color:var(--text3)}
+.dash-limit-box{margin:0 12px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px}
+.dlim-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.dlim-row.main{margin-bottom:6px}
+.dlim-label{font-size:12px;color:var(--text2)}
+.dlim-val{font-size:12px;font-weight:600;color:var(--text)}
+.dlim-val.green{color:var(--green);font-size:16px;font-weight:700}
+.dlim-bar-wrap{height:8px;background:var(--bg3);border-radius:6px;overflow:hidden;margin-bottom:10px;position:relative}
+.dlim-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),#34D399);border-radius:6px;transition:width .5s}
+.dlim-pct{position:absolute;right:6px;top:-1px;font-size:9px;font-weight:700;color:var(--text)}
+.dash-perf-box{margin:0 12px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.perf-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)}
+.perf-row:last-child{border-bottom:none}
+.perf-left{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)}
+.perf-val{font-size:13px;font-weight:700;color:var(--text)}
+.perf-val.green{color:var(--green)}
+.perf-val.red{color:var(--red)}
 .reset-btn{display:block;width:100%;margin-top:20px;padding:12px;background:transparent;border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.5px;transition:background 0.2s}
 .reset-btn:hover{background:rgba(239,68,68,0.1)}</style>
 </head><body>
@@ -685,40 +726,162 @@ nav{
     <div class="logo"><span><span class="logo-accent">You</span>Trade GAME</span></div>
   </div>
   <div class="content">
+
+    <!-- INFO STRIP: Phase / Balance / Date -->
+    <div class="dash-info-strip">
+      <div class="dis-item">
+        <div class="dis-label">Начальный баланс</div>
+        <div class="dis-val" id="dis-startbal">$10 000.00</div>
+      </div>
+      <div class="dis-divider"></div>
+      <div class="dis-item">
+        <div class="dis-label">Текущая фаза</div>
+        <div class="dis-val accent">Phase 1</div>
+      </div>
+      <div class="dis-divider"></div>
+      <div class="dis-item">
+        <div class="dis-label">Следующая</div>
+        <div class="dis-val">Funded</div>
+      </div>
+    </div>
+
+    <!-- BALANCE CARD -->
     <div class="balance-card">
       <div class="bal-label">Баланс</div>
       <div class="bal-amount" id="bal">$10,000.00</div>
-      <div class="bal-sub" id="bal-sub">Начальный баланс</div>
+      <div class="bal-sub" id="bal-sub" style="color:var(--green)">▲ +0.00$ (+0.00%) всего</div>
     </div>
-    <div class="stats-row">
-      <div class="stat-card"><div class="sl">Дн. P&L</div><div class="sv g" id="dpnl">$0.00</div></div>
-      <div class="stat-card"><div class="sl">Общий P&L</div><div class="sv g" id="tpnl">$0.00</div></div>
-      <div class="stat-card"><div class="sl">Сделок</div><div class="sv" id="tcnt">0</div></div>
-    </div>
-    <div class="prog-wrap">
-      <div class="sl">Прогресс к цели +8% ($800)</div>
-      <div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
-      <div class="prog-labels"><span id="ppct">0.00%</span><span>Цель: +8%</span></div>
-    </div>
-    <div class="sec-title">Открытые позиции</div>
-    <div id="open-positions-dash">
-      <div class="empty-state" style="padding:16px">Нет открытых позиций</div>
-    </div>
-    <div class="sec-title">Лимиты</div>
-    <div style="margin:0 12px 12px;background:var(--bg2);border-radius:12px;padding:12px;border:1px solid var(--border)">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-        <span style="font-size:12px;color:var(--text2)">Дн. лимит потерь</span>
-        <span style="font-size:12px;color:var(--red)" id="day-limit-used">$0 / $500</span>
+
+    <!-- TRADING GOALS -->
+    <div class="dash-section-title">Цели торговли</div>
+    <div class="dash-goals">
+
+      <div class="goal-row" id="goal-profit">
+        <div class="goal-top">
+          <div class="goal-left">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#4E35C6" stroke-width="2"/><path d="M12 8v4l3 3" stroke="#4E35C6" stroke-width="2" stroke-linecap="round"/></svg>
+            <span class="goal-name">Целевой профит</span>
+            <span class="goal-status working" id="gs-profit">В работе</span>
+          </div>
+          <span class="goal-val" id="gv-profit">$0 / $800</span>
+        </div>
+        <div class="goal-bar-wrap"><div class="goal-bar-fill green" id="gb-profit" style="width:0%"></div></div>
+        <div class="goal-pct" id="gp-profit">0%</div>
       </div>
-      <div class="prog-bar" style="height:6px">
-        <div class="prog-fill" id="limit-bar" style="width:0%;background:linear-gradient(90deg,var(--green),var(--red))"></div>
+
+      <div class="goal-row" id="goal-days">
+        <div class="goal-top">
+          <div class="goal-left">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#4E35C6" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="#4E35C6" stroke-width="2" stroke-linecap="round"/></svg>
+            <span class="goal-name">Торговые дни</span>
+            <span class="goal-status working" id="gs-days">В работе</span>
+          </div>
+          <span class="goal-val" id="gv-days">0 / 3 дней</span>
+        </div>
+        <div class="goal-bar-wrap"><div class="goal-bar-fill green" id="gb-days" style="width:0%"></div></div>
+        <div class="goal-pct" id="gp-days">0%</div>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-top:8px">
-        <span style="font-size:12px;color:var(--text2)">Макс. просадка</span>
-        <span style="font-size:12px;color:var(--red)" id="drawdown-used">$0 / $1000</span>
+
+      <div class="goal-row" id="goal-dloss">
+        <div class="goal-top">
+          <div class="goal-left">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#10B981" stroke-width="2"/><path d="M12 8v5" stroke="#10B981" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#10B981"/></svg>
+            <span class="goal-name">Макс. дневной убыток</span>
+            <span class="goal-status passed" id="gs-dloss">Пройдено</span>
+          </div>
+          <span class="goal-val red" id="gv-dloss">$0 / $500</span>
+        </div>
+        <div class="goal-bar-wrap"><div class="goal-bar-fill red" id="gb-dloss" style="width:0%"></div></div>
+        <div class="goal-pct" id="gp-dloss">0%</div>
+      </div>
+
+      <div class="goal-row" id="goal-maxdd">
+        <div class="goal-top">
+          <div class="goal-left">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#10B981" stroke-width="2"/><path d="M8 21h8M12 17v4" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
+            <span class="goal-name">Максимальный убыток</span>
+            <span class="goal-status passed" id="gs-maxdd">Пройдено</span>
+          </div>
+          <span class="goal-val red" id="gv-maxdd">$0 / $1000</span>
+        </div>
+        <div class="goal-bar-wrap"><div class="goal-bar-fill red" id="gb-maxdd" style="width:0%"></div></div>
+        <div class="goal-pct" id="gp-maxdd">0%</div>
+      </div>
+
+    </div>
+
+    <!-- DAILY LIMIT -->
+    <div class="dash-section-title" style="margin-top:16px">Дневной лимит убытка</div>
+    <div class="dash-limit-box">
+      <div class="dlim-row main">
+        <span class="dlim-label">Осталось:</span>
+        <span class="dlim-val green" id="dlim-left">$500.00</span>
+      </div>
+      <div class="dlim-bar-wrap">
+        <div class="dlim-bar-fill" id="dlim-bar" style="width:100%"></div>
+        <span class="dlim-pct" id="dlim-pct">100%</span>
+      </div>
+      <div class="dlim-row">
+        <span class="dlim-label">Макс. дневной убыток:</span>
+        <span class="dlim-val">$500.00</span>
+      </div>
+      <div class="dlim-row">
+        <span class="dlim-label">Нач. баланс за сегодня:</span>
+        <span class="dlim-val" id="dlim-startday">$10 000.00</span>
+      </div>
+      <div class="dlim-row">
+        <span class="dlim-label">Пороговый лимит:</span>
+        <span class="dlim-val" id="dlim-thresh">$9 500.00</span>
       </div>
     </div>
-  <button class="reset-btn" onclick="resetAccount()">Сбросить счёт</button>
+
+    <!-- PERFORMANCE -->
+    <div class="dash-section-title" style="margin-top:16px">Производительность</div>
+    <div class="dash-perf-box">
+      <div class="perf-row">
+        <div class="perf-left">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="var(--text3)" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="var(--text3)" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="var(--text3)" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="var(--text3)" stroke-width="2"/></svg>
+          <span>Количество сделок</span>
+        </div>
+        <span class="perf-val" id="pf-cnt">0</span>
+      </div>
+      <div class="perf-row">
+        <div class="perf-left">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 110 20A10 10 0 0112 2z" stroke="var(--text3)" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="var(--text3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Процент выигрышных</span>
+        </div>
+        <span class="perf-val green" id="pf-win">0%</span>
+      </div>
+      <div class="perf-row">
+        <div class="perf-left">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 17l4-8 4 4 4-6 4 4" stroke="var(--text3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Средняя прибыль</span>
+        </div>
+        <span class="perf-val green" id="pf-avgwin">$0</span>
+      </div>
+      <div class="perf-row">
+        <div class="perf-left">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 7l4 8 4-4 4 6 4-4" stroke="var(--text3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Средний убыток</span>
+        </div>
+        <span class="perf-val red" id="pf-avgloss">$0</span>
+      </div>
+      <div class="perf-row">
+        <div class="perf-left">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="var(--text3)" stroke-width="2"/></svg>
+          <span>Дн. P&amp;L</span>
+        </div>
+        <span class="perf-val" id="pf-dpnl">$0.00</span>
+      </div>
+    </div>
+
+    <!-- OPEN POSITIONS -->
+    <div class="dash-section-title" style="margin-top:16px">Открытые позиции</div>
+    <div id="open-positions-dash" style="margin:0 12px 12px">
+      <div class="empty-state" style="padding:16px">Нет открытых позиций<br><small style="color:var(--text3)">Перейди в Торговля чтобы открыть сделку</small></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAccount()">Сбросить счёт</button>
   </div>
 </div>
 
@@ -1215,47 +1378,109 @@ function closeTradeConfirm(id) {
 
 // ============ DASHBOARD UPDATE ============
 function updateDashboard() {
-  document.getElementById('bal').textContent = '$' + S.bal.toFixed(2);
-  
-  const sub = S.totalPnl >= 0 
-    ? `▲ +${S.totalPnl.toFixed(2)}$ (+${(S.totalPnl/S.startBal*100).toFixed(2)}%) всего`
-    : `▼ ${S.totalPnl.toFixed(2)}$ (${(S.totalPnl/S.startBal*100).toFixed(2)}%) всего`;
-  document.getElementById('bal-sub').textContent = sub;
-  document.getElementById('bal-sub').style.color = S.totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
-  
-  const dpEl = document.getElementById('dpnl');
-  dpEl.textContent = (S.dayPnl >= 0 ? '+' : '') + '$' + S.dayPnl.toFixed(2);
-  dpEl.className = 'sv ' + (S.dayPnl >= 0 ? 'g' : 'r');
-  
-  const tpEl = document.getElementById('tpnl');
-  tpEl.textContent = (S.totalPnl >= 0 ? '+' : '') + '$' + S.totalPnl.toFixed(2);
-  tpEl.className = 'sv ' + (S.totalPnl >= 0 ? 'g' : 'r');
-  
-  document.getElementById('tcnt').textContent = S.tradeCount;
-  
-  const pct = S.totalPnl / S.startBal * 100;
-  const prog = Math.min(Math.max(pct / 8 * 100, 0), 100);
-  document.getElementById('prog').style.width = prog + '%';
-  document.getElementById('ppct').textContent = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
-  document.getElementById('ppct').style.color = pct >= 0 ? 'var(--green)' : 'var(--red)';
-  
-  // Chal progress
-  var _cp = document.getElementById('chal-prog'); if(_cp) _cp.style.width = prog + '%';
-  var _cst = document.getElementById('chal-status'); if(_cst) _cst.textContent = pct.toFixed(2) + '%';
-  
-  // Leaderboard my pct
-  updateLeaderboardMyStats();
-  
-  // Limits
-  const dayLoss = Math.abs(Math.min(S.dayPnl, 0));
-  document.getElementById('day-limit-used').textContent = '$' + dayLoss.toFixed(0) + ' / $500';
-  document.getElementById('limit-bar').style.width = Math.min(dayLoss / 500 * 100, 100) + '%';
-  
-  const maxDrop = S.startBal - S.bal;
-  document.getElementById('drawdown-used').textContent = '$' + Math.max(maxDrop, 0).toFixed(0) + ' / $1000';
-  
+  const bal = S.bal, startBal = S.startBal;
+  const totalPnl = S.totalPnl, dayPnl = S.dayPnl;
+  const dayLoss = Math.abs(Math.min(dayPnl, 0));
+  const maxDrop = Math.max(startBal - bal, 0);
+  const goalPct = Math.max(totalPnl / startBal * 100, 0);
+  const GOAL_TARGET = startBal * 0.08;
+  const DAY_LIMIT = 500;
+  const MAX_DD = 1000;
+
+  // Balance card
+  document.getElementById('bal').textContent = '$' + bal.toFixed(2);
+  const sub = totalPnl >= 0
+    ? '▲ +' + totalPnl.toFixed(2) + '$ (+' + (totalPnl/startBal*100).toFixed(2) + '%) всего'
+    : '▼ ' + totalPnl.toFixed(2) + '$ (' + (totalPnl/startBal*100).toFixed(2) + '%) всего';
+  const balSubEl = document.getElementById('bal-sub');
+  balSubEl.textContent = sub;
+  balSubEl.style.color = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // Info strip
+  const disStart = document.getElementById('dis-startbal');
+  if(disStart) disStart.textContent = '$' + startBal.toLocaleString('ru-RU', {minimumFractionDigits:2});
+
+  // Trading days (count unique days with trades)
+  const tradeDays = new Set(S.closedTrades.map(t => t.closeTime ? new Date(t.closeTime).toDateString() : '')).size;
+  const MIN_DAYS = 3;
+
+  // GOAL: Profit
+  const profitPct = Math.min(totalPnl / GOAL_TARGET * 100, 100);
+  const profitDone = totalPnl >= GOAL_TARGET;
+  setGoal('profit', '$' + Math.max(totalPnl,0).toFixed(0) + ' / $' + GOAL_TARGET.toFixed(0), profitPct, profitDone ? 'passed' : 'working', profitDone ? 'Пройдено' : 'В работе', false);
+
+  // GOAL: Trade days
+  const daysPct = Math.min(tradeDays / MIN_DAYS * 100, 100);
+  const daysDone = tradeDays >= MIN_DAYS;
+  setGoal('days', tradeDays + ' / ' + MIN_DAYS + ' дней', daysPct, daysDone ? 'passed' : 'working', daysDone ? 'Пройдено' : 'В работе', false);
+
+  // GOAL: Daily loss
+  const dlPct = Math.min(dayLoss / DAY_LIMIT * 100, 100);
+  const dlFailed = dayLoss >= DAY_LIMIT;
+  setGoal('dloss', '$' + dayLoss.toFixed(0) + ' / $' + DAY_LIMIT, dlPct, dlFailed ? 'failed' : 'passed', dlFailed ? 'Нарушено' : 'Пройдено', true);
+
+  // GOAL: Max drawdown
+  const ddPct = Math.min(maxDrop / MAX_DD * 100, 100);
+  const ddFailed = maxDrop >= MAX_DD;
+  setGoal('maxdd', '$' + maxDrop.toFixed(0) + ' / $' + MAX_DD, ddPct, ddFailed ? 'failed' : 'passed', ddFailed ? 'Нарушено' : 'Пройдено', true);
+
+  // Daily limit box
+  const dlLeft = Math.max(DAY_LIMIT - dayLoss, 0);
+  const dlLeftPct = Math.round(dlLeft / DAY_LIMIT * 100);
+  const dlLeftEl = document.getElementById('dlim-left');
+  if(dlLeftEl) {
+    dlLeftEl.textContent = '$' + dlLeft.toFixed(2);
+    dlLeftEl.style.color = dlLeft > 100 ? 'var(--green)' : 'var(--red)';
+  }
+  const dlBar = document.getElementById('dlim-bar');
+  if(dlBar) dlBar.style.width = dlLeftPct + '%';
+  const dlPctEl = document.getElementById('dlim-pct');
+  if(dlPctEl) dlPctEl.textContent = dlLeftPct + '%';
+  const dlStartDay = document.getElementById('dlim-startday');
+  if(dlStartDay) dlStartDay.textContent = '$' + startBal.toLocaleString('ru-RU', {minimumFractionDigits:2});
+  const dlThresh = document.getElementById('dlim-thresh');
+  if(dlThresh) dlThresh.textContent = '$' + (startBal - DAY_LIMIT).toLocaleString('ru-RU', {minimumFractionDigits:2});
+
+  // Performance
+  const closed = S.closedTrades || [];
+  const wins = closed.filter(t => t.pnl > 0);
+  const losses = closed.filter(t => t.pnl < 0);
+  const winRate = closed.length > 0 ? Math.round(wins.length / closed.length * 100) : 0;
+  const avgWin = wins.length > 0 ? wins.reduce((a,t) => a + t.pnl, 0) / wins.length : 0;
+  const avgLoss = losses.length > 0 ? losses.reduce((a,t) => a + t.pnl, 0) / losses.length : 0;
+
+  const pfCnt = document.getElementById('pf-cnt');
+  if(pfCnt) pfCnt.textContent = closed.length;
+  const pfWin = document.getElementById('pf-win');
+  if(pfWin) { pfWin.textContent = winRate + '%'; pfWin.className = 'perf-val ' + (winRate >= 50 ? 'green' : 'red'); }
+  const pfAvgWin = document.getElementById('pf-avgwin');
+  if(pfAvgWin) pfAvgWin.textContent = '$' + avgWin.toFixed(2);
+  const pfAvgLoss = document.getElementById('pf-avgloss');
+  if(pfAvgLoss) pfAvgLoss.textContent = '$' + Math.abs(avgLoss).toFixed(2);
+  const pfDpnl = document.getElementById('pf-dpnl');
+  if(pfDpnl) {
+    pfDpnl.textContent = (dayPnl >= 0 ? '+' : '') + '$' + dayPnl.toFixed(2);
+    pfDpnl.className = 'perf-val ' + (dayPnl >= 0 ? 'green' : 'red');
+  }
+
+  // Open positions
   renderOpenPositionsDash();
+
+  // Leaderboard
+  updateLeaderboardMyStats();
 }
+
+function setGoal(id, valText, pct, status, statusText, isRisk) {
+  const valEl = document.getElementById('gv-' + id);
+  const barEl = document.getElementById('gb-' + id);
+  const pctEl = document.getElementById('gp-' + id);
+  const statusEl = document.getElementById('gs-' + id);
+  if(valEl) { valEl.textContent = valText; valEl.className = 'goal-val' + (isRisk ? ' red' : ''); }
+  if(barEl) { barEl.style.width = Math.min(pct,100) + '%'; }
+  if(pctEl) pctEl.textContent = Math.round(pct) + '%';
+  if(statusEl) { statusEl.textContent = statusText; statusEl.className = 'goal-status ' + status; }
+}
+
 
 // ============ HISTORY RENDER ============
 function setHistFilter(f, btn) {

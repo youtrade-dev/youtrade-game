@@ -1021,7 +1021,7 @@ function updatePriceDisplay() {
   const chgStr = `${arrow} ${data.change >= 0 ? '+' : ''}${data.change.toFixed(inst.dec)} (${data.changePct >= 0 ? '+' : ''}${data.changePct.toFixed(2)}%)`;
   if(chEl) chEl.textContent = chgStr;
   if(chEl) chEl.style.color = color;
-  hdEl.textContent = inst.name + ': ' + priceStr;
+  if(hdEl) hdEl.textContent = inst.name + ': ' + priceStr;
 }
 
 // Refresh current price every 30 seconds

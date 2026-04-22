@@ -517,38 +517,16 @@ nav{
 }
 
 /* === TRADE SCREEN REDESIGN === */
-/* ===== TRADE SCREEN — LIST STYLE ===== */
+/* ===== TRADE SCREEN LIST ===== */
 .trade-screen-inner{display:flex;flex-direction:column;height:100%;overflow:hidden}
-.inst-list-header{
-  display:flex;justify-content:space-between;
-  padding:8px 16px;
-  font-size:11px;font-weight:600;color:var(--text3);
-  text-transform:uppercase;letter-spacing:.6px;
-  border-bottom:1px solid var(--border);
-  background:var(--bg);flex-shrink:0;
-}
+.inst-list-header{display:flex;justify-content:space-between;padding:8px 16px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
 .inst-list{flex:1;overflow-y:auto;padding-bottom:80px}
 .inst-list-group{margin-bottom:4px}
-.inst-list-group-label{
-  padding:10px 16px 4px;
-  font-size:10px;font-weight:700;
-  color:var(--text3);
-  text-transform:uppercase;letter-spacing:.8px;
-}
-.inst-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px;cursor:pointer;
-  border-bottom:1px solid rgba(255,255,255,0.04);
-  transition:background .15s;
-}
-.inst-row:active{background:rgba(255,255,255,0.03)}
+.inst-list-group-label{padding:10px 16px 4px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+.inst-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);transition:background .15s}
 .inst-row.active{background:rgba(78,53,198,0.12);border-left:3px solid var(--primary)}
 .inst-row-left{display:flex;align-items:center;gap:10px}
-.inst-icon{
-  width:38px;height:38px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:800;flex-shrink:0;letter-spacing:-.5px;
-}
+.inst-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
 .inst-icon-forex{background:rgba(78,53,198,0.25);color:#9B8BF4;border:1px solid rgba(78,53,198,0.35)}
 .inst-icon-metals{background:rgba(234,179,8,0.18);color:#EAB308;border:1px solid rgba(234,179,8,0.3)}
 .inst-icon-indices{background:rgba(16,185,129,0.18);color:#10B981;border:1px solid rgba(16,185,129,0.3)}
@@ -557,54 +535,24 @@ nav{
 .inst-row-name{font-size:14px;font-weight:700;color:var(--text)}
 .inst-row-sub{font-size:11px;color:var(--text3)}
 .inst-row-right{display:flex;align-items:center;gap:10px}
-.inst-row-price{
-  font-size:14px;font-weight:700;color:var(--text);
-  min-width:72px;text-align:right;
-  transition:color .3s;
-}
-.inst-row-price.up{color:var(--green)}
-.inst-row-price.dn{color:var(--red)}
-.inst-row-star{font-size:18px;color:var(--text3);cursor:pointer;padding:2px;line-height:1;transition:color .15s}
+.inst-row-price{font-size:14px;font-weight:700;color:var(--text);min-width:72px;text-align:right;transition:color .3s}
+.inst-row-price.up{color:var(--green)}.inst-row-price.dn{color:var(--red)}
+.inst-row-star{font-size:18px;color:var(--text3);cursor:pointer;padding:2px;line-height:1}
 .inst-row-star.fav{color:#F59E0B}
-.inst-expand{
-  background:var(--bg2);
-  border-bottom:2px solid var(--primary);
-  padding:12px 16px;
-}
+.inst-expand{background:var(--bg2);border-bottom:2px solid var(--primary);padding:12px 16px}
 .inst-expand-bar{display:flex;align-items:center;gap:8px}
 .inst-expand-lots{display:flex;flex-direction:column;gap:3px;flex-shrink:0}
 .inst-expand-lot-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px}
 .inst-expand-lot-ctrl{display:flex;align-items:center;gap:4px}
-.lot-btn{
-  width:24px;height:24px;border-radius:6px;
-  border:1px solid var(--border2);
-  background:rgba(255,255,255,0.06);
-  color:var(--text);font-size:16px;font-weight:600;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-}
+.lot-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text);font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .lot-btn:hover{background:rgba(78,53,198,0.2)}
-.lot-input{
-  background:var(--bg3);border:1px solid var(--border2);
-  border-radius:7px;color:var(--text);font-family:inherit;
-  font-size:13px;font-weight:600;width:54px;
-  text-align:center;padding:4px 4px;
-}
-.inst-btn-sell,.inst-btn-buy{
-  flex:1;padding:10px 6px;border-radius:10px;
-  border:none;font-family:inherit;font-size:12px;font-weight:700;
-  cursor:pointer;line-height:1.35;text-align:center;
-}
+.lot-input{background:var(--bg3);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-family:inherit;font-size:13px;font-weight:600;width:54px;text-align:center;padding:4px}
+.inst-btn-sell,.inst-btn-buy{flex:1;padding:10px 6px;border-radius:10px;border:none;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;line-height:1.35;text-align:center}
 .inst-btn-sell{background:linear-gradient(135deg,#EF4444,#DC2626);color:#fff}
-.inst-btn-sell:active{opacity:.85;transform:scale(0.97)}
-.inst-btn-buy{background:linear-gradient(135deg,#10B981,#059669);color:#fff}
-.inst-btn-buy:active{opacity:.85;transform:scale(0.97)}
-.inst-btn-label{font-size:10px;font-weight:500;opacity:.85}
-.inst-btn-price{font-size:14px;font-weight:700}
-.inst-risk-warn{
-  margin-top:8px;font-size:11px;color:var(--text2);
-  display:flex;align-items:center;gap:6px;
-}
+.inst-btn-sell:active{opacity:.85}.inst-btn-buy{background:linear-gradient(135deg,#10B981,#059669);color:#fff}
+.inst-btn-buy:active{opacity:.85}
+.inst-btn-label{font-size:10px;font-weight:500;opacity:.85}.inst-btn-price{font-size:14px;font-weight:700}
+.inst-risk-warn{margin-top:8px;font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px}
 .dash-info-strip{display:flex;align-items:stretch;background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin:12px 12px 0;overflow:hidden}
 .dis-item{flex:1;padding:10px 10px;display:flex;flex-direction:column;align-items:center;gap:3px}
 .dis-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;text-align:center}
@@ -815,277 +763,7 @@ nav{
 </div>
 
 <!-- TRADE SCREEN -->
-<div class="screen" id="s-trade">
-  <div class="trade-screen-inner">
-    <div class="inst-list-header">
-      <span>Символ</span>
-      <span>Цена</span>
-    </div>
-    <div class="inst-list">
-      <div class="inst-list-group">
-        <div class="inst-list-group-label">Форекс</div>
-        <div class="inst-row" id="row-EURUSD" onclick="selAsset2('EURUSD=X','EUR/USD','forex',this)">
-          <div class="inst-row-left">
-            <div class="inst-icon inst-icon-forex">fx</div>
-            <div class="inst-row-info">
-              <span class="inst-row-name">EUR/USD</span>
-              <span class="inst-row-sub">Euro / US Dollar</span>
-            </div>
-          </div>
-          <div class="inst-row-right">
-            <span class="inst-row-price" id="lp-EURUSD">—</span>
-            <span class="inst-row-star" id="st-EURUSD" onclick="toggleFav('EURUSD=X','st-EURUSD',event)">☆</span>
-          </div>
-        </div>
-        <div class="inst-expand" id="exp-EURUSD" style="display:none">
-          <div class="inst-expand-bar">
-            <div class="inst-expand-lots">
-              <div class="inst-expand-lot-label">Лоты</div>
-              <div class="inst-expand-lot-ctrl">
-                <button class="lot-btn" onclick="adjLot(-1)">−</button>
-                <input class="lot-input" id="lots" type="number" value="0.1" min="0.01" step="0.01" max="100">
-                <button class="lot-btn" onclick="adjLot(1)">+</button>
-              </div>
-            </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-EURUSD">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-EURUSD">—</div></button>
-          </div>
-          <div id="rwarn" class="inst-risk-warn"></div>
-        </div><div class="inst-row" id="row-GBPUSD" onclick="selAsset2('GBPUSD=X','GBP/USD','forex',this)">
-          <div class="inst-row-left">
-            <div class="inst-icon inst-icon-forex">fx</div>
-            <div class="inst-row-info">
-              <span class="inst-row-name">GBP/USD</span>
-              <span class="inst-row-sub">British Pound / Dollar</span>
-            </div>
-          </div>
-          <div class="inst-row-right">
-            <span class="inst-row-price" id="lp-GBPUSD">—</span>
-            <span class="inst-row-star" id="st-GBPUSD" onclick="toggleFav('GBPUSD=X','st-GBPUSD',event)">☆</span>
-          </div>
-        </div>
-        <div class="inst-expand" id="exp-GBPUSD" style="display:none">
-          <div class="inst-expand-bar">
-            <div class="inst-expand-lots">
-              <div class="inst-expand-lot-label">Лоты</div>
-              <div class="inst-expand-lot-ctrl">
-                <button class="lot-btn" onclick="adjLot(-1)">−</button>
-                <input class="lot-input" id="lots2" type="number" value="0.1" min="0.01" step="0.01" max="100">
-                <button class="lot-btn" onclick="adjLot(1)">+</button>
-              </div>
-            </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-GBPUSD">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-GBPUSD">—</div></button>
-          </div>
-          <div id="rwarn2" class="inst-risk-warn"></div>
-        </div><div class="inst-row" id="row-USDJPY" onclick="selAsset2('USDJPY=X','USD/JPY','forex',this)">
-          <div class="inst-row-left">
-            <div class="inst-icon inst-icon-forex">fx</div>
-            <div class="inst-row-info">
-              <span class="inst-row-name">USD/JPY</span>
-              <span class="inst-row-sub">Dollar / Japanese Yen</span>
-            </div>
-          </div>
-          <div class="inst-row-right">
-            <span class="inst-row-price" id="lp-USDJPY">—</span>
-            <span class="inst-row-star" id="st-USDJPY" onclick="toggleFav('USDJPY=X','st-USDJPY',event)">☆</span>
-          </div>
-        </div>
-        <div class="inst-expand" id="exp-USDJPY" style="display:none">
-          <div class="inst-expand-bar">
-            <div class="inst-expand-lots">
-              <div class="inst-expand-lot-label">Лоты</div>
-              <div class="inst-expand-lot-ctrl">
-                <button class="lot-btn" onclick="adjLot(-1)">−</button>
-                <input class="lot-input" id="lots3" type="number" value="0.1" min="0.01" step="0.01" max="100">
-                <button class="lot-btn" onclick="adjLot(1)">+</button>
-              </div>
-            </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-USDJPY">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-USDJPY">—</div></button>
-          </div>
-          <div id="rwarn3" class="inst-risk-warn"></div>
-        </div>
-      </div>
-      <div class="inst-list-group">
-        <div class="inst-list-group-label">Металлы</div>
-        <div class="inst-row" id="row-XAUUSD" onclick="selAsset2('GC=F','XAUUSD','metals',this)">
-          <div class="inst-row-left">
-            <div class="inst-icon inst-icon-metals">Au</div>
-            <div class="inst-row-info">
-              <span class="inst-row-name">XAUUSD</span>
-              <span class="inst-row-sub">Gold troy ounce</span>
-            </div>
-          </div>
-          <div class="inst-row-right">
-            <span class="inst-row-price" id="lp-XAUUSD">—</span>
-            <span class="inst-row-star" id="st-XAUUSD" onclick="toggleFav('GC=F','st-XAUUSD',event)">☆</span>
-          </div>
-        </div>
-        <div class="inst-expand" id="exp-XAUUSD" style="display:none">
-          <div class="inst-expand-bar">
-            <div class="inst-expand-lots">
-              <div class="inst-expand-lot-label">Лоты</div>
-              <div class="inst-expand-lot-ctrl">
-                <button class="lot-btn" onclick="adjLot(-1)">−</button>
-                <input class="lot-input" id="lots4" type="number" value="0.1" min="0.01" step="0.01" max="100">
-                <button class="lot-btn" onclick="adjLot(1)">+</button>
-              </div>
-            </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAUUSD">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAUUSD">—</div></button>
-          </div>
-          <div id="rwarn4" class="inst-risk-warn"></div>
-        </div><div class="inst-row" id="row-XAGUSD" onclick="selAsset2('SI=F','XAGUSD','metals',this)">
-          <div class="inst-row-left">
-            <div class="inst-icon inst-icon-metals">Ag</div>
-            <div class="inst-row-info">
-              <span class="inst-row-name">XAGUSD</span>
-              <span class="inst-row-sub">Silver troy ounce</span>
-            </div>
-          </div>
-          <div class="inst-row-right">
-            <span class="inst-row-price" id="lp-XAGUSD">—</span>
-            <span class="inst-row-star" id="st-XAGUSD" onclick="toggleFav('SI=F','st-XAGUSD',event)">☆</span>
-          </div>
-        </div>
-        <div class="inst-expand" id="exp-XAGUSD" style="display:none">
-          <div class="inst-expand-bar">
-            <div class="inst-expand-lots">
-              <div class="inst-expand-lot-label">Лоты</div>
-              <div class="inst-expand-lot-ctrl">
-                <button class="lot-btn" onclick="adjLot(-1)">−</button>
-                <input class="lot-input" id="lots5" type="number" value="0.1" min="0.01" step="0.01" max="100">
-                <button class="lot-btn" onclick="adjLot(1)">+</button>
-              </div>
-            </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAGUSD">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAGUSD">—</div></button>
-          </div>
-          <div id="rwarn5" class="inst-risk-warn"></div>
-        </div>
-      </div>
-      <div class="inst-list-group">
-        <div class="inst-list-group-label">Индексы</div>
-        <div class="inst-row" id="row-SP500" onclick="selAsset2('^GSPC','S\u0026P 500','indices',this)">
-          <div class="inst-row-left">
-            <div class="inst-icon inst-icon-indices">idx</div>
-            <div class="inst-row-info">
-              <span class="inst-row-name">S&amp;P 500</span>
-              <span class="inst-row-sub">US Large Cap</span>
-            </div>
-          </div>
-          <div class="inst-row-right">
-            <span class="inst-row-price" id="lp-SP500">—</span>
-            <span class="inst-row-star" id="st-SP500" onclick="toggleFav('^GSPC','st-SP500',event)">☆</span>
-          </div>
-        </div>
-        <div class="inst-expand" id="exp-SP500" style="display:none">
-          <div class="inst-expand-bar">
-            <div class="inst-expand-lots">
-              <div class="inst-expand-lot-label">Лоты</div>
-              <div class="inst-expand-lot-ctrl">
-                <button class="lot-btn" onclick="adjLot(-1)">−</button>
-                <input class="lot-input" id="lots6" type="number" value="0.1" min="0.01" step="0.01" max="100">
-                <button class="lot-btn" onclick="adjLot(1)">+</button>
-              </div>
-            </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-SP500">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-SP500">—</div></button>
-          </div>
-          <div id="rwarn6" class="inst-risk-warn"></div>
-        </div><div class="inst-row" id="row-NASDAQ" onclick="selAsset2('^IXIC','NASDAQ','indices',this)">
-          <div class="inst-row-left">
-            <div class="inst-icon inst-icon-indices">idx</div>
-            <div class="inst-row-info">
-              <span class="inst-row-name">NASDAQ</span>
-              <span class="inst-row-sub">US Tech Index</span>
-            </div>
-          </div>
-          <div class="inst-row-right">
-            <span class="inst-row-price" id="lp-NASDAQ">—</span>
-            <span class="inst-row-star" id="st-NASDAQ" onclick="toggleFav('^IXIC','st-NASDAQ',event)">☆</span>
-          </div>
-        </div>
-        <div class="inst-expand" id="exp-NASDAQ" style="display:none">
-          <div class="inst-expand-bar">
-            <div class="inst-expand-lots">
-              <div class="inst-expand-lot-label">Лоты</div>
-              <div class="inst-expand-lot-ctrl">
-                <button class="lot-btn" onclick="adjLot(-1)">−</button>
-                <input class="lot-input" id="lots7" type="number" value="0.1" min="0.01" step="0.01" max="100">
-                <button class="lot-btn" onclick="adjLot(1)">+</button>
-              </div>
-            </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-NASDAQ">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-NASDAQ">—</div></button>
-          </div>
-          <div id="rwarn7" class="inst-risk-warn"></div>
-        </div>
-      </div>
-      <div class="inst-list-group">
-        <div class="inst-list-group-label">Крипто</div>
-        <div class="inst-row" id="row-BTC" onclick="selAsset2('BTC-USD','BTC/USD','crypto',this)">
-          <div class="inst-row-left">
-            <div class="inst-icon inst-icon-crypto">₿</div>
-            <div class="inst-row-info">
-              <span class="inst-row-name">BTC/USD</span>
-              <span class="inst-row-sub">Bitcoin</span>
-            </div>
-          </div>
-          <div class="inst-row-right">
-            <span class="inst-row-price" id="lp-BTC">—</span>
-            <span class="inst-row-star" id="st-BTC" onclick="toggleFav('BTC-USD','st-BTC',event)">☆</span>
-          </div>
-        </div>
-        <div class="inst-expand" id="exp-BTC" style="display:none">
-          <div class="inst-expand-bar">
-            <div class="inst-expand-lots">
-              <div class="inst-expand-lot-label">Лоты</div>
-              <div class="inst-expand-lot-ctrl">
-                <button class="lot-btn" onclick="adjLot(-1)">−</button>
-                <input class="lot-input" id="lots8" type="number" value="0.1" min="0.01" step="0.01" max="100">
-                <button class="lot-btn" onclick="adjLot(1)">+</button>
-              </div>
-            </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-BTC">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-BTC">—</div></button>
-          </div>
-          <div id="rwarn8" class="inst-risk-warn"></div>
-        </div><div class="inst-row" id="row-ETH" onclick="selAsset2('ETH-USD','ETH/USD','crypto',this)">
-          <div class="inst-row-left">
-            <div class="inst-icon inst-icon-crypto">Ξ</div>
-            <div class="inst-row-info">
-              <span class="inst-row-name">ETH/USD</span>
-              <span class="inst-row-sub">Ethereum</span>
-            </div>
-          </div>
-          <div class="inst-row-right">
-            <span class="inst-row-price" id="lp-ETH">—</span>
-            <span class="inst-row-star" id="st-ETH" onclick="toggleFav('ETH-USD','st-ETH',event)">☆</span>
-          </div>
-        </div>
-        <div class="inst-expand" id="exp-ETH" style="display:none">
-          <div class="inst-expand-bar">
-            <div class="inst-expand-lots">
-              <div class="inst-expand-lot-label">Лоты</div>
-              <div class="inst-expand-lot-ctrl">
-                <button class="lot-btn" onclick="adjLot(-1)">−</button>
-                <input class="lot-input" id="lots9" type="number" value="0.1" min="0.01" step="0.01" max="100">
-                <button class="lot-btn" onclick="adjLot(1)">+</button>
-              </div>
-            </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-ETH">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-ETH">—</div></button>
-          </div>
-          <div id="rwarn9" class="inst-risk-warn"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="cprice" style="display:none"></div>
-  <div id="pchange" style="display:none"></div>
-</div>
+<div class="screen" id="s-trade"><div class="trade-screen-inner"><div class="inst-list-header"><span>Символ</span><span>Цена</span></div><div class="inst-list"><div class="inst-list-group"><div class="inst-list-group-label">Форекс</div><div class="inst-row" id="row-EURUSD" onclick="selAsset2('EURUSD=X','EUR/USD','forex',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-forex">fx</div><div class="inst-row-info"><span class="inst-row-name">EUR/USD</span><span class="inst-row-sub">Euro / US Dollar</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-EURUSD">—</span><span class="inst-row-star" id="st-EURUSD" onclick="toggleFav('EURUSD=X','st-EURUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-EURUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-EURUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-EURUSD">—</div></button></div><div id="rwarn" class="inst-risk-warn"></div></div><div class="inst-row" id="row-GBPUSD" onclick="selAsset2('GBPUSD=X','GBP/USD','forex',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-forex">fx</div><div class="inst-row-info"><span class="inst-row-name">GBP/USD</span><span class="inst-row-sub">British Pound</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-GBPUSD">—</span><span class="inst-row-star" id="st-GBPUSD" onclick="toggleFav('GBPUSD=X','st-GBPUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-GBPUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots2" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-GBPUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-GBPUSD">—</div></button></div><div id="rwarn2" class="inst-risk-warn"></div></div><div class="inst-row" id="row-USDJPY" onclick="selAsset2('USDJPY=X','USD/JPY','forex',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-forex">fx</div><div class="inst-row-info"><span class="inst-row-name">USD/JPY</span><span class="inst-row-sub">Dollar / Yen</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-USDJPY">—</span><span class="inst-row-star" id="st-USDJPY" onclick="toggleFav('USDJPY=X','st-USDJPY',event)">☆</span></div></div><div class="inst-expand" id="exp-USDJPY" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots3" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-USDJPY">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-USDJPY">—</div></button></div><div id="rwarn3" class="inst-risk-warn"></div></div></div><div class="inst-list-group"><div class="inst-list-group-label">Металлы</div><div class="inst-row" id="row-XAUUSD" onclick="selAsset2('GC=F','XAUUSD','metals',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-metals">Au</div><div class="inst-row-info"><span class="inst-row-name">XAUUSD</span><span class="inst-row-sub">Gold troy ounce</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-XAUUSD">—</span><span class="inst-row-star" id="st-XAUUSD" onclick="toggleFav('GC=F','st-XAUUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-XAUUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots4" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAUUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAUUSD">—</div></button></div><div id="rwarn4" class="inst-risk-warn"></div></div><div class="inst-row" id="row-XAGUSD" onclick="selAsset2('SI=F','XAGUSD','metals',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-metals">Ag</div><div class="inst-row-info"><span class="inst-row-name">XAGUSD</span><span class="inst-row-sub">Silver troy ounce</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-XAGUSD">—</span><span class="inst-row-star" id="st-XAGUSD" onclick="toggleFav('SI=F','st-XAGUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-XAGUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots5" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAGUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAGUSD">—</div></button></div><div id="rwarn5" class="inst-risk-warn"></div></div></div><div class="inst-list-group"><div class="inst-list-group-label">Индексы</div><div class="inst-row" id="row-SP500" onclick="selAsset2('^GSPC','S\u0026P 500','indices',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-indices">idx</div><div class="inst-row-info"><span class="inst-row-name">S&P 500</span><span class="inst-row-sub">US Large Cap</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-SP500">—</span><span class="inst-row-star" id="st-SP500" onclick="toggleFav('^GSPC','st-SP500',event)">☆</span></div></div><div class="inst-expand" id="exp-SP500" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots6" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-SP500">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-SP500">—</div></button></div><div id="rwarn6" class="inst-risk-warn"></div></div><div class="inst-row" id="row-NASDAQ" onclick="selAsset2('^IXIC','NASDAQ','indices',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-indices">idx</div><div class="inst-row-info"><span class="inst-row-name">NASDAQ</span><span class="inst-row-sub">US Tech Index</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-NASDAQ">—</span><span class="inst-row-star" id="st-NASDAQ" onclick="toggleFav('^IXIC','st-NASDAQ',event)">☆</span></div></div><div class="inst-expand" id="exp-NASDAQ" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots7" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-NASDAQ">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-NASDAQ">—</div></button></div><div id="rwarn7" class="inst-risk-warn"></div></div></div><div class="inst-list-group"><div class="inst-list-group-label">Крипто</div><div class="inst-row" id="row-BTC" onclick="selAsset2('BTC-USD','BTC/USD','crypto',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-crypto">₿</div><div class="inst-row-info"><span class="inst-row-name">BTC/USD</span><span class="inst-row-sub">Bitcoin</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-BTC">—</span><span class="inst-row-star" id="st-BTC" onclick="toggleFav('BTC-USD','st-BTC',event)">☆</span></div></div><div class="inst-expand" id="exp-BTC" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots8" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-BTC">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-BTC">—</div></button></div><div id="rwarn8" class="inst-risk-warn"></div></div><div class="inst-row" id="row-ETH" onclick="selAsset2('ETH-USD','ETH/USD','crypto',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-crypto">Ξ</div><div class="inst-row-info"><span class="inst-row-name">ETH/USD</span><span class="inst-row-sub">Ethereum</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-ETH">—</span><span class="inst-row-star" id="st-ETH" onclick="toggleFav('ETH-USD','st-ETH',event)">☆</span></div></div><div class="inst-expand" id="exp-ETH" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots9" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-ETH">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-ETH">—</div></button></div><div id="rwarn9" class="inst-risk-warn"></div></div></div></div></div><div id="cprice" style="display:none"></div><div id="pchange" style="display:none"></div></div>
 <div class="screen" id="s-hist">
   <div class="header"><div class="logo"><svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px"><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" fill="#4E35C6" opacity="0.3"/><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" stroke="#4E35C6" stroke-width="2"/><path d="M14 20L18 24L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       История
@@ -1346,108 +1024,14 @@ setInterval(() => {
     loadCurrentPrice();
   }
 
-  if (typeof _updateListPrices === "function") _updateListPrices();}
+  if (typeof _updateListPrices === "function") _updateListPrices();}, 30000);
 
-// ===== NEW TRADE SCREEN FUNCTIONS =====
-const _INST_MAP = {
-  'EURUSD=X': {row:'row-EURUSD',exp:'exp-EURUSD',lp:'lp-EURUSD',sp:'sp-EURUSD',bp:'bp-EURUSD'},
-  'GBPUSD=X': {row:'row-GBPUSD',exp:'exp-GBPUSD',lp:'lp-GBPUSD',sp:'sp-GBPUSD',bp:'bp-GBPUSD'},
-  'USDJPY=X': {row:'row-USDJPY',exp:'exp-USDJPY',lp:'lp-USDJPY',sp:'sp-USDJPY',bp:'bp-USDJPY'},
-  'GC=F':     {row:'row-XAUUSD',exp:'exp-XAUUSD',lp:'lp-XAUUSD',sp:'sp-XAUUSD',bp:'bp-XAUUSD'},
-  'SI=F':     {row:'row-XAGUSD',exp:'exp-XAGUSD',lp:'lp-XAGUSD',sp:'sp-XAGUSD',bp:'bp-XAGUSD'},
-  '^GSPC':    {row:'row-SP500', exp:'exp-SP500', lp:'lp-SP500', sp:'sp-SP500', bp:'bp-SP500'},
-  '^IXIC':    {row:'row-NASDAQ',exp:'exp-NASDAQ',lp:'lp-NASDAQ',sp:'sp-NASDAQ',bp:'bp-NASDAQ'},
-  'BTC-USD':  {row:'row-BTC',   exp:'exp-BTC',   lp:'lp-BTC',   sp:'sp-BTC',   bp:'bp-BTC'},
-  'ETH-USD':  {row:'row-ETH',   exp:'exp-ETH',   lp:'lp-ETH',   sp:'sp-ETH',   bp:'bp-ETH'}
-};
-let _activeInstKey2 = null;
-let _favs2 = [];
-try { _favs2 = JSON.parse(localStorage.getItem('yt_favs')||'[]'); } catch(e){}
+const _INST_MAP={'EURUSD=X':{row:'row-EURUSD',exp:'exp-EURUSD',lp:'lp-EURUSD',sp:'sp-EURUSD',bp:'bp-EURUSD'},'GBPUSD=X':{row:'row-GBPUSD',exp:'exp-GBPUSD',lp:'lp-GBPUSD',sp:'sp-GBPUSD',bp:'bp-GBPUSD'},'USDJPY=X':{row:'row-USDJPY',exp:'exp-USDJPY',lp:'lp-USDJPY',sp:'sp-USDJPY',bp:'bp-USDJPY'},'GC=F':{row:'row-XAUUSD',exp:'exp-XAUUSD',lp:'lp-XAUUSD',sp:'sp-XAUUSD',bp:'bp-XAUUSD'},'SI=F':{row:'row-XAGUSD',exp:'exp-XAGUSD',lp:'lp-XAGUSD',sp:'sp-XAGUSD',bp:'bp-XAGUSD'},'^GSPC':{row:'row-SP500',exp:'exp-SP500',lp:'lp-SP500',sp:'sp-SP500',bp:'bp-SP500'},'^IXIC':{row:'row-NASDAQ',exp:'exp-NASDAQ',lp:'lp-NASDAQ',sp:'sp-NASDAQ',bp:'bp-NASDAQ'},'BTC-USD':{row:'row-BTC',exp:'exp-BTC',lp:'lp-BTC',sp:'sp-BTC',bp:'bp-BTC'},'ETH-USD':{row:'row-ETH',exp:'exp-ETH',lp:'lp-ETH',sp:'sp-ETH',bp:'bp-ETH'}};
+let _activeKey2=null,_favs2=[];try{_favs2=JSON.parse(localStorage.getItem('yt_favs')||'[]');}catch(e){}
+function selAsset2(key,name,cat,rowEl){var ids=_INST_MAP[key];if(!ids)return;if(_activeKey2&&_activeKey2!==key){var pi=_INST_MAP[_activeKey2];if(pi){var pe=document.getElementById(pi.exp),pr=document.getElementById(pi.row);if(pe)pe.style.display='none';if(pr)pr.classList.remove('active');}}var expEl=document.getElementById(ids.exp),rowDiv=document.getElementById(ids.row);if(!expEl)return;var isOpen=expEl.style.display!=='none';if(isOpen){expEl.style.display='none';if(rowDiv)rowDiv.classList.remove('active');_activeKey2=null;}else{expEl.style.display='block';if(rowDiv)rowDiv.classList.add('active');_activeKey2=key;S.asset=key;S.assetName=name;var inst=INSTRUMENTS[key];if(inst){var data=S.prices[key];if(data&&data.price){var spread=inst.pip*2,sp=document.getElementById(ids.sp),bp=document.getElementById(ids.bp);if(sp)sp.textContent=(data.price-spread).toFixed(inst.dec);if(bp)bp.textContent=(data.price+spread).toFixed(inst.dec);}updRisk();}loadCurrentPrice();}}
+function toggleFav(key,starId,ev){if(ev){ev.stopPropagation();ev.preventDefault();}var star=document.getElementById(starId);if(!star)return;var idx=_favs2.indexOf(key);if(idx>=0){_favs2.splice(idx,1);star.classList.remove('fav');star.textContent='\u2606';}else{_favs2.push(key);star.classList.add('fav');star.textContent='\u2605';}try{localStorage.setItem('yt_favs',JSON.stringify(_favs2));}catch(e){}}
+function _updateListPrices(){Object.entries(INSTRUMENTS).forEach(function(kv){var key=kv[0],inst=kv[1],data=S.prices[key];if(!data||!data.price)return;var ids=_INST_MAP[key];if(!ids)return;var lpEl=document.getElementById(ids.lp);if(lpEl){var prev=parseFloat(lpEl.dataset.prev)||0,p=data.price;lpEl.textContent=p.toFixed(inst.dec);if(prev&&p>prev){lpEl.classList.add('up');lpEl.classList.remove('dn');}else if(prev&&p<prev){lpEl.classList.add('dn');lpEl.classList.remove('up');}lpEl.dataset.prev=p;}if(_activeKey2===key){var spread=inst.pip*2,sp=document.getElementById(ids.sp),bp=document.getElementById(ids.bp);if(sp)sp.textContent=(data.price-spread).toFixed(inst.dec);if(bp)bp.textContent=(data.price+spread).toFixed(inst.dec);}});}
 
-function selAsset2(key, name, cat, rowEl) {
-  const ids = _INST_MAP[key];
-  if (!ids) return;
-  if (_activeInstKey2 && _activeInstKey2 !== key) {
-    const pi = _INST_MAP[_activeInstKey2];
-    if (pi) {
-      const pe = document.getElementById(pi.exp);
-      const pr = document.getElementById(pi.row);
-      if (pe) pe.style.display = 'none';
-      if (pr) pr.classList.remove('active');
-    }
-  }
-  const expEl = document.getElementById(ids.exp);
-  const rowDiv = document.getElementById(ids.row);
-  if (!expEl) return;
-  const isOpen = expEl.style.display !== 'none';
-  if (isOpen) {
-    expEl.style.display = 'none';
-    if (rowDiv) rowDiv.classList.remove('active');
-    _activeInstKey2 = null;
-  } else {
-    expEl.style.display = 'block';
-    if (rowDiv) rowDiv.classList.add('active');
-    _activeInstKey2 = key;
-    S.asset = key;
-    S.assetName = name;
-    const inst = INSTRUMENTS[key];
-    if (inst) {
-      const data = S.prices[key];
-      if (data && data.price) {
-        const spread = inst.pip * 2;
-        const sp = document.getElementById(ids.sp);
-        const bp = document.getElementById(ids.bp);
-        if (sp) sp.textContent = (data.price - spread).toFixed(inst.dec);
-        if (bp) bp.textContent = (data.price + spread).toFixed(inst.dec);
-      }
-      updRisk();
-    }
-    loadCurrentPrice();
-  }
-}
-
-function toggleFav(key, starId, ev) {
-  if (ev) { ev.stopPropagation(); ev.preventDefault(); }
-  const star = document.getElementById(starId);
-  if (!star) return;
-  const idx = _favs2.indexOf(key);
-  if (idx >= 0) {
-    _favs2.splice(idx, 1);
-    star.classList.remove('fav');
-    star.textContent = '\u2606';
-  } else {
-    _favs2.push(key);
-    star.classList.add('fav');
-    star.textContent = '\u2605';
-  }
-  try { localStorage.setItem('yt_favs', JSON.stringify(_favs2)); } catch(e) {}
-}
-
-function _updateListPrices() {
-  Object.entries(INSTRUMENTS).forEach(function([key, inst]) {
-    const data = S.prices[key];
-    if (!data || !data.price) return;
-    const ids = _INST_MAP[key];
-    if (!ids) return;
-    const lpEl = document.getElementById(ids.lp);
-    if (lpEl) {
-      const prev = parseFloat(lpEl.dataset.prev) || 0;
-      const p = data.price;
-      lpEl.textContent = p.toFixed(inst.dec);
-      if (prev && p > prev) { lpEl.classList.add('up'); lpEl.classList.remove('dn'); }
-      else if (prev && p < prev) { lpEl.classList.add('dn'); lpEl.classList.remove('up'); }
-      lpEl.dataset.prev = p;
-    }
-    if (_activeInstKey2 === key) {
-      const spread = inst.pip * 2;
-      const sp = document.getElementById(ids.sp);
-      const bp = document.getElementById(ids.bp);
-      if (sp) sp.textContent = (data.price - spread).toFixed(inst.dec);
-      if (bp) bp.textContent = (data.price + spread).toFixed(inst.dec);
-    }
-  });
-}
-, 30000);
 
 // ============ ASSET SELECTION ============
 function selAsset(btn, sym, name) {

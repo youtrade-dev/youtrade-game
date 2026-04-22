@@ -981,7 +981,7 @@ async function loadCurrentPrice() {
   const inst = INSTRUMENTS[sym];
   var _cpe = document.getElementById('cprice'); if(_cpe) { document.getElementById('cprice').innerHTML = '<span class="spin"></span>загрузка...'; }
   var _pc4=document.getElementById('pchange'); if(_pc4) _pc4.textContent = '—';
-  document.getElementById('trade-header-price').textContent = '—';
+  var _thp=document.getElementById('trade-header-price');if(_thp)_thp.textContent='—';
   
   const data = await fetchPrice(sym);
   if(data) {

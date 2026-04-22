@@ -883,9 +883,9 @@ nav{
       </div>
 
       <!-- Buy button -->
-      <a class="btn-buy-chal" href="https://prop.youtrade.kz/challenge-purchase/" target="_blank" rel="noopener">
-        🚀 Купить Challenge на сайте
-      </a>
+      <button class="btn-buy-chal" onclick="buyChal()">
+        💬 Купить через WhatsApp
+      </button>
 
       <div class="chal-footer-note">
         Мгновенный доступ · 24/7 поддержка · Выплата 80% прибыли
@@ -1430,6 +1430,17 @@ function chalRender() {
 
 function initChallenge() {
   chalRender();
+}
+
+function buyChal() {
+  var planLabel = _chalData[_chalPlan] ? _chalData[_chalPlan].label : _chalPlan;
+  var price = (_chalData[_chalPlan] && _chalData[_chalPlan].prices && _chalData[_chalPlan].prices[_chalBal])
+    ? _chalData[_chalPlan].prices[_chalBal]
+    : '';
+  var priceStr = price ? ' (' + price + ')' : '';
+  var msg = 'Привет! Я из YOUTRADE GAME и хочу приобрести Challenge ' + planLabel + ' — ' + _chalBal + priceStr + '. Как оформить?';
+  var url = 'https://wa.me/77081906251?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
 }
 
 

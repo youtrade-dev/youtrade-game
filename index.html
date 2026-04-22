@@ -49,7 +49,7 @@ body{
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
 .screen{display:none;flex-direction:column;flex:1;overflow:hidden}
 .screen.active{display:flex}
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:70px}
 .content::-webkit-scrollbar{width:3px}
 .content::-webkit-scrollbar-track{background:transparent}
 .content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
@@ -367,9 +367,14 @@ nav{
   background:var(--bg2);
   border-top:1px solid var(--border);
   display:flex;
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  width:100%;
   padding:4px 8px;
   padding-bottom:calc(4px + env(safe-area-inset-bottom));
-  flex-shrink:0;
+  z-index:100;
   gap:2px;
 }
 .nb{

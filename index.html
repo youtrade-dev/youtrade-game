@@ -1438,7 +1438,9 @@ function buyChal() {
     ? _chalData[_chalPlan].prices[_chalBal]
     : '';
   var priceStr = price ? ' (' + price + ')' : '';
-  var msg = 'Привет! Хочу купить Challenge ' + planLabel + ' ' + _chalBal + priceStr + ' — как это сделать?';
+  var msg = _chalPlan === 'instant'
+    ? 'Привет! Хочу купить Инстант ' + _chalBal + priceStr + ' — как это сделать?'
+    : 'Привет! Хочу купить Challenge ' + planLabel + ' ' + _chalBal + priceStr + ' — как это сделать?';
   var url = 'https://wa.me/77081906251?text=' + encodeURIComponent(msg);
   window.open(url, '_blank');
 }

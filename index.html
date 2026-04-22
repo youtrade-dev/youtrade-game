@@ -315,7 +315,7 @@ body{
   position:relative;
 }
 .chal-bal-btn.active{border-color:var(--primary);background:rgba(78,53,198,0.15);color:var(--primary)}
-.chal-bal-btn.best::after{content:'â';position:absolute;top:-6px;right:4px;font-size:10px;color:#f59e0b;background:var(--bg);padding:0 2px}
+.chal-bal-btn.best::after{content:'★';position:absolute;top:-6px;right:4px;font-size:10px;color:#f59e0b;background:var(--bg);padding:0 2px}
 /* Conditions table */
 .chal-cond-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .chal-cond-header{display:grid;gap:0;border-bottom:1px solid var(--border)}
@@ -566,7 +566,6 @@ nav{
 .inst-row-price.dn{color:var(--red)}
 .inst-row-star{font-size:18px;color:var(--text3);cursor:pointer;padding:2px;line-height:1;transition:color .15s}
 .inst-row-star.fav{color:#F59E0B}
-/* Expanded inline trade panel */
 .inst-expand{
   background:var(--bg2);
   border-bottom:2px solid var(--primary);
@@ -660,38 +659,38 @@ nav{
     <!-- INFO STRIP: Phase / Balance / Date -->
     <div class="dash-info-strip">
       <div class="dis-item">
-        <div class="dis-label">ÐÐ°ÑÐ°Ð»ÑÐ½ÑÐ¹ Ð±Ð°Ð»Ð°Ð½Ñ</div>
+        <div class="dis-label">Начальный баланс</div>
         <div class="dis-val" id="dis-startbal">$10 000.00</div>
       </div>
       <div class="dis-divider"></div>
       <div class="dis-item">
-        <div class="dis-label">Ð¢ÐµÐºÑÑÐ°Ñ ÑÐ°Ð·Ð°</div>
+        <div class="dis-label">Текущая фаза</div>
         <div class="dis-val accent">Phase 1</div>
       </div>
       <div class="dis-divider"></div>
       <div class="dis-item">
-        <div class="dis-label">Ð¡Ð»ÐµÐ´ÑÑÑÐ°Ñ</div>
+        <div class="dis-label">Следующая</div>
         <div class="dis-val">Funded</div>
       </div>
     </div>
 
     <!-- BALANCE CARD -->
     <div class="balance-card">
-      <div class="bal-label">ÐÐ°Ð»Ð°Ð½Ñ</div>
+      <div class="bal-label">Баланс</div>
       <div class="bal-amount" id="bal">$10,000.00</div>
-      <div class="bal-sub" id="bal-sub" style="color:var(--green)">â² +0.00$ (+0.00%) Ð²ÑÐµÐ³Ð¾</div>
+      <div class="bal-sub" id="bal-sub" style="color:var(--green)">▲ +0.00$ (+0.00%) всего</div>
     </div>
 
     <!-- TRADING GOALS -->
-    <div class="dash-section-title">Ð¦ÐµÐ»Ð¸ ÑÐ¾ÑÐ³Ð¾Ð²Ð»Ð¸</div>
+    <div class="dash-section-title">Цели торговли</div>
     <div class="dash-goals">
 
       <div class="goal-row" id="goal-profit">
         <div class="goal-top">
           <div class="goal-left">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#4E35C6" stroke-width="2"/><path d="M12 8v4l3 3" stroke="#4E35C6" stroke-width="2" stroke-linecap="round"/></svg>
-            <span class="goal-name">Ð¦ÐµÐ»ÐµÐ²Ð¾Ð¹ Ð¿ÑÐ¾ÑÐ¸Ñ</span>
-            <span class="goal-status working" id="gs-profit">Ð ÑÐ°Ð±Ð¾ÑÐµ</span>
+            <span class="goal-name">Целевой профит</span>
+            <span class="goal-status working" id="gs-profit">В работе</span>
           </div>
           <span class="goal-val" id="gv-profit">$0 / $800</span>
         </div>
@@ -703,10 +702,10 @@ nav{
         <div class="goal-top">
           <div class="goal-left">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#4E35C6" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="#4E35C6" stroke-width="2" stroke-linecap="round"/></svg>
-            <span class="goal-name">Ð¢Ð¾ÑÐ³Ð¾Ð²ÑÐµ Ð´Ð½Ð¸</span>
-            <span class="goal-status working" id="gs-days">Ð ÑÐ°Ð±Ð¾ÑÐµ</span>
+            <span class="goal-name">Торговые дни</span>
+            <span class="goal-status working" id="gs-days">В работе</span>
           </div>
-          <span class="goal-val" id="gv-days">0 / 3 Ð´Ð½ÐµÐ¹</span>
+          <span class="goal-val" id="gv-days">0 / 3 дней</span>
         </div>
         <div class="goal-bar-wrap"><div class="goal-bar-fill green" id="gb-days" style="width:0%"></div></div>
         <div class="goal-pct" id="gp-days">0%</div>
@@ -716,8 +715,8 @@ nav{
         <div class="goal-top">
           <div class="goal-left">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#10B981" stroke-width="2"/><path d="M12 8v5" stroke="#10B981" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#10B981"/></svg>
-            <span class="goal-name">ÐÐ°ÐºÑ. Ð´Ð½ÐµÐ²Ð½Ð¾Ð¹ ÑÐ±ÑÑÐ¾Ðº</span>
-            <span class="goal-status passed" id="gs-dloss">ÐÑÐ¾Ð¹Ð´ÐµÐ½Ð¾</span>
+            <span class="goal-name">Макс. дневной убыток</span>
+            <span class="goal-status passed" id="gs-dloss">Пройдено</span>
           </div>
           <span class="goal-val red" id="gv-dloss">$0 / $500</span>
         </div>
@@ -729,8 +728,8 @@ nav{
         <div class="goal-top">
           <div class="goal-left">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#10B981" stroke-width="2"/><path d="M8 21h8M12 17v4" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
-            <span class="goal-name">ÐÐ°ÐºÑÐ¸Ð¼Ð°Ð»ÑÐ½ÑÐ¹ ÑÐ±ÑÑÐ¾Ðº</span>
-            <span class="goal-status passed" id="gs-maxdd">ÐÑÐ¾Ð¹Ð´ÐµÐ½Ð¾</span>
+            <span class="goal-name">Максимальный убыток</span>
+            <span class="goal-status passed" id="gs-maxdd">Пройдено</span>
           </div>
           <span class="goal-val red" id="gv-maxdd">$0 / $1000</span>
         </div>
@@ -741,10 +740,10 @@ nav{
     </div>
 
     <!-- DAILY LIMIT -->
-    <div class="dash-section-title" style="margin-top:16px">ÐÐ½ÐµÐ²Ð½Ð¾Ð¹ Ð»Ð¸Ð¼Ð¸Ñ ÑÐ±ÑÑÐºÐ°</div>
+    <div class="dash-section-title" style="margin-top:16px">Дневной лимит убытка</div>
     <div class="dash-limit-box">
       <div class="dlim-row main">
-        <span class="dlim-label">ÐÑÑÐ°Ð»Ð¾ÑÑ:</span>
+        <span class="dlim-label">Осталось:</span>
         <span class="dlim-val green" id="dlim-left">$500.00</span>
       </div>
       <div class="dlim-bar-wrap">
@@ -752,66 +751,66 @@ nav{
         <span class="dlim-pct" id="dlim-pct">100%</span>
       </div>
       <div class="dlim-row">
-        <span class="dlim-label">ÐÐ°ÐºÑ. Ð´Ð½ÐµÐ²Ð½Ð¾Ð¹ ÑÐ±ÑÑÐ¾Ðº:</span>
+        <span class="dlim-label">Макс. дневной убыток:</span>
         <span class="dlim-val">$500.00</span>
       </div>
       <div class="dlim-row">
-        <span class="dlim-label">ÐÐ°Ñ. Ð±Ð°Ð»Ð°Ð½Ñ Ð·Ð° ÑÐµÐ³Ð¾Ð´Ð½Ñ:</span>
+        <span class="dlim-label">Нач. баланс за сегодня:</span>
         <span class="dlim-val" id="dlim-startday">$10 000.00</span>
       </div>
       <div class="dlim-row">
-        <span class="dlim-label">ÐÐ¾ÑÐ¾Ð³Ð¾Ð²ÑÐ¹ Ð»Ð¸Ð¼Ð¸Ñ:</span>
+        <span class="dlim-label">Пороговый лимит:</span>
         <span class="dlim-val" id="dlim-thresh">$9 500.00</span>
       </div>
     </div>
 
     <!-- PERFORMANCE -->
-    <div class="dash-section-title" style="margin-top:16px">ÐÑÐ¾Ð¸Ð·Ð²Ð¾Ð´Ð¸ÑÐµÐ»ÑÐ½Ð¾ÑÑÑ</div>
+    <div class="dash-section-title" style="margin-top:16px">Производительность</div>
     <div class="dash-perf-box">
       <div class="perf-row">
         <div class="perf-left">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="var(--text3)" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="var(--text3)" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="var(--text3)" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="var(--text3)" stroke-width="2"/></svg>
-          <span>ÐÐ¾Ð»Ð¸ÑÐµÑÑÐ²Ð¾ ÑÐ´ÐµÐ»Ð¾Ðº</span>
+          <span>Количество сделок</span>
         </div>
         <span class="perf-val" id="pf-cnt">0</span>
       </div>
       <div class="perf-row">
         <div class="perf-left">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 110 20A10 10 0 0112 2z" stroke="var(--text3)" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="var(--text3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>ÐÑÐ¾ÑÐµÐ½Ñ Ð²ÑÐ¸Ð³ÑÑÑÐ½ÑÑ</span>
+          <span>Процент выигрышных</span>
         </div>
         <span class="perf-val green" id="pf-win">0%</span>
       </div>
       <div class="perf-row">
         <div class="perf-left">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 17l4-8 4 4 4-6 4 4" stroke="var(--text3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Ð¡ÑÐµÐ´Ð½ÑÑ Ð¿ÑÐ¸Ð±ÑÐ»Ñ</span>
+          <span>Средняя прибыль</span>
         </div>
         <span class="perf-val green" id="pf-avgwin">$0</span>
       </div>
       <div class="perf-row">
         <div class="perf-left">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 7l4 8 4-4 4 6 4-4" stroke="var(--text3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Ð¡ÑÐµÐ´Ð½Ð¸Ð¹ ÑÐ±ÑÑÐ¾Ðº</span>
+          <span>Средний убыток</span>
         </div>
         <span class="perf-val red" id="pf-avgloss">$0</span>
       </div>
       <div class="perf-row">
         <div class="perf-left">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="var(--text3)" stroke-width="2"/></svg>
-          <span>ÐÐ½. P&amp;L</span>
+          <span>Дн. P&amp;L</span>
         </div>
         <span class="perf-val" id="pf-dpnl">$0.00</span>
       </div>
     </div>
 
     <!-- OPEN POSITIONS -->
-    <div class="dash-section-title" style="margin-top:16px">ÐÑÐºÑÑÑÑÐµ Ð¿Ð¾Ð·Ð¸ÑÐ¸Ð¸</div>
+    <div class="dash-section-title" style="margin-top:16px">Открытые позиции</div>
     <div id="open-positions-dash" style="margin:0 12px 12px">
-      <div class="empty-state" style="padding:16px">ÐÐµÑ Ð¾ÑÐºÑÑÑÑÑ Ð¿Ð¾Ð·Ð¸ÑÐ¸Ð¹<br><small style="color:var(--text3)">ÐÐµÑÐµÐ¹Ð´Ð¸ Ð² Ð¢Ð¾ÑÐ³Ð¾Ð²Ð»Ñ ÑÑÐ¾Ð±Ñ Ð¾ÑÐºÑÑÑÑ ÑÐ´ÐµÐ»ÐºÑ</small></div>
+      <div class="empty-state" style="padding:16px">Нет открытых позиций<br><small style="color:var(--text3)">Перейди в Торговля чтобы открыть сделку</small></div>
     </div>
 
-    <button class="reset-btn" onclick="resetAccount()">Ð¡Ð±ÑÐ¾ÑÐ¸ÑÑ ÑÑÑÑ</button>
+    <button class="reset-btn" onclick="resetAccount()">Сбросить счёт</button>
   </div>
 </div>
 
@@ -819,8 +818,8 @@ nav{
 <div class="screen" id="s-trade">
   <div class="trade-screen-inner">
     <div class="inst-list-header">
-      <span class="inst-col-sym">Символ</span>
-      <span class="inst-col-price">Цена</span>
+      <span>Символ</span>
+      <span>Цена</span>
     </div>
     <div class="inst-list">
       <div class="inst-list-group">
@@ -848,17 +847,16 @@ nav{
                 <button class="lot-btn" onclick="adjLot(1)">+</button>
               </div>
             </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">ПРОДАТЬ</div><div class="inst-btn-price" id="sp-EURUSD">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">КУПИТЬ</div><div class="inst-btn-price" id="bp-EURUSD">—</div></button>
+            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-EURUSD">—</div></button>
+            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-EURUSD">—</div></button>
           </div>
           <div id="rwarn" class="inst-risk-warn"></div>
-        </div>
-        <div class="inst-row" id="row-GBPUSD" onclick="selAsset2('GBPUSD=X','GBP/USD','forex',this)">
+        </div><div class="inst-row" id="row-GBPUSD" onclick="selAsset2('GBPUSD=X','GBP/USD','forex',this)">
           <div class="inst-row-left">
             <div class="inst-icon inst-icon-forex">fx</div>
             <div class="inst-row-info">
               <span class="inst-row-name">GBP/USD</span>
-              <span class="inst-row-sub">British Pound / US Dollar</span>
+              <span class="inst-row-sub">British Pound / Dollar</span>
             </div>
           </div>
           <div class="inst-row-right">
@@ -876,16 +874,16 @@ nav{
                 <button class="lot-btn" onclick="adjLot(1)">+</button>
               </div>
             </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">ПРОДАТЬ</div><div class="inst-btn-price" id="sp-GBPUSD">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">КУПИТЬ</div><div class="inst-btn-price" id="bp-GBPUSD">—</div></button>
+            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-GBPUSD">—</div></button>
+            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-GBPUSD">—</div></button>
           </div>
-        </div>
-        <div class="inst-row" id="row-USDJPY" onclick="selAsset2('USDJPY=X','USD/JPY','forex',this)">
+          <div id="rwarn2" class="inst-risk-warn"></div>
+        </div><div class="inst-row" id="row-USDJPY" onclick="selAsset2('USDJPY=X','USD/JPY','forex',this)">
           <div class="inst-row-left">
             <div class="inst-icon inst-icon-forex">fx</div>
             <div class="inst-row-info">
               <span class="inst-row-name">USD/JPY</span>
-              <span class="inst-row-sub">US Dollar / Japanese Yen</span>
+              <span class="inst-row-sub">Dollar / Japanese Yen</span>
             </div>
           </div>
           <div class="inst-row-right">
@@ -903,9 +901,10 @@ nav{
                 <button class="lot-btn" onclick="adjLot(1)">+</button>
               </div>
             </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">ПРОДАТЬ</div><div class="inst-btn-price" id="sp-USDJPY">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">КУПИТЬ</div><div class="inst-btn-price" id="bp-USDJPY">—</div></button>
+            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-USDJPY">—</div></button>
+            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-USDJPY">—</div></button>
           </div>
+          <div id="rwarn3" class="inst-risk-warn"></div>
         </div>
       </div>
       <div class="inst-list-group">
@@ -933,11 +932,11 @@ nav{
                 <button class="lot-btn" onclick="adjLot(1)">+</button>
               </div>
             </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">ПРОДАТЬ</div><div class="inst-btn-price" id="sp-XAUUSD">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">КУПИТЬ</div><div class="inst-btn-price" id="bp-XAUUSD">—</div></button>
+            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAUUSD">—</div></button>
+            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAUUSD">—</div></button>
           </div>
-        </div>
-        <div class="inst-row" id="row-XAGUSD" onclick="selAsset2('SI=F','XAGUSD','metals',this)">
+          <div id="rwarn4" class="inst-risk-warn"></div>
+        </div><div class="inst-row" id="row-XAGUSD" onclick="selAsset2('SI=F','XAGUSD','metals',this)">
           <div class="inst-row-left">
             <div class="inst-icon inst-icon-metals">Ag</div>
             <div class="inst-row-info">
@@ -960,19 +959,20 @@ nav{
                 <button class="lot-btn" onclick="adjLot(1)">+</button>
               </div>
             </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">ПРОДАТЬ</div><div class="inst-btn-price" id="sp-XAGUSD">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">КУПИТЬ</div><div class="inst-btn-price" id="bp-XAGUSD">—</div></button>
+            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAGUSD">—</div></button>
+            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAGUSD">—</div></button>
           </div>
+          <div id="rwarn5" class="inst-risk-warn"></div>
         </div>
       </div>
       <div class="inst-list-group">
         <div class="inst-list-group-label">Индексы</div>
-        <div class="inst-row" id="row-SP500" onclick="selAsset2('^GSPC','S&amp;P 500','indices',this)">
+        <div class="inst-row" id="row-SP500" onclick="selAsset2('^GSPC','S\u0026P 500','indices',this)">
           <div class="inst-row-left">
             <div class="inst-icon inst-icon-indices">idx</div>
             <div class="inst-row-info">
               <span class="inst-row-name">S&amp;P 500</span>
-              <span class="inst-row-sub">US Large Cap Index</span>
+              <span class="inst-row-sub">US Large Cap</span>
             </div>
           </div>
           <div class="inst-row-right">
@@ -990,11 +990,11 @@ nav{
                 <button class="lot-btn" onclick="adjLot(1)">+</button>
               </div>
             </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">ПРОДАТЬ</div><div class="inst-btn-price" id="sp-SP500">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">КУПИТЬ</div><div class="inst-btn-price" id="bp-SP500">—</div></button>
+            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-SP500">—</div></button>
+            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-SP500">—</div></button>
           </div>
-        </div>
-        <div class="inst-row" id="row-NASDAQ" onclick="selAsset2('^IXIC','NASDAQ','indices',this)">
+          <div id="rwarn6" class="inst-risk-warn"></div>
+        </div><div class="inst-row" id="row-NASDAQ" onclick="selAsset2('^IXIC','NASDAQ','indices',this)">
           <div class="inst-row-left">
             <div class="inst-icon inst-icon-indices">idx</div>
             <div class="inst-row-info">
@@ -1017,9 +1017,10 @@ nav{
                 <button class="lot-btn" onclick="adjLot(1)">+</button>
               </div>
             </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">ПРОДАТЬ</div><div class="inst-btn-price" id="sp-NASDAQ">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">КУПИТЬ</div><div class="inst-btn-price" id="bp-NASDAQ">—</div></button>
+            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-NASDAQ">—</div></button>
+            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-NASDAQ">—</div></button>
           </div>
+          <div id="rwarn7" class="inst-risk-warn"></div>
         </div>
       </div>
       <div class="inst-list-group">
@@ -1047,11 +1048,11 @@ nav{
                 <button class="lot-btn" onclick="adjLot(1)">+</button>
               </div>
             </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">ПРОДАТЬ</div><div class="inst-btn-price" id="sp-BTC">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">КУПИТЬ</div><div class="inst-btn-price" id="bp-BTC">—</div></button>
+            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-BTC">—</div></button>
+            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-BTC">—</div></button>
           </div>
-        </div>
-        <div class="inst-row" id="row-ETH" onclick="selAsset2('ETH-USD','ETH/USD','crypto',this)">
+          <div id="rwarn8" class="inst-risk-warn"></div>
+        </div><div class="inst-row" id="row-ETH" onclick="selAsset2('ETH-USD','ETH/USD','crypto',this)">
           <div class="inst-row-left">
             <div class="inst-icon inst-icon-crypto">Ξ</div>
             <div class="inst-row-info">
@@ -1074,9 +1075,10 @@ nav{
                 <button class="lot-btn" onclick="adjLot(1)">+</button>
               </div>
             </div>
-            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">ПРОДАТЬ</div><div class="inst-btn-price" id="sp-ETH">—</div></button>
-            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">КУПИТЬ</div><div class="inst-btn-price" id="bp-ETH">—</div></button>
+            <button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-ETH">—</div></button>
+            <button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-ETH">—</div></button>
           </div>
+          <div id="rwarn9" class="inst-risk-warn"></div>
         </div>
       </div>
     </div>
@@ -1086,18 +1088,18 @@ nav{
 </div>
 <div class="screen" id="s-hist">
   <div class="header"><div class="logo"><svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px"><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" fill="#4E35C6" opacity="0.3"/><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" stroke="#4E35C6" stroke-width="2"/><path d="M14 20L18 24L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      ÐÑÑÐ¾ÑÐ¸Ñ
+      История
     </div></div>
   <div style="padding:12px 12px 0;flex-shrink:0">
     <div class="filter-tabs">
-      <div class="ft active" onclick="setHistFilter('open',this)">ÐÑÐºÑÑÑÑÐµ</div>
-      <div class="ft" onclick="setHistFilter('closed',this)">ÐÐ°ÐºÑÑÑÑÐµ</div>
-      <div class="ft" onclick="setHistFilter('all',this)">ÐÑÐµ</div>
+      <div class="ft active" onclick="setHistFilter('open',this)">Открытые</div>
+      <div class="ft" onclick="setHistFilter('closed',this)">Закрытые</div>
+      <div class="ft" onclick="setHistFilter('all',this)">Все</div>
     </div>
   </div>
   <div class="content">
     <div class="history-wrap" id="history-list">
-      <div class="empty-state">ÐÐµÑ ÑÐ´ÐµÐ»Ð¾Ðº</div>
+      <div class="empty-state">Нет сделок</div>
     </div>
   </div>
 </div>
@@ -1105,12 +1107,12 @@ nav{
 <!-- LEADERBOARD -->
 <div class="screen" id="s-lead">
   <div class="header"><div class="logo"><svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px"><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" fill="#4E35C6" opacity="0.3"/><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" stroke="#4E35C6" stroke-width="2"/><path d="M14 20L18 24L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Ð¢Ð¾Ð¿
+      Топ
     </div></div>
   <div class="content">
       <div class="my-rank">
-        <div><div class="sl">Ð¢Ð²Ð¾Ñ Ð¿Ð¾Ð·Ð¸ÑÐ¸Ñ</div><div class="sv" id="my-rank-pos">â</div></div>
-        <div style="text-align:right"><div class="sl">ÐÐ¾ÑÐ¾Ð´Ð½Ð¾ÑÑÑ</div><div class="sv g" id="my-pct-lb" style="font-size:18px">+0.00%</div></div>
+        <div><div class="sl">Твоя позиция</div><div class="sv" id="my-rank-pos">—</div></div>
+        <div style="text-align:right"><div class="sl">Доходность</div><div class="sv g" id="my-pct-lb" style="font-size:18px">+0.00%</div></div>
       </div>
       <div class="lb-meta" id="lb-meta" style="font-size:12px;color:var(--text2);margin:8px 0 4px;text-align:center"></div>
       <div id="leader-list"></div>
@@ -1122,7 +1124,7 @@ nav{
   <div class="header">
     <div class="logo">
       <svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px"><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" fill="#4E35C6" opacity="0.3"/><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" stroke="#4E35C6" stroke-width="2"/><path d="M14 20L18 24L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Ð¢Ð°ÑÐ¸ÑÑ
+      Тарифы
     </div>
   </div>
   <div class="content">
@@ -1131,27 +1133,27 @@ nav{
       <!-- Hero -->
       <div class="chal-hero">
         <div class="chal-hero-title">YouTrade Prop Challenge</div>
-        <div class="chal-hero-sub">ÐÑÐ¾Ð¹Ð´Ð¸ Ð¸ÑÐ¿ÑÑÐ°Ð½Ð¸Ðµ â Ð¿Ð¾Ð»ÑÑÐ¸ ÑÐµÐ°Ð»ÑÐ½ÑÐ¹ Ð¿ÑÐ¾Ð¿-ÑÑÑÑ Ð´Ð¾ $200,000</div>
+        <div class="chal-hero-sub">Пройди испытание — получи реальный проп-счёт до $200,000</div>
         <div class="chal-hero-badges">
-          <span class="chal-badge green">80% Ð¿ÑÐ¸Ð±ÑÐ»Ð¸</span>
-          <span class="chal-badge">ÐÐµÐ· Ð¾Ð³ÑÐ°Ð½Ð¸ÑÐµÐ½Ð¸Ð¹ Ð¿Ð¾ Ð²ÑÐµÐ¼ÐµÐ½Ð¸</span>
-          <span class="chal-badge">ÐÐ³Ð½Ð¾Ð²ÐµÐ½Ð½ÑÐ¹ Ð´Ð¾ÑÑÑÐ¿</span>
+          <span class="chal-badge green">80% прибыли</span>
+          <span class="chal-badge">Без ограничений по времени</span>
+          <span class="chal-badge">Мгновенный доступ</span>
         </div>
       </div>
 
       <!-- Plan type tabs -->
       <div>
-        <div class="chal-section-title">Ð¢Ð¸Ð¿ Ð¿ÑÐ¾Ð³ÑÐ°Ð¼Ð¼Ñ</div>
+        <div class="chal-section-title">Тип программы</div>
         <div class="chal-plan-tabs">
-          <button class="chal-plan-tab active" onclick="chalSetPlan('1step',this)">1 ÑÑÐ°Ð¿</button>
-          <button class="chal-plan-tab" onclick="chalSetPlan('2step',this)">2 ÑÑÐ°Ð¿Ð°</button>
-          <button class="chal-plan-tab" onclick="chalSetPlan('instant',this)">ÐÐ½ÑÑÐ°Ð½Ñ</button>
+          <button class="chal-plan-tab active" onclick="chalSetPlan('1step',this)">1 этап</button>
+          <button class="chal-plan-tab" onclick="chalSetPlan('2step',this)">2 этапа</button>
+          <button class="chal-plan-tab" onclick="chalSetPlan('instant',this)">Инстант</button>
         </div>
       </div>
 
       <!-- Balance selector -->
       <div>
-        <div class="chal-section-title">Ð Ð°Ð·Ð¼ÐµÑ ÑÑÑÑÐ°</div>
+        <div class="chal-section-title">Размер счёта</div>
         <div class="chal-bal-grid" id="chal-bal-grid">
           <!-- filled by JS -->
         </div>
@@ -1160,18 +1162,18 @@ nav{
       <!-- Price card -->
       <div class="chal-price-card">
         <div>
-          <div class="chal-price-label">ÐÑÐ±ÑÐ°Ð½Ð½ÑÐ¹ Ð¿Ð»Ð°Ð½</div>
-          <div class="chal-price-name" id="chal-plan-name">1 ÑÑÐ°Ð¿ Â· $5K</div>
+          <div class="chal-price-label">Выбранный план</div>
+          <div class="chal-price-name" id="chal-plan-name">1 этап · $5K</div>
         </div>
         <div style="text-align:right">
           <div class="chal-price-val" id="chal-price">$49</div>
-          <div class="chal-price-note">ÐµÐ´Ð¸Ð½Ð¾ÑÐ°Ð·Ð¾Ð²ÑÐ¹ Ð¿Ð»Ð°ÑÑÐ¶</div>
+          <div class="chal-price-note">единоразовый платёж</div>
         </div>
       </div>
 
       <!-- Conditions table -->
       <div>
-        <div class="chal-section-title">Ð£ÑÐ»Ð¾Ð²Ð¸Ñ ÑÐ¾ÑÐ³Ð¾Ð²Ð»Ð¸</div>
+        <div class="chal-section-title">Условия торговли</div>
         <div class="chal-cond-box">
           <div class="chal-cond-row" id="chal-cond-header" style="background:var(--bg3)">
             <!-- filled by JS -->
@@ -1184,22 +1186,22 @@ nav{
 
       <!-- Buy button -->
       <button class="btn-buy-chal" onclick="buyChal()">
-        ð ÐÑÐ¿Ð¸ÑÑ ÑÑÑÑ Ð¿ÑÑÐ¼Ð¾ ÑÐµÐ¹ÑÐ°Ñ
+        🚀 Купить счёт прямо сейчас
       </button>
 
       <div class="chal-footer-note">
-        ÐÐ³Ð½Ð¾Ð²ÐµÐ½Ð½ÑÐ¹ Ð´Ð¾ÑÑÑÐ¿ Â· 24/7 Ð¿Ð¾Ð´Ð´ÐµÑÐ¶ÐºÐ° Â· ÐÑÐ¿Ð»Ð°ÑÐ° 80% Ð¿ÑÐ¸Ð±ÑÐ»Ð¸
+        Мгновенный доступ · 24/7 поддержка · Выплата 80% прибыли
       </div>
 
     </div>
   </div>
 </div>
 <nav class="nav">
-  <button class="nb active" onclick="show('dash',this)">Ð¡ÑÑÑ</button>
-  <button class="nb" onclick="show('trade',this)">Ð¢Ð¾ÑÐ³Ð¾Ð²Ð»Ñ</button>
-  <button class="nb" onclick="show('hist',this)">ÐÑÑÐ¾ÑÐ¸Ñ</button>
-  <button class="nb" onclick="show('lead',this)">Ð¢Ð¾Ð¿</button>
-  <button class="nb" onclick="show('chal',this)">Ð¢Ð°ÑÐ¸ÑÑ</button>
+  <button class="nb active" onclick="show('dash',this)">Счёт</button>
+  <button class="nb" onclick="show('trade',this)">Торговля</button>
+  <button class="nb" onclick="show('hist',this)">История</button>
+  <button class="nb" onclick="show('lead',this)">Топ</button>
+  <button class="nb" onclick="show('chal',this)">Тарифы</button>
 </nav>
 
 </div>
@@ -1299,9 +1301,9 @@ async function fetchPrice(symbol) {
 async function loadCurrentPrice() {
   const sym = S.asset;
   const inst = INSTRUMENTS[sym];
-  var _cpe = document.getElementById('cprice'); if(_cpe) { document.getElementById('cprice').innerHTML = '<span class="spin"></span>Ð·Ð°Ð³ÑÑÐ·ÐºÐ°...'; }
-  var _pc4=document.getElementById('pchange'); if(_pc4) _pc4.textContent = 'â';
-  document.getElementById('trade-header-price').textContent = 'â';
+  var _cpe = document.getElementById('cprice'); if(_cpe) { document.getElementById('cprice').innerHTML = '<span class="spin"></span>загрузка...'; }
+  var _pc4=document.getElementById('pchange'); if(_pc4) _pc4.textContent = '—';
+  document.getElementById('trade-header-price').textContent = '—';
   
   const data = await fetchPrice(sym);
   if(data) {
@@ -1311,7 +1313,7 @@ async function loadCurrentPrice() {
     updateOpenPnl();
     updateChartTick(sym, data.price);
   } else {
-    var _cpe2=document.getElementById('cprice'); if(_cpe2) _cpe2.textContent = 'ÐÐµÑ Ð´Ð°Ð½Ð½ÑÑ';    var _pc3=document.getElementById('pchange'); if(_pc3) _pc3.textContent = 'ÐÑÐ¾Ð²ÐµÑÑÑÐµ ÑÐ¾ÐµÐ´Ð¸Ð½ÐµÐ½Ð¸Ðµ';
+    var _cpe2=document.getElementById('cprice'); if(_cpe2) _cpe2.textContent = 'Нет данных';    var _pc3=document.getElementById('pchange'); if(_pc3) _pc3.textContent = 'Проверьте соединение';
   }
 }
 
@@ -1330,13 +1332,21 @@ function updatePriceDisplay() {
   if(pEl) pEl.textContent = priceStr;
   
   const isUp = data.changePct >= 0;
-  const arrow = isUp ? 'â²' : 'â¼';
+  const arrow = isUp ? '▲' : '▼';
   const color = isUp ? 'var(--green)' : 'var(--red)';
   const chgStr = `${arrow} ${data.change >= 0 ? '+' : ''}${data.change.toFixed(inst.dec)} (${data.changePct >= 0 ? '+' : ''}${data.changePct.toFixed(2)}%)`;
   if(chEl) chEl.textContent = chgStr;
   if(chEl) chEl.style.color = color;
   hdEl.textContent = inst.name + ': ' + priceStr;
 }
+
+// Refresh current price every 30 seconds
+setInterval(() => {
+  if(S.prices[S.asset]) {
+    loadCurrentPrice();
+  }
+
+  if (typeof _updateListPrices === "function") _updateListPrices();}
 
 // ===== NEW TRADE SCREEN FUNCTIONS =====
 const _INST_MAP = {
@@ -1357,13 +1367,12 @@ try { _favs2 = JSON.parse(localStorage.getItem('yt_favs')||'[]'); } catch(e){}
 function selAsset2(key, name, cat, rowEl) {
   const ids = _INST_MAP[key];
   if (!ids) return;
-  // Close prev
   if (_activeInstKey2 && _activeInstKey2 !== key) {
     const pi = _INST_MAP[_activeInstKey2];
     if (pi) {
       const pe = document.getElementById(pi.exp);
       const pr = document.getElementById(pi.row);
-      if (pe) pe.style.display='none';
+      if (pe) pe.style.display = 'none';
       if (pr) pr.classList.remove('active');
     }
   }
@@ -1379,34 +1388,31 @@ function selAsset2(key, name, cat, rowEl) {
     expEl.style.display = 'block';
     if (rowDiv) rowDiv.classList.add('active');
     _activeInstKey2 = key;
-    // Sync with original selAsset logic
     S.asset = key;
     S.assetName = name;
     const inst = INSTRUMENTS[key];
     if (inst) {
       const data = S.prices[key];
       if (data && data.price) {
+        const spread = inst.pip * 2;
         const sp = document.getElementById(ids.sp);
         const bp = document.getElementById(ids.bp);
-        const spread = inst.pip * 2;
         if (sp) sp.textContent = (data.price - spread).toFixed(inst.dec);
         if (bp) bp.textContent = (data.price + spread).toFixed(inst.dec);
       }
       updRisk();
     }
     loadCurrentPrice();
-    const lotsEl = document.getElementById('lots');
-    if (lotsEl) { S.lot = parseFloat(lotsEl.value)||0.1; }
   }
 }
 
 function toggleFav(key, starId, ev) {
-  if (ev) ev.stopPropagation();
+  if (ev) { ev.stopPropagation(); ev.preventDefault(); }
   const star = document.getElementById(starId);
   if (!star) return;
   const idx = _favs2.indexOf(key);
   if (idx >= 0) {
-    _favs2.splice(idx,1);
+    _favs2.splice(idx, 1);
     star.classList.remove('fav');
     star.textContent = '\u2606';
   } else {
@@ -1414,44 +1420,24 @@ function toggleFav(key, starId, ev) {
     star.classList.add('fav');
     star.textContent = '\u2605';
   }
-  try { localStorage.setItem('yt_favs', JSON.stringify(_favs2)); } catch(e){}
-}
-
-function _initFavs2() {
-  _favs2.forEach(k => {
-    const ids = _INST_MAP[k];
-    if (!ids) return;
-    // find star id
-    Object.entries(_INST_MAP).forEach(([key,v]) => {
-      if (key === k) {
-        const allStars = document.querySelectorAll('.inst-row-star');
-        allStars.forEach(s => {
-          if (s.id && s.id.includes(v.row.replace('row-',''))) {
-            s.classList.add('fav');
-            s.textContent = '\u2605';
-          }
-        });
-      }
-    });
-  });
+  try { localStorage.setItem('yt_favs', JSON.stringify(_favs2)); } catch(e) {}
 }
 
 function _updateListPrices() {
-  Object.entries(INSTRUMENTS).forEach(([key, inst]) => {
+  Object.entries(INSTRUMENTS).forEach(function([key, inst]) {
     const data = S.prices[key];
     if (!data || !data.price) return;
     const ids = _INST_MAP[key];
     if (!ids) return;
     const lpEl = document.getElementById(ids.lp);
     if (lpEl) {
-      const prev = parseFloat(lpEl.dataset.prev)||0;
+      const prev = parseFloat(lpEl.dataset.prev) || 0;
       const p = data.price;
       lpEl.textContent = p.toFixed(inst.dec);
       if (prev && p > prev) { lpEl.classList.add('up'); lpEl.classList.remove('dn'); }
       else if (prev && p < prev) { lpEl.classList.add('dn'); lpEl.classList.remove('up'); }
       lpEl.dataset.prev = p;
     }
-    // Update buy/sell prices if this instrument is active
     if (_activeInstKey2 === key) {
       const spread = inst.pip * 2;
       const sp = document.getElementById(ids.sp);
@@ -1461,15 +1447,7 @@ function _updateListPrices() {
     }
   });
 }
-
-
-// Refresh current price every 30 seconds
-setInterval(() => {
-  if(S.prices[S.asset]) {
-    loadCurrentPrice();
-  }
-
-  if (typeof _updateListPrices === "function") _updateListPrices();}, 30000);
+, 30000);
 
 // ============ ASSET SELECTION ============
 function selAsset(btn, sym, name) {
@@ -1497,7 +1475,7 @@ function updRisk() {
   if(!inst) return;
   const lots = parseFloat(document.getElementById('lots').value || 0.1);
   const data = S.prices[sym];
-  if(!data) { document.getElementById('rwarn').textContent = 'â³ ÐÐ¶Ð¸Ð´Ð°Ð½Ð¸Ðµ ÑÐµÐ½Ñ...'; return; }
+  if(!data) { document.getElementById('rwarn').textContent = '⏳ Ожидание цены...'; return; }
   
   const p = data.price;
   let risk;
@@ -1515,8 +1493,8 @@ function updRisk() {
   const dayLeft = 500 - Math.abs(S.dayPnl < 0 ? S.dayPnl : 0);
   const color = pct > 3 ? '#ff8888' : '#ffcc44';
   document.getElementById('rwarn').innerHTML = 
-    `<span style="color:${color}">â ï¸ Ð Ð¸ÑÐº ÑÐ´ÐµÐ»ÐºÐ¸: ~$${risk.toFixed(2)} (${pct}%)</span><br>` +
-    `ð ÐÐ½. Ð»Ð¸Ð¼Ð¸Ñ: $${dayLeft.toFixed(0)} Ð¾ÑÑÐ°Ð»Ð¾ÑÑ`;
+    `<span style="color:${color}">⚠️ Риск сделки: ~$${risk.toFixed(2)} (${pct}%)</span><br>` +
+    `📊 Дн. лимит: $${dayLeft.toFixed(0)} осталось`;
 }
 
 // ============ EXECUTE TRADE ============
@@ -1524,7 +1502,7 @@ function trade(dir) {
   const sym = S.asset;
   const inst = INSTRUMENTS[sym];
   const data = S.prices[sym];
-  if(!data) { alert('ÐÐµÑ ÑÐµÐ½Ñ, Ð¿Ð¾Ð¿ÑÐ¾Ð±ÑÐ¹ÑÐµ ÑÐ½Ð¾Ð²Ð°'); return; }
+  if(!data) { alert('Нет цены, попробуйте снова'); return; }
   
   const lots = parseFloat(document.getElementById('lots').value || 0.1);
   const entry = data.price;
@@ -1539,7 +1517,7 @@ function trade(dir) {
   S.openTrades.push(newTrade);
   S.tradeCount++;
   
-  const msg = `${dir === 'BUY' ? 'â²' : 'â¼'} ${dir} ${lots} Ð»Ð¾Ñ ${S.assetName}\nÐ¦ÐµÐ½Ð° Ð²ÑÐ¾Ð´Ð°: ${entry.toFixed(inst.dec)}`;
+  const msg = `${dir === 'BUY' ? '▲' : '▼'} ${dir} ${lots} лот ${S.assetName}\nЦена входа: ${entry.toFixed(inst.dec)}`;
   try { if(tg && tg.showAlert) tg.showAlert(msg); else alert(msg); } catch(e) { alert(msg); }
   
   updateDashboard();
@@ -1601,7 +1579,7 @@ setInterval(updateOpenPnl, 5000);
 function renderOpenPositionsDash() {
   const el = document.getElementById('open-positions-dash');
   if(S.openTrades.length === 0) {
-    el.innerHTML = '<div class="empty-state" style="padding:16px;font-size:12px">ÐÐµÑ Ð¾ÑÐºÑÑÑÑÑ Ð¿Ð¾Ð·Ð¸ÑÐ¸Ð¹<br><span style="font-size:11px">ÐÐµÑÐµÐ¹Ð´Ð¸ Ð² Ð¢Ð¾ÑÐ³Ð¾Ð²Ð»Ñ ÑÑÐ¾Ð±Ñ Ð¾ÑÐºÑÑÑÑ ÑÐ´ÐµÐ»ÐºÑ</span></div>';
+    el.innerHTML = '<div class="empty-state" style="padding:16px;font-size:12px">Нет открытых позиций<br><span style="font-size:11px">Перейди в Торговля чтобы открыть сделку</span></div>';
     return;
   }
   el.innerHTML = S.openTrades.map(t => {
@@ -1611,11 +1589,11 @@ function renderOpenPositionsDash() {
     return `<div class="pos-item" onclick="closeTradeConfirm(${t.id})">
       <div>
         <div class="pos-sym">${t.name}</div>
-        <div class="pos-det">${t.dir} ${t.lots} Ð»Ð¾Ñ Â· ÐÑÐ¾Ð´ ${t.entry.toFixed(inst ? inst.dec : 5)} Â· ${t.openTime}</div>
+        <div class="pos-det">${t.dir} ${t.lots} лот · Вход ${t.entry.toFixed(inst ? inst.dec : 5)} · ${t.openTime}</div>
       </div>
       <div style="text-align:right">
         <div class="pos-pnl" style="color:${col}">${pnl >= 0 ? '+' : ''}${pnl}$</div>
-        <div class="pos-pnl-sub">ÐÐ°Ð¶Ð¼Ð¸ ÑÑÐ¾Ð±Ñ Ð·Ð°ÐºÑÑÑÑ</div>
+        <div class="pos-pnl-sub">Нажми чтобы закрыть</div>
       </div>
     </div>`;
   }).join('');
@@ -1625,7 +1603,7 @@ function closeTradeConfirm(id) {
   const t = S.openTrades.find(x => x.id === id);
   if(!t) return;
   const pnl = t.floatingPnl || 0;
-  const msg = `ÐÐ°ÐºÑÑÑÑ ${t.name} ${t.dir}?\nP&L: ${pnl >= 0 ? '+' : ''}${pnl}$`;
+  const msg = `Закрыть ${t.name} ${t.dir}?\nP&L: ${pnl >= 0 ? '+' : ''}${pnl}$`;
   if(tg) {
     tg.showConfirm(msg, (ok) => { if(ok) closeTrade(id); });
   } else if(confirm(msg)) {
@@ -1647,8 +1625,8 @@ function updateDashboard() {
   // Balance card
   document.getElementById('bal').textContent = '$' + bal.toFixed(2);
   const sub = totalPnl >= 0
-    ? 'â² +' + totalPnl.toFixed(2) + '$ (+' + (totalPnl/startBal*100).toFixed(2) + '%) Ð²ÑÐµÐ³Ð¾'
-    : 'â¼ ' + totalPnl.toFixed(2) + '$ (' + (totalPnl/startBal*100).toFixed(2) + '%) Ð²ÑÐµÐ³Ð¾';
+    ? '▲ +' + totalPnl.toFixed(2) + '$ (+' + (totalPnl/startBal*100).toFixed(2) + '%) всего'
+    : '▼ ' + totalPnl.toFixed(2) + '$ (' + (totalPnl/startBal*100).toFixed(2) + '%) всего';
   const balSubEl = document.getElementById('bal-sub');
   balSubEl.textContent = sub;
   balSubEl.style.color = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
@@ -1664,22 +1642,22 @@ function updateDashboard() {
   // GOAL: Profit
   const profitPct = Math.min(totalPnl / GOAL_TARGET * 100, 100);
   const profitDone = totalPnl >= GOAL_TARGET;
-  setGoal('profit', '$' + Math.max(totalPnl,0).toFixed(0) + ' / $' + GOAL_TARGET.toFixed(0), profitPct, profitDone ? 'passed' : 'working', profitDone ? 'ÐÑÐ¾Ð¹Ð´ÐµÐ½Ð¾' : 'Ð ÑÐ°Ð±Ð¾ÑÐµ', false);
+  setGoal('profit', '$' + Math.max(totalPnl,0).toFixed(0) + ' / $' + GOAL_TARGET.toFixed(0), profitPct, profitDone ? 'passed' : 'working', profitDone ? 'Пройдено' : 'В работе', false);
 
   // GOAL: Trade days
   const daysPct = Math.min(tradeDays / MIN_DAYS * 100, 100);
   const daysDone = tradeDays >= MIN_DAYS;
-  setGoal('days', tradeDays + ' / ' + MIN_DAYS + ' Ð´Ð½ÐµÐ¹', daysPct, daysDone ? 'passed' : 'working', daysDone ? 'ÐÑÐ¾Ð¹Ð´ÐµÐ½Ð¾' : 'Ð ÑÐ°Ð±Ð¾ÑÐµ', false);
+  setGoal('days', tradeDays + ' / ' + MIN_DAYS + ' дней', daysPct, daysDone ? 'passed' : 'working', daysDone ? 'Пройдено' : 'В работе', false);
 
   // GOAL: Daily loss
   const dlPct = Math.min(dayLoss / DAY_LIMIT * 100, 100);
   const dlFailed = dayLoss >= DAY_LIMIT;
-  setGoal('dloss', '$' + dayLoss.toFixed(0) + ' / $' + DAY_LIMIT, dlPct, dlFailed ? 'failed' : 'passed', dlFailed ? 'ÐÐ°ÑÑÑÐµÐ½Ð¾' : 'ÐÑÐ¾Ð¹Ð´ÐµÐ½Ð¾', true);
+  setGoal('dloss', '$' + dayLoss.toFixed(0) + ' / $' + DAY_LIMIT, dlPct, dlFailed ? 'failed' : 'passed', dlFailed ? 'Нарушено' : 'Пройдено', true);
 
   // GOAL: Max drawdown
   const ddPct = Math.min(maxDrop / MAX_DD * 100, 100);
   const ddFailed = maxDrop >= MAX_DD;
-  setGoal('maxdd', '$' + maxDrop.toFixed(0) + ' / $' + MAX_DD, ddPct, ddFailed ? 'failed' : 'passed', ddFailed ? 'ÐÐ°ÑÑÑÐµÐ½Ð¾' : 'ÐÑÐ¾Ð¹Ð´ÐµÐ½Ð¾', true);
+  setGoal('maxdd', '$' + maxDrop.toFixed(0) + ' / $' + MAX_DD, ddPct, ddFailed ? 'failed' : 'passed', ddFailed ? 'Нарушено' : 'Пройдено', true);
 
   // Daily limit box
   const dlLeft = Math.max(DAY_LIMIT - dayLoss, 0);
@@ -1759,8 +1737,8 @@ function renderHistory() {
   }
   
   if(items.length === 0) {
-    const msgs = {open:'ÐÐµÑ Ð¾ÑÐºÑÑÑÑÑ Ð¿Ð¾Ð·Ð¸ÑÐ¸Ð¹', closed:'ÐÐµÑ Ð·Ð°ÐºÑÑÑÑÑ ÑÐ´ÐµÐ»Ð¾Ðº', all:'ÐÑÑÐ¾ÑÐ¸Ñ Ð¿ÑÑÑÐ°'};
-    el.innerHTML = `<div class="empty-state">${msgs[S.histFilter] || 'ÐÐµÑ ÑÐ´ÐµÐ»Ð¾Ðº'}<br><span style="font-size:11px;margin-top:4px;display:block">ÐÑÐºÑÐ¾Ð¹ Ð¿ÐµÑÐ²ÑÑ ÑÐ´ÐµÐ»ÐºÑ Ð²Ð¾ Ð²ÐºÐ»Ð°Ð´ÐºÐµ Ð¢Ð¾ÑÐ³Ð¾Ð²Ð»Ñ</span></div>`;
+    const msgs = {open:'Нет открытых позиций', closed:'Нет закрытых сделок', all:'История пуста'};
+    el.innerHTML = `<div class="empty-state">${msgs[S.histFilter] || 'Нет сделок'}<br><span style="font-size:11px;margin-top:4px;display:block">Открой первую сделку во вкладке Торговля</span></div>`;
     return;
   }
   
@@ -1770,19 +1748,19 @@ function renderHistory() {
     const pnl = isOpen ? (t.floatingPnl || 0) : t.pnl;
     const col = pnl >= 0 ? 'var(--green)' : 'var(--red)';
     const statusBadge = isOpen 
-      ? `<span style="font-size:9px;color:var(--green);background:rgba(0,212,170,.15);padding:2px 5px;border-radius:4px;margin-left:4px">â OPEN</span>`
+      ? `<span style="font-size:9px;color:var(--green);background:rgba(0,212,170,.15);padding:2px 5px;border-radius:4px;margin-left:4px">● OPEN</span>`
       : `<span style="font-size:9px;color:var(--text2);background:rgba(255,255,255,.08);padding:2px 5px;border-radius:4px;margin-left:4px">CLOSED</span>`;
     
     const entryExit = isOpen 
-      ? `ÐÑÐ¾Ð´: ${t.entry.toFixed(inst ? inst.dec : 5)} Â· ${t.openTime}`
-      : `ÐÑÐ¾Ð´: ${t.entry.toFixed(inst ? inst.dec : 5)} â ${t.exit ? t.exit.toFixed(inst ? inst.dec : 5) : '?'} Â· ${t.closeTime}`;
+      ? `Вход: ${t.entry.toFixed(inst ? inst.dec : 5)} · ${t.openTime}`
+      : `Вход: ${t.entry.toFixed(inst ? inst.dec : 5)} → ${t.exit ? t.exit.toFixed(inst ? inst.dec : 5) : '?'} · ${t.closeTime}`;
     
-    const closeBtn = isOpen ? `<div style="font-size:9px;color:var(--text2);margin-top:2px;cursor:pointer" onclick="closeTradeConfirm(${t.id})">ÐÐ°ÐºÑÑÑÑ Ã</div>` : '';
+    const closeBtn = isOpen ? `<div style="font-size:9px;color:var(--text2);margin-top:2px;cursor:pointer" onclick="closeTradeConfirm(${t.id})">Закрыть ×</div>` : '';
     
     return `<div class="hist-item">
       <div class="hist-left">
         <div class="h-sym">${t.name}${statusBadge}</div>
-        <div class="h-dir ${t.dir.toLowerCase()}">${t.dir} ${t.lots} Ð»Ð¾Ñ</div>
+        <div class="h-dir ${t.dir.toLowerCase()}">${t.dir} ${t.lots} лот</div>
         <div class="h-det">${entryExit}</div>
         ${closeBtn}
       </div>
@@ -1810,45 +1788,45 @@ var _chalBal = '$5K';
 
 var _chalData = {
   '1step': {
-    label: '1-ÑÑÐ°Ð¿Ð½ÑÐ¹',
-    cols: ['Ð¤Ð°Ð·Ð° 1','Ð¤Ð¸Ð½Ð°Ð½Ñ.'],
+    label: '1-этапный',
+    cols: ['Фаза 1','Финанс.'],
     rows: [
-      ['Ð¦ÐµÐ»Ñ Ð¿ÑÐ¸Ð±ÑÐ»Ð¸','10%','â'],
-      ['ÐÐ°ÐºÑ. Ð´Ð½. ÑÐ±ÑÑÐ¾Ðº','5%','5%'],
-      ['ÐÐ°ÐºÑ. ÑÐ±ÑÑÐ¾Ðº','6%','6%'],
-      ['ÐÐ¸Ð½. ÑÐ¾ÑÐ³. Ð´Ð½ÐµÐ¹','3','3'],
-      ['Ð¢Ð¾ÑÐ³Ð¾Ð²ÑÐ¹ Ð¿ÐµÑÐ¸Ð¾Ð´','â','â'],
-      ['ÐÑÐ¿Ð»Ð°ÑÐ° Ð¿ÑÐ¸Ð±ÑÐ»Ð¸','0%','80%']
+      ['Цель прибыли','10%','—'],
+      ['Макс. дн. убыток','5%','5%'],
+      ['Макс. убыток','6%','6%'],
+      ['Мин. торг. дней','3','3'],
+      ['Торговый период','∞','∞'],
+      ['Выплата прибыли','0%','80%']
     ],
     prices: {'$5K':'$49','$10K':'$89','$25K':'$190','$50K':'$375','$100K':'$750','$200K':'$1 500'},
     balances: ['$5K','$10K','$25K','$50K','$100K','$200K'],
     best: '$50K'
   },
   '2step': {
-    label: '2-ÑÑÐ°Ð¿Ð½ÑÐ¹',
-    cols: ['Ð¤Ð°Ð·Ð° 1','Ð¤Ð°Ð·Ð° 2','Ð¤Ð¸Ð½Ð°Ð½Ñ.'],
+    label: '2-этапный',
+    cols: ['Фаза 1','Фаза 2','Финанс.'],
     rows: [
-      ['Ð¦ÐµÐ»Ñ Ð¿ÑÐ¸Ð±ÑÐ»Ð¸','8%','5%','â'],
-      ['ÐÐ°ÐºÑ. Ð´Ð½. ÑÐ±ÑÑÐ¾Ðº','5%','5%','5%'],
-      ['ÐÐ°ÐºÑ. ÑÐ±ÑÑÐ¾Ðº','8%','8%','8%'],
-      ['ÐÐ¸Ð½. ÑÐ¾ÑÐ³. Ð´Ð½ÐµÐ¹','3','3','3'],
-      ['Ð¢Ð¾ÑÐ³Ð¾Ð²ÑÐ¹ Ð¿ÐµÑÐ¸Ð¾Ð´','â','â','â'],
-      ['ÐÑÐ¿Ð»Ð°ÑÐ° Ð¿ÑÐ¸Ð±ÑÐ»Ð¸','0%','0%','80%']
+      ['Цель прибыли','8%','5%','—'],
+      ['Макс. дн. убыток','5%','5%','5%'],
+      ['Макс. убыток','8%','8%','8%'],
+      ['Мин. торг. дней','3','3','3'],
+      ['Торговый период','∞','∞','∞'],
+      ['Выплата прибыли','0%','0%','80%']
     ],
     prices: {'$5K':'$39','$10K':'$69','$25K':'$159','$50K':'$259','$100K':'$450','$200K':'$900'},
     balances: ['$5K','$10K','$25K','$50K','$100K','$200K'],
     best: '$50K'
   },
   'instant': {
-    label: 'ÐÐ½ÑÑÐ°Ð½Ñ',
-    cols: ['ÐÐ³Ð½Ð¾Ð²ÐµÐ½Ð½ÑÐ¹'],
+    label: 'Инстант',
+    cols: ['Мгновенный'],
     rows: [
-      ['Ð¦ÐµÐ»Ñ Ð¿ÑÐ¸Ð±ÑÐ»Ð¸','â'],
-      ['ÐÐ°ÐºÑ. Ð´Ð½. ÑÐ±ÑÑÐ¾Ðº','5%'],
-      ['ÐÐ°ÐºÑ. ÑÐ±ÑÑÐ¾Ðº','8%'],
-      ['ÐÐ¸Ð½. ÑÐ¾ÑÐ³. Ð´Ð½ÐµÐ¹','3'],
-      ['Ð¢Ð¾ÑÐ³Ð¾Ð²ÑÐ¹ Ð¿ÐµÑÐ¸Ð¾Ð´','â'],
-      ['ÐÑÐ¿Ð»Ð°ÑÐ° Ð¿ÑÐ¸Ð±ÑÐ»Ð¸','80%']
+      ['Цель прибыли','—'],
+      ['Макс. дн. убыток','5%'],
+      ['Макс. убыток','8%'],
+      ['Мин. торг. дней','3'],
+      ['Торговый период','∞'],
+      ['Выплата прибыли','80%']
     ],
     prices: {'$5K':'$200','$10K':'$400','$25K':'$1 125','$50K':'$2 500','$100K':'$5 000'},
     balances: ['$5K','$10K','$25K','$50K','$100K'],
@@ -1885,16 +1863,16 @@ function chalRender() {
   }
 
   // Update price card
-  var price = data.prices[_chalBal] || 'â';
+  var price = data.prices[_chalBal] || '—';
   var planName = document.getElementById('chal-plan-name');
   var priceEl = document.getElementById('chal-price');
-  if(planName) planName.textContent = data.label + ' Â· ' + _chalBal;
+  if(planName) planName.textContent = data.label + ' · ' + _chalBal;
   if(priceEl) priceEl.textContent = price;
 
   // Render conditions table header
   var header = document.getElementById('chal-cond-header');
   if(header) {
-    header.innerHTML = '<div class="chal-cond-col-head" style="flex:1.5">ÐÐ°ÑÐ°Ð¼ÐµÑÑ</div>' +
+    header.innerHTML = '<div class="chal-cond-col-head" style="flex:1.5">Параметр</div>' +
       data.cols.map(function(c){ return '<div class="chal-cond-col-head">' + c + '</div>'; }).join('');
   }
 
@@ -1905,10 +1883,10 @@ function chalRender() {
       var label = row[0];
       var cells = row.slice(1).map(function(v, i) {
         var cls = 'chal-cval-bold';
-        if(v === 'â' || v === '0%') cls = 'chal-cval-muted';
-        else if(v.includes('%') && (label.includes('ÑÐ±ÑÑÐ¾Ðº') || label.includes('Ð¿Ð¾ÑÐµÑ'))) cls = 'chal-cval-red';
-        else if(label.includes('ÐÑÐ¿Ð»Ð°ÑÐ°') && v !== '0%' && v !== 'â') cls = 'chal-cval-green';
-        else if(label.includes('Ð¦ÐµÐ»Ñ') && v !== 'â') cls = 'chal-cval-green';
+        if(v === '—' || v === '0%') cls = 'chal-cval-muted';
+        else if(v.includes('%') && (label.includes('убыток') || label.includes('потер'))) cls = 'chal-cval-red';
+        else if(label.includes('Выплата') && v !== '0%' && v !== '—') cls = 'chal-cval-green';
+        else if(label.includes('Цель') && v !== '—') cls = 'chal-cval-green';
         return '<div class="chal-cond-cell"><span class="' + cls + '">' + v + '</span></div>';
       }).join('');
       return '<div class="chal-cond-row"><div class="chal-cond-cell" style="flex:1.5;color:var(--text2);font-size:11px">' + label + '</div>' + cells + '</div>';
@@ -1925,10 +1903,10 @@ function buyChal() {
   var price = (_chalData[_chalPlan] && _chalData[_chalPlan].prices && _chalData[_chalPlan].prices[_chalBal])
     ? _chalData[_chalPlan].prices[_chalBal]
     : '';
-  var priceStr = price ? ' Ð·Ð° ' + price : '';
+  var priceStr = price ? ' за ' + price : '';
   var msg = _chalPlan === 'instant'
-    ? 'ÐÑÐ¸Ð²ÐµÑ! Ð¥Ð¾ÑÑ ÐºÑÐ¿Ð¸ÑÑ ÐÐ½ÑÑÐ°Ð½Ñ ' + _chalBal + priceStr + ' â ÐºÐ°Ðº ÑÑÐ¾ ÑÐ´ÐµÐ»Ð°ÑÑ?'
-    : 'ÐÑÐ¸Ð²ÐµÑ! Ð¥Ð¾ÑÑ ÐºÑÐ¿Ð¸ÑÑ Challenge ' + planLabel + ' ' + _chalBal + priceStr + ' â ÐºÐ°Ðº ÑÑÐ¾ ÑÐ´ÐµÐ»Ð°ÑÑ?';
+    ? 'Привет! Хочу купить Инстант ' + _chalBal + priceStr + ' — как это сделать?'
+    : 'Привет! Хочу купить Challenge ' + planLabel + ' ' + _chalBal + priceStr + ' — как это сделать?';
   var url = 'https://wa.me/77081906251?text=' + encodeURIComponent(msg);
   window.open(url, '_blank');
 }
@@ -2265,7 +2243,7 @@ function drawEntryLines() {
       position: t.dir === 'BUY' ? 'belowBar' : 'aboveBar',
       color: color,
       shape: t.dir === 'BUY' ? 'arrowUp' : 'arrowDown',
-      text: (t.dir === 'BUY' ? 'â² BUY' : 'â¼ SELL') + (pnlStr ? ' ' + pnlStr : '')
+      text: (t.dir === 'BUY' ? '▲ BUY' : '▼ SELL') + (pnlStr ? ' ' + pnlStr : '')
     });
   });
   if(markers.length > 0) _candleSeries.setMarkers(markers);
@@ -2347,7 +2325,7 @@ function saveStateAfterAction() {
 }
 
 function resetAccount() {
-  if (!confirm('Ð¡Ð±ÑÐ¾ÑÐ¸ÑÑ ÑÑÑÑ? ÐÐ°Ð»Ð°Ð½Ñ Ð²ÐµÑÐ½ÑÑÑÑ Ðº $10 000, Ð²ÑÐµ ÑÐ´ÐµÐ»ÐºÐ¸ Ð¸ Ð¸ÑÑÐ¾ÑÐ¸Ñ Ð±ÑÐ´ÑÑ ÑÐ´Ð°Ð»ÐµÐ½Ñ.')) return;
+  if (!confirm('Сбросить счёт? Баланс вернётся к $10 000, все сделки и история будут удалены.')) return;
   // Close all open trades without PnL
   S.openTrades = [];
   S.closedTrades = [];
@@ -2361,7 +2339,7 @@ function resetAccount() {
   renderOpenPositionsDash();
   renderHistory();
   saveState();
-  alert('Ð¡ÑÑÑ ÑÐ±ÑÐ¾ÑÐµÐ½! ÐÐ°Ð»Ð°Ð½Ñ: $10 000');
+  alert('Счёт сброшен! Баланс: $10 000');
 }
 
 
@@ -2396,7 +2374,7 @@ function _rndBal(min, max) {
 }
 
 function initLeaderboard() {
-  var count = 180 + Math.floor(Math.random() * 70); // 180-250 ÑÑÐ°ÑÑÐ½Ð¸ÐºÐ¾Ð²
+  var count = 180 + Math.floor(Math.random() * 70); // 180-250 участников
   _lbTotal = count;
   _lbBots = [];
   for (var i = 0; i < 49; i++) {
@@ -2449,7 +2427,7 @@ function renderLeaderboard() {
 
   // Build combined list: bots + real user
   var all = _lbBots.map(function(b) { return {name: b.name, pct: b.pct, trades: b.trades, days: b.days, isMe: false}; });
-  all.push({name: 'ÐÑ', pct: Math.round(pct * 100) / 100, trades: S.tradeCount, days: S.day, isMe: true});
+  all.push({name: 'Вы', pct: Math.round(pct * 100) / 100, trades: S.tradeCount, days: S.day, isMe: true});
   all.sort(function(a, b) { return b.pct - a.pct; });
 
   var myRank = 1;
@@ -2461,12 +2439,12 @@ function renderLeaderboard() {
   if (scaledRank < 1) scaledRank = 1;
 
   var rankEl = document.getElementById('my-rank-pos');
-  if (rankEl) rankEl.textContent = '#' + scaledRank + ' Ð¸Ð· ' + _lbTotal;
+  if (rankEl) rankEl.textContent = '#' + scaledRank + ' из ' + _lbTotal;
 
   var meta = document.getElementById('lb-meta');
-  if (meta) meta.textContent = 'Ð£ÑÐ°ÑÑÐ½Ð¸ÐºÐ¾Ð²: ' + _lbTotal + ' Â· ÐÐ±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¾ ÑÐµÐ¹ÑÐ°Ñ';
+  if (meta) meta.textContent = 'Участников: ' + _lbTotal + ' · Обновлено сейчас';
 
-  var medals = ['ð¥','ð¥','ð¥'];
+  var medals = ['🥇','🥈','🥉'];
   var html = '';
   var shown = all.slice(0, 20);
   for (var i = 0; i < shown.length; i++) {
@@ -2477,8 +2455,8 @@ function renderLeaderboard() {
     var highlight = p.isMe ? 'background:rgba(78,53,198,0.18);border:1px solid var(--primary);' : '';
     html += '<div class="leader-card" style="' + highlight + '">'
       + '<div class="rank-badge">' + badge + '</div>'
-      + '<div class="leader-info"><div class="leader-name">' + (p.isMe ? '<b>ÐÑ</b>' : p.name) + '</div>'
-      + '<div class="leader-stat">' + p.trades + ' ' + _tradeWord(p.trades) + ' Â· ' + p.days + ' ' + _dayWord(p.days) + '</div></div>'
+      + '<div class="leader-info"><div class="leader-name">' + (p.isMe ? '<b>Вы</b>' : p.name) + '</div>'
+      + '<div class="leader-stat">' + p.trades + ' ' + _tradeWord(p.trades) + ' · ' + p.days + ' ' + _dayWord(p.days) + '</div></div>'
       + '<div class="leader-pnl" style="color:' + pctColor + '">' + pctStr + '</div>'
       + '</div>';
   }
@@ -2488,20 +2466,20 @@ function renderLeaderboard() {
 
 function _tradeWord(n) {
   var m = n % 100;
-  if (m >= 11 && m <= 19) return 'ÑÐ´ÐµÐ»Ð¾Ðº';
+  if (m >= 11 && m <= 19) return 'сделок';
   var r = n % 10;
-  if (r === 1) return 'ÑÐ´ÐµÐ»ÐºÐ°';
-  if (r >= 2 && r <= 4) return 'ÑÐ´ÐµÐ»ÐºÐ¸';
-  return 'ÑÐ´ÐµÐ»Ð¾Ðº';
+  if (r === 1) return 'сделка';
+  if (r >= 2 && r <= 4) return 'сделки';
+  return 'сделок';
 }
 
 function _dayWord(n) {
   var m = n % 100;
-  if (m >= 11 && m <= 19) return 'Ð´Ð½ÐµÐ¹';
+  if (m >= 11 && m <= 19) return 'дней';
   var r = n % 10;
-  if (r === 1) return 'Ð´ÐµÐ½Ñ';
-  if (r >= 2 && r <= 4) return 'Ð´Ð½Ñ';
-  return 'Ð´Ð½ÐµÐ¹';
+  if (r === 1) return 'день';
+  if (r >= 2 && r <= 4) return 'дня';
+  return 'дней';
 }
 
 

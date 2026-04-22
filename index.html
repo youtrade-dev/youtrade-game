@@ -1392,7 +1392,7 @@ function chalRender() {
     balGrid.innerHTML = data.balances.map(function(b) {
       var isBest = b === data.best;
       var isActive = b === _chalBal;
-      return '<button class="chal-bal-btn' + (isActive?' active':'') + (isBest?' best':'') + '" onclick="chalSetBal('' + b + '')">' + b + '</button>';
+      return '<button class="chal-bal-btn' + (isActive?' active':'') + (isBest?' best':'') + '" onclick="chalSetBal(\'' + b + '\')">' + b + '</button>';
     }).join('');
   }
 

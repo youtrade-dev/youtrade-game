@@ -282,85 +282,77 @@ body{
 .lead-pct{font-size:13px;font-weight:700;color:var(--green)}
 
 /* === CHALLENGE SCREEN === */
-.chal-wrap{padding:12px;display:flex;flex-direction:column;gap:12px}
+.chal-wrap{padding:12px 12px 16px;display:flex;flex-direction:column;gap:14px}
 .chal-hero{
-  background:linear-gradient(135deg,rgba(78,53,198,0.2),rgba(16,185,129,0.1));
-  border:1px solid rgba(78,53,198,0.35);
+  background:linear-gradient(135deg,rgba(78,53,198,0.25),rgba(16,185,129,0.08));
+  border:1px solid rgba(78,53,198,0.4);
   border-radius:16px;
-  padding:20px 16px;
+  padding:18px 16px 14px;
   text-align:center;
 }
-.chal-hero-icon{font-size:32px;margin-bottom:8px}
-.chal-hero-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-0.3px}
-.chal-hero-sub{font-size:13px;color:var(--text2);line-height:1.4}
-.chal-steps{
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:4px 0;
-}
-.chal-step{
-  display:flex;
-  align-items:flex-start;
-  gap:12px;
-  padding:12px 14px;
-  border-bottom:1px solid var(--border);
-}
-.chal-step:last-child{border-bottom:none}
-.chal-step-num{
-  width:24px;height:24px;
-  background:var(--primary);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;
-  flex-shrink:0;
-  margin-top:1px;
-}
-.chal-step-text{font-size:13px;color:var(--text);line-height:1.4}
-.chal-conditions{
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px;
-}
-.chal-cond-title{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
-.chal-cond-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.chal-cond-item{
-  background:var(--bg3);
-  border:1px solid var(--border);
+.chal-hero-title{font-size:19px;font-weight:800;color:var(--text);margin-bottom:3px;letter-spacing:-0.3px}
+.chal-hero-sub{font-size:12px;color:var(--text2);line-height:1.4}
+.chal-hero-badges{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.chal-badge{background:rgba(78,53,198,0.18);border:1px solid rgba(78,53,198,0.3);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--primary)}
+.chal-badge.green{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3);color:var(--green)}
+/* Plan tabs */
+.chal-plan-tabs{display:flex;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:4px}
+.chal-plan-tab{flex:1;padding:7px 4px;border:none;border-radius:9px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);transition:all .2s;text-align:center}
+.chal-plan-tab.active{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(78,53,198,0.4)}
+/* Balance selector */
+.chal-section-title{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.chal-bal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.chal-bal-btn{
+  padding:10px 4px;
+  border:1px solid var(--border2);
   border-radius:10px;
-  padding:10px 12px;
-}
-.chal-cond-label{font-size:10px;color:var(--text3);display:block;margin-bottom:3px}
-.chal-cond-value{font-size:16px;font-weight:700;color:var(--text)}
-.chal-cond-value.green{color:var(--green)}
-.chal-cond-value.red{color:var(--red)}
-.btn-buy-chal{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  background:var(--primary);
-  color:#fff;
-  border-radius:14px;
-  padding:14px 20px;
-  font-size:15px;
-  font-weight:700;
-  text-decoration:none;
+  background:var(--bg2);
+  color:var(--text);
+  font-size:13px;font-weight:700;
   cursor:pointer;
-  transition:all .2s;
-  border:none;
-  letter-spacing:-.2px;
+  transition:all .15s;
+  text-align:center;
+  position:relative;
+}
+.chal-bal-btn.active{border-color:var(--primary);background:rgba(78,53,198,0.15);color:var(--primary)}
+.chal-bal-btn.best::after{content:'★';position:absolute;top:-6px;right:4px;font-size:10px;color:#f59e0b;background:var(--bg);padding:0 2px}
+/* Conditions table */
+.chal-cond-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.chal-cond-header{display:grid;gap:0;border-bottom:1px solid var(--border)}
+.chal-cond-row{display:flex;align-items:center;border-bottom:1px solid var(--border)}
+.chal-cond-row:last-child{border-bottom:none}
+.chal-cond-cell{flex:1;padding:9px 10px;font-size:12px;text-align:center}
+.chal-cond-cell:first-child{flex:1.5;text-align:left;color:var(--text2);font-size:11px}
+.chal-cond-col-head{flex:1;padding:8px 10px;font-size:10px;font-weight:700;text-align:center;color:var(--text2);text-transform:uppercase;letter-spacing:.3px;background:var(--bg3)}
+.chal-cond-col-head:first-child{flex:1.5;text-align:left}
+.chal-cval-green{color:var(--green);font-weight:700}
+.chal-cval-red{color:var(--red);font-weight:700}
+.chal-cval-bold{color:var(--text);font-weight:700}
+.chal-cval-muted{color:var(--text3)}
+/* Price card */
+.chal-price-card{
+  background:linear-gradient(135deg,rgba(78,53,198,0.15),rgba(78,53,198,0.05));
+  border:1px solid rgba(78,53,198,0.35);
+  border-radius:14px;
+  padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.chal-price-label{font-size:12px;color:var(--text2);margin-bottom:3px}
+.chal-price-name{font-size:14px;font-weight:700;color:var(--text)}
+.chal-price-val{font-size:26px;font-weight:800;color:var(--primary)}
+.chal-price-note{font-size:10px;color:var(--text3);margin-top:2px;text-align:right}
+/* Buy button */
+.btn-buy-chal{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--primary);color:#fff;
+  border-radius:14px;padding:15px 20px;
+  font-size:15px;font-weight:700;text-decoration:none;cursor:pointer;
+  transition:all .2s;border:none;letter-spacing:-.2px;
   box-shadow:0 4px 20px rgba(78,53,198,0.4);
 }
 .btn-buy-chal:hover{background:var(--primary-hover);box-shadow:0 6px 24px rgba(78,53,198,0.5)}
 .btn-buy-chal:active{transform:scale(0.97)}
-.chal-footer-note{
-  text-align:center;
-  font-size:11px;
-  color:var(--text3);
-  padding:0 8px;
-}
+.chal-footer-note{text-align:center;font-size:11px;color:var(--text3);padding:0 8px}
 
 /* === NAV BAR === */
 nav{
@@ -837,56 +829,67 @@ nav{
   <div class="content">
     <div class="chal-wrap">
 
+      <!-- Hero -->
       <div class="chal-hero">
-        <div class="chal-hero-icon">🏆</div>
         <div class="chal-hero-title">YouTrade Prop Challenge</div>
-        <div class="chal-hero-sub">Торгуй на демо — получи реальный проп-счёт</div>
-      </div>
-
-      <div class="chal-steps">
-        <div class="chal-step">
-          <div class="chal-step-num">1</div>
-          <div class="chal-step-text">Тренируйся в симуляторе и набери +8% прибыли</div>
-        </div>
-        <div class="chal-step">
-          <div class="chal-step-num">2</div>
-          <div class="chal-step-text">Купи реальный Challenge на сайте YouTrade</div>
-        </div>
-        <div class="chal-step">
-          <div class="chal-step-num">3</div>
-          <div class="chal-step-text">Пройди испытание и получи финансирование до $200,000</div>
+        <div class="chal-hero-sub">Пройди испытание — получи реальный проп-счёт до $200,000</div>
+        <div class="chal-hero-badges">
+          <span class="chal-badge green">80% прибыли</span>
+          <span class="chal-badge">Без ограничений по времени</span>
+          <span class="chal-badge">Мгновенный доступ</span>
         </div>
       </div>
 
-      <div class="chal-conditions">
-        <div class="chal-cond-title">Условия Challenge</div>
-        <div class="chal-cond-grid">
-          <div class="chal-cond-item">
-            <span class="chal-cond-label">Цель прибыли</span>
-            <span class="chal-cond-value green">+8%</span>
+      <!-- Plan type tabs -->
+      <div>
+        <div class="chal-section-title">Тип программы</div>
+        <div class="chal-plan-tabs">
+          <button class="chal-plan-tab active" onclick="chalSetPlan('1step',this)">1 этап</button>
+          <button class="chal-plan-tab" onclick="chalSetPlan('2step',this)">2 этапа</button>
+          <button class="chal-plan-tab" onclick="chalSetPlan('instant',this)">Мгновенное</button>
+        </div>
+      </div>
+
+      <!-- Balance selector -->
+      <div>
+        <div class="chal-section-title">Размер счёта</div>
+        <div class="chal-bal-grid" id="chal-bal-grid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Price card -->
+      <div class="chal-price-card">
+        <div>
+          <div class="chal-price-label">Выбранный план</div>
+          <div class="chal-price-name" id="chal-plan-name">1 этап · $5K</div>
+        </div>
+        <div style="text-align:right">
+          <div class="chal-price-val" id="chal-price">$49</div>
+          <div class="chal-price-note">единоразовый платёж</div>
+        </div>
+      </div>
+
+      <!-- Conditions table -->
+      <div>
+        <div class="chal-section-title">Условия торговли</div>
+        <div class="chal-cond-box">
+          <div class="chal-cond-row" id="chal-cond-header" style="background:var(--bg3)">
+            <!-- filled by JS -->
           </div>
-          <div class="chal-cond-item">
-            <span class="chal-cond-label">Дн. лимит потерь</span>
-            <span class="chal-cond-value red">5%</span>
-          </div>
-          <div class="chal-cond-item">
-            <span class="chal-cond-label">Макс. просадка</span>
-            <span class="chal-cond-value red">10%</span>
-          </div>
-          <div class="chal-cond-item">
-            <span class="chal-cond-label">Мин. дней</span>
-            <span class="chal-cond-value">5</span>
+          <div id="chal-cond-rows">
+            <!-- filled by JS -->
           </div>
         </div>
       </div>
 
+      <!-- Buy button -->
       <a class="btn-buy-chal" href="https://prop.youtrade.kz/challenge-purchase/" target="_blank" rel="noopener">
-        <span>🚀</span>
-        Купить Challenge
+        🚀 Купить Challenge на сайте
       </a>
 
       <div class="chal-footer-note">
-        Финансирование до $200,000 · Выплата 80% прибыли
+        Мгновенный доступ · 24/7 поддержка · Выплата 80% прибыли
       </div>
 
     </div>
@@ -1314,9 +1317,119 @@ function show(n, btn) {
 }
 
 // ============ CHALLENGE ============
-function buyChal() {
-  const url = 'https://prop.youtrade.kz';
-  if(tg) tg.openLink(url); else window.open(url,'_blank');
+var _chalPlan = '1step';
+var _chalBal = '$5K';
+
+var _chalData = {
+  '1step': {
+    label: '1 этап',
+    cols: ['Фаза 1','Финанс.'],
+    rows: [
+      ['Цель прибыли','10%','—'],
+      ['Макс. дн. убыток','5%','5%'],
+      ['Макс. убыток','6%','6%'],
+      ['Мин. торг. дней','3','3'],
+      ['Торговый период','∞','∞'],
+      ['Выплата прибыли','0%','80%']
+    ],
+    prices: {'$5K':'$49','$10K':'$89','$25K':'$190','$50K':'$375','$100K':'$750','$200K':'$1 500'},
+    balances: ['$5K','$10K','$25K','$50K','$100K','$200K'],
+    best: '$50K'
+  },
+  '2step': {
+    label: '2 этапа',
+    cols: ['Фаза 1','Фаза 2','Финанс.'],
+    rows: [
+      ['Цель прибыли','8%','5%','—'],
+      ['Макс. дн. убыток','5%','5%','5%'],
+      ['Макс. убыток','8%','8%','8%'],
+      ['Мин. торг. дней','3','3','3'],
+      ['Торговый период','∞','∞','∞'],
+      ['Выплата прибыли','0%','0%','80%']
+    ],
+    prices: {'$5K':'$39','$10K':'$69','$25K':'$159','$50K':'$259','$100K':'$450','$200K':'$900'},
+    balances: ['$5K','$10K','$25K','$50K','$100K','$200K'],
+    best: '$50K'
+  },
+  'instant': {
+    label: 'Мгновенное',
+    cols: ['Мгновенный'],
+    rows: [
+      ['Цель прибыли','—'],
+      ['Макс. дн. убыток','5%'],
+      ['Макс. убыток','8%'],
+      ['Мин. торг. дней','3'],
+      ['Торговый период','∞'],
+      ['Выплата прибыли','80%']
+    ],
+    prices: {'$5K':'$200','$10K':'$400','$25K':'$1 125','$50K':'$2 500','$100K':'$5 000'},
+    balances: ['$5K','$10K','$25K','$50K','$100K'],
+    best: '$25K'
+  }
+};
+
+function chalSetPlan(plan, btn) {
+  _chalPlan = plan;
+  document.querySelectorAll('.chal-plan-tab').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  var data = _chalData[plan];
+  // Reset balance to first option
+  _chalBal = data.balances[0];
+  chalRender();
+}
+
+function chalSetBal(bal) {
+  _chalBal = bal;
+  chalRender();
+}
+
+function chalRender() {
+  var data = _chalData[_chalPlan];
+
+  // Render balance buttons
+  var balGrid = document.getElementById('chal-bal-grid');
+  if(balGrid) {
+    balGrid.innerHTML = data.balances.map(function(b) {
+      var isBest = b === data.best;
+      var isActive = b === _chalBal;
+      return '<button class="chal-bal-btn' + (isActive?' active':'') + (isBest?' best':'') + '" onclick="chalSetBal('' + b + '')">' + b + '</button>';
+    }).join('');
+  }
+
+  // Update price card
+  var price = data.prices[_chalBal] || '—';
+  var planName = document.getElementById('chal-plan-name');
+  var priceEl = document.getElementById('chal-price');
+  if(planName) planName.textContent = data.label + ' · ' + _chalBal;
+  if(priceEl) priceEl.textContent = price;
+
+  // Render conditions table header
+  var header = document.getElementById('chal-cond-header');
+  if(header) {
+    header.innerHTML = '<div class="chal-cond-col-head" style="flex:1.5">Параметр</div>' +
+      data.cols.map(function(c){ return '<div class="chal-cond-col-head">' + c + '</div>'; }).join('');
+  }
+
+  // Render conditions rows
+  var rowsEl = document.getElementById('chal-cond-rows');
+  if(rowsEl) {
+    rowsEl.innerHTML = data.rows.map(function(row) {
+      var label = row[0];
+      var cells = row.slice(1).map(function(v, i) {
+        var cls = 'chal-cval-bold';
+        if(v === '—' || v === '0%') cls = 'chal-cval-muted';
+        else if(v.includes('%') && (label.includes('убыток') || label.includes('потер'))) cls = 'chal-cval-red';
+        else if(label.includes('Выплата') && v !== '0%' && v !== '—') cls = 'chal-cval-green';
+        else if(label.includes('Цель') && v !== '—') cls = 'chal-cval-green';
+        return '<div class="chal-cond-cell"><span class="' + cls + '">' + v + '</span></div>';
+      }).join('');
+      return '<div class="chal-cond-row"><div class="chal-cond-cell" style="flex:1.5;color:var(--text2);font-size:11px">' + label + '</div>' + cells + '</div>';
+    }).join('');
+  }
+}
+
+function initChallenge() {
+  chalRender();
 }
 
 
@@ -1896,6 +2009,7 @@ function _dayWord(n) {
 loadState(function() {
   updateDashboard();
   initLeaderboard();
+  initChallenge();
   loadCurrentPrice().then(() => {
     setTimeout(() => initChart(S.asset), 500);
   });

@@ -1095,7 +1095,7 @@ window._fxCache = window._fxCache || { ts: 0, eur: null, gbp: null, jpy: null };
 
 async function _fetchFxBatch() {
   const now = Date.now();
-  if (now - (window._fxCache.ts || 0) < 30000 && window._fxCache.eur) return window._fxCache;
+  if (now - (window._fxCache.ts || 0) < 3000 && window._fxCache.eur) return window._fxCache;
   const urls = [
     'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json',
     'https://latest.currency-api.pages.dev/v1/currencies/usd.json'
@@ -1142,7 +1142,7 @@ async function _fetchBinanceTicker(sym) {
 
 async function _fetchYahooViaProxy(symbol) {
   const encoded = encodeURIComponent(symbol);
-  const target = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encoded + '?range=1d&interval=1m';
+  const target = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encoded + '?range=1d&interval=1m&_=' + Date.now();
   const proxies = [
     'https://corsproxy.io/?',
     'https://api.allorigins.win/raw?url=',
@@ -1173,6 +1173,8 @@ async function fetchPrice(symbol) {
   try {
     // FX
     if (symbol === 'EURUSD=X' || symbol === 'GBPUSD=X' || symbol === 'USDJPY=X') {
+      // PRIMARY: Yahoo (минутные тики), fallback ниже на currency-api
+      try { const yh = await _fetchYahooViaProxy(symbol); if (yh && isFinite(yh.price) && yh.price > 0) return yh; } catch(e){}
       const fx = await _fetchFxBatch();
       let price = null;
       if (symbol === 'EURUSD=X' && fx.eur) price = 1 / fx.eur;

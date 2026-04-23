@@ -1856,8 +1856,15 @@ async function _loadRealCandles(sym, tf) {
   if(candles && candles.length > 0){
     _candleSeries.setData(candles);
     if(_volSeries){
-      const volData = candles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
-      _volSeries.setData(volData);
+      const totalVol = candles.reduce((s,c) => s + (c.volume||0), 0);
+      if(totalVol > 0){
+        const volData = candles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
+        _volSeries.setData(volData);
+        _volSeries.applyOptions({visible: true});
+      } else {
+        _volSeries.setData([]);
+        _volSeries.applyOptions({visible: false});
+      }
     }
     _chart.timeScale().fitContent();
     drawEntryLines();

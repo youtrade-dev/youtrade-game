@@ -627,7 +627,46 @@ nav{
 .perf-val.green{color:var(--green)}
 .perf-val.red{color:var(--red)}
 .reset-btn{display:block;width:100%;margin-top:20px;padding:12px;background:transparent;border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.5px;transition:background 0.2s}
-.reset-btn:hover{background:rgba(239,68,68,0.1)}</style>
+.reset-btn:hover{background:rgba(239,68,68,0.1)}
+/* === ACCOUNT STATUS BAR (Trade screen) === */
+.acc-bar{display:flex;gap:6px;align-items:stretch;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:10px;margin:0 0 12px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.acc-bar::-webkit-scrollbar{display:none}
+.acc-cell{flex:1 1 0;min-width:96px;padding:6px 10px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border)}
+.acc-cell:last-child{border-right:0}
+.acc-cell-label{font-size:11px;color:#9aa0a6;letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px;font-weight:500}
+.acc-cell-value{font-size:15px;font-weight:600;color:#e6e6e6;line-height:1.1;display:flex;align-items:baseline;gap:4px}
+.acc-cell-value.pos{color:#7ee787}
+.acc-cell-value.neg{color:#ff8888}
+.acc-cell-ccy{font-size:10px;color:#9aa0a6;font-weight:500;letter-spacing:.4px}
+.acc-info-btn{flex:0 0 auto;align-self:center;width:34px;height:34px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--primary);font-weight:700;font-family:Inter,sans-serif;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:4px;transition:transform .12s,background .12s}
+.acc-info-btn:hover{background:#1a1a22;transform:scale(1.05)}
+.acc-info-btn:active{transform:scale(.95)}
+
+/* === INSTRUMENT INFO MODAL === */
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:9000;display:none;align-items:flex-start;justify-content:center;padding:40px 16px 16px;overflow:auto}
+.modal-back.show{display:flex}
+.modal-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;width:100%;max-width:440px;padding:18px 18px 14px;box-shadow:0 12px 40px rgba(0,0,0,.5);animation:modalIn .18s ease-out}
+@keyframes modalIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.modal-title{font-size:17px;font-weight:600;color:#fff;display:flex;align-items:center;gap:10px}
+.modal-close{width:30px;height:30px;border-radius:50%;background:#1a1a22;border:none;color:#aaa;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:#26262e;color:#fff}
+.spec-row{display:flex;justify-content:space-between;align-items:center;padding:8px 2px;border-bottom:1px dashed rgba(255,255,255,.06);font-size:13.5px}
+.spec-row:last-child{border-bottom:0}
+.spec-key{color:#9aa0a6}
+.spec-val{color:#e6e6e6;font-weight:500;text-align:right;max-width:60%}
+.spec-val.green{color:#7ee787}
+.spec-val.red{color:#ff8888}
+.spec-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;letter-spacing:.4px}
+.spec-pill.green{background:rgba(126,231,135,.12);color:#7ee787}
+.spec-pill.red{background:rgba(255,136,136,.12);color:#ff8888}
+
+/* === Compact session/leverage bar inside order panel === */
+.inst-risk-warn{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 4px 0;font-size:12.5px;color:#9aa0a6;line-height:1.4}
+.inst-risk-warn .pill{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:10px;background:#1a1a22;border:1px solid var(--border);font-weight:500}
+.inst-risk-warn .pill .dot{width:7px;height:7px;border-radius:50%;background:#7ee787;box-shadow:0 0 6px rgba(126,231,135,.6)}
+.inst-risk-warn .pill .dot.off{background:#ff8888;box-shadow:0 0 6px rgba(255,136,136,.6)}
+</style>
 </head><body>
 <div class="app">
 
@@ -797,7 +836,24 @@ nav{
 </div>
 
 <!-- TRADE SCREEN -->
-<div class="screen" id="s-trade"><div class="trade-screen-inner"><div class="inst-list-header"><span>Символ</span><span>Цена</span></div><div class="inst-list"><div class="inst-list-group"><div class="inst-list-group-label">Форекс</div><div class="inst-row" id="row-EURUSD" onclick="selAsset2('EURUSD=X','EUR/USD','forex',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-forex">fx</div><div class="inst-row-info"><span class="inst-row-name">EUR/USD</span><span class="inst-row-sub">Euro / US Dollar</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-EURUSD">—</span><span class="inst-row-star" id="st-EURUSD" onclick="toggleFav('EURUSD=X','st-EURUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-EURUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-EURUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-EURUSD">—</div></button></div><div id="rwarn" class="inst-risk-warn"></div></div><div class="inst-row" id="row-GBPUSD" onclick="selAsset2('GBPUSD=X','GBP/USD','forex',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-forex">fx</div><div class="inst-row-info"><span class="inst-row-name">GBP/USD</span><span class="inst-row-sub">British Pound</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-GBPUSD">—</span><span class="inst-row-star" id="st-GBPUSD" onclick="toggleFav('GBPUSD=X','st-GBPUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-GBPUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots2" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-GBPUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-GBPUSD">—</div></button></div><div id="rwarn2" class="inst-risk-warn"></div></div><div class="inst-row" id="row-USDJPY" onclick="selAsset2('USDJPY=X','USD/JPY','forex',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-forex">fx</div><div class="inst-row-info"><span class="inst-row-name">USD/JPY</span><span class="inst-row-sub">Dollar / Yen</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-USDJPY">—</span><span class="inst-row-star" id="st-USDJPY" onclick="toggleFav('USDJPY=X','st-USDJPY',event)">☆</span></div></div><div class="inst-expand" id="exp-USDJPY" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots3" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-USDJPY">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-USDJPY">—</div></button></div><div id="rwarn3" class="inst-risk-warn"></div></div></div><div class="inst-list-group"><div class="inst-list-group-label">Металлы</div><div class="inst-row" id="row-XAUUSD" onclick="selAsset2('GC=F','XAUUSD','metals',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-metals">Au</div><div class="inst-row-info"><span class="inst-row-name">XAUUSD</span><span class="inst-row-sub">Gold troy ounce</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-XAUUSD">—</span><span class="inst-row-star" id="st-XAUUSD" onclick="toggleFav('GC=F','st-XAUUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-XAUUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots4" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAUUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAUUSD">—</div></button></div><div id="rwarn4" class="inst-risk-warn"></div></div><div class="inst-row" id="row-XAGUSD" onclick="selAsset2('SI=F','XAGUSD','metals',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-metals">Ag</div><div class="inst-row-info"><span class="inst-row-name">XAGUSD</span><span class="inst-row-sub">Silver troy ounce</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-XAGUSD">—</span><span class="inst-row-star" id="st-XAGUSD" onclick="toggleFav('SI=F','st-XAGUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-XAGUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots5" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAGUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAGUSD">—</div></button></div><div id="rwarn5" class="inst-risk-warn"></div></div></div><div class="inst-list-group"><div class="inst-list-group-label">Индексы</div><div class="inst-row" id="row-SP500" onclick="selAsset2('^GSPC','S\u0026P 500','indices',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-indices">idx</div><div class="inst-row-info"><span class="inst-row-name">S&P 500</span><span class="inst-row-sub">US Large Cap</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-SP500">—</span><span class="inst-row-star" id="st-SP500" onclick="toggleFav('^GSPC','st-SP500',event)">☆</span></div></div><div class="inst-expand" id="exp-SP500" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots6" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-SP500">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-SP500">—</div></button></div><div id="rwarn6" class="inst-risk-warn"></div></div><div class="inst-row" id="row-NASDAQ" onclick="selAsset2('^IXIC','NASDAQ','indices',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-indices">idx</div><div class="inst-row-info"><span class="inst-row-name">NASDAQ</span><span class="inst-row-sub">US Tech Index</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-NASDAQ">—</span><span class="inst-row-star" id="st-NASDAQ" onclick="toggleFav('^IXIC','st-NASDAQ',event)">☆</span></div></div><div class="inst-expand" id="exp-NASDAQ" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots7" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-NASDAQ">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-NASDAQ">—</div></button></div><div id="rwarn7" class="inst-risk-warn"></div></div></div><div class="inst-list-group"><div class="inst-list-group-label">Крипто</div><div class="inst-row" id="row-BTC" onclick="selAsset2('BTC-USD','BTC/USD','crypto',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-crypto">₿</div><div class="inst-row-info"><span class="inst-row-name">BTC/USD</span><span class="inst-row-sub">Bitcoin</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-BTC">—</span><span class="inst-row-star" id="st-BTC" onclick="toggleFav('BTC-USD','st-BTC',event)">☆</span></div></div><div class="inst-expand" id="exp-BTC" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots8" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-BTC">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-BTC">—</div></button></div><div id="rwarn8" class="inst-risk-warn"></div></div><div class="inst-row" id="row-ETH" onclick="selAsset2('ETH-USD','ETH/USD','crypto',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-crypto">Ξ</div><div class="inst-row-info"><span class="inst-row-name">ETH/USD</span><span class="inst-row-sub">Ethereum</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-ETH">—</span><span class="inst-row-star" id="st-ETH" onclick="toggleFav('ETH-USD','st-ETH',event)">☆</span></div></div><div class="inst-expand" id="exp-ETH" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots9" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-ETH">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-ETH">—</div></button></div><div id="rwarn9" class="inst-risk-warn"></div></div></div></div></div><div id="cprice" style="display:none"></div><div id="pchange" style="display:none"></div></div>
+<div class="screen" id="s-trade"><div class="trade-screen-inner"><div class="acc-bar" id="acc-bar">
+  <div class="acc-cell"><div class="acc-cell-label">Прибыль</div><div class="acc-cell-value" id="ab-pnl"><span id="ab-pnl-v">0.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <div class="acc-cell"><div class="acc-cell-label">Средства</div><div class="acc-cell-value"><span id="ab-eq">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <div class="acc-cell"><div class="acc-cell-label">Баланс</div><div class="acc-cell-value"><span id="ab-bal">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <div class="acc-cell"><div class="acc-cell-label">Свободно</div><div class="acc-cell-value"><span id="ab-free">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <div class="acc-cell"><div class="acc-cell-label">Маржа</div><div class="acc-cell-value"><span id="ab-mar">0.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <button class="acc-info-btn" id="ab-info-btn" onclick="openInstrInfo()" title="Спецификация инструмента">i</button>
+</div>
+<div class="modal-back" id="instr-modal" onclick="if(event.target===this)closeInstrInfo()">
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div class="modal-title" id="instr-modal-title">Спецификация</div>
+      <button class="modal-close" onclick="closeInstrInfo()">×</button>
+    </div>
+    <div id="instr-modal-body"></div>
+  </div>
+</div>
+<div class="inst-list-header"><span>Символ</span><span>Цена</span></div><div class="inst-list"><div class="inst-list-group"><div class="inst-list-group-label">Форекс</div><div class="inst-row" id="row-EURUSD" onclick="selAsset2('EURUSD=X','EUR/USD','forex',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-forex">fx</div><div class="inst-row-info"><span class="inst-row-name">EUR/USD</span><span class="inst-row-sub">Euro / US Dollar</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-EURUSD">—</span><span class="inst-row-star" id="st-EURUSD" onclick="toggleFav('EURUSD=X','st-EURUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-EURUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-EURUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-EURUSD">—</div></button></div><div id="rwarn" class="inst-risk-warn"></div></div><div class="inst-row" id="row-GBPUSD" onclick="selAsset2('GBPUSD=X','GBP/USD','forex',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-forex">fx</div><div class="inst-row-info"><span class="inst-row-name">GBP/USD</span><span class="inst-row-sub">British Pound</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-GBPUSD">—</span><span class="inst-row-star" id="st-GBPUSD" onclick="toggleFav('GBPUSD=X','st-GBPUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-GBPUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots2" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-GBPUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-GBPUSD">—</div></button></div><div id="rwarn2" class="inst-risk-warn"></div></div><div class="inst-row" id="row-USDJPY" onclick="selAsset2('USDJPY=X','USD/JPY','forex',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-forex">fx</div><div class="inst-row-info"><span class="inst-row-name">USD/JPY</span><span class="inst-row-sub">Dollar / Yen</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-USDJPY">—</span><span class="inst-row-star" id="st-USDJPY" onclick="toggleFav('USDJPY=X','st-USDJPY',event)">☆</span></div></div><div class="inst-expand" id="exp-USDJPY" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots3" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-USDJPY">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-USDJPY">—</div></button></div><div id="rwarn3" class="inst-risk-warn"></div></div></div><div class="inst-list-group"><div class="inst-list-group-label">Металлы</div><div class="inst-row" id="row-XAUUSD" onclick="selAsset2('GC=F','XAUUSD','metals',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-metals">Au</div><div class="inst-row-info"><span class="inst-row-name">XAUUSD</span><span class="inst-row-sub">Gold troy ounce</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-XAUUSD">—</span><span class="inst-row-star" id="st-XAUUSD" onclick="toggleFav('GC=F','st-XAUUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-XAUUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots4" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAUUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAUUSD">—</div></button></div><div id="rwarn4" class="inst-risk-warn"></div></div><div class="inst-row" id="row-XAGUSD" onclick="selAsset2('SI=F','XAGUSD','metals',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-metals">Ag</div><div class="inst-row-info"><span class="inst-row-name">XAGUSD</span><span class="inst-row-sub">Silver troy ounce</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-XAGUSD">—</span><span class="inst-row-star" id="st-XAGUSD" onclick="toggleFav('SI=F','st-XAGUSD',event)">☆</span></div></div><div class="inst-expand" id="exp-XAGUSD" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots5" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-XAGUSD">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-XAGUSD">—</div></button></div><div id="rwarn5" class="inst-risk-warn"></div></div></div><div class="inst-list-group"><div class="inst-list-group-label">Индексы</div><div class="inst-row" id="row-SP500" onclick="selAsset2('^GSPC','S\u0026P 500','indices',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-indices">idx</div><div class="inst-row-info"><span class="inst-row-name">S&P 500</span><span class="inst-row-sub">US Large Cap</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-SP500">—</span><span class="inst-row-star" id="st-SP500" onclick="toggleFav('^GSPC','st-SP500',event)">☆</span></div></div><div class="inst-expand" id="exp-SP500" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots6" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-SP500">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-SP500">—</div></button></div><div id="rwarn6" class="inst-risk-warn"></div></div><div class="inst-row" id="row-NASDAQ" onclick="selAsset2('^IXIC','NASDAQ','indices',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-indices">idx</div><div class="inst-row-info"><span class="inst-row-name">NASDAQ</span><span class="inst-row-sub">US Tech Index</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-NASDAQ">—</span><span class="inst-row-star" id="st-NASDAQ" onclick="toggleFav('^IXIC','st-NASDAQ',event)">☆</span></div></div><div class="inst-expand" id="exp-NASDAQ" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots7" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-NASDAQ">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-NASDAQ">—</div></button></div><div id="rwarn7" class="inst-risk-warn"></div></div></div><div class="inst-list-group"><div class="inst-list-group-label">Крипто</div><div class="inst-row" id="row-BTC" onclick="selAsset2('BTC-USD','BTC/USD','crypto',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-crypto">₿</div><div class="inst-row-info"><span class="inst-row-name">BTC/USD</span><span class="inst-row-sub">Bitcoin</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-BTC">—</span><span class="inst-row-star" id="st-BTC" onclick="toggleFav('BTC-USD','st-BTC',event)">☆</span></div></div><div class="inst-expand" id="exp-BTC" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots8" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-BTC">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-BTC">—</div></button></div><div id="rwarn8" class="inst-risk-warn"></div></div><div class="inst-row" id="row-ETH" onclick="selAsset2('ETH-USD','ETH/USD','crypto',this)"><div class="inst-row-left"><div class="inst-icon inst-icon-crypto">Ξ</div><div class="inst-row-info"><span class="inst-row-name">ETH/USD</span><span class="inst-row-sub">Ethereum</span></div></div><div class="inst-row-right"><span class="inst-row-price" id="lp-ETH">—</span><span class="inst-row-star" id="st-ETH" onclick="toggleFav('ETH-USD','st-ETH',event)">☆</span></div></div><div class="inst-expand" id="exp-ETH" style="display:none"><div class="inst-expand-bar"><div class="inst-expand-lots"><div class="inst-expand-lot-label">Лоты</div><div class="inst-expand-lot-ctrl"><button class="lot-btn" onclick="adjLot(-1)">−</button><input class="lot-input" id="lots9" type="number" value="0.1" min="0.01" step="0.01" max="100"><button class="lot-btn" onclick="adjLot(1)">+</button></div></div><button class="inst-btn-sell" onclick="trade('sell')"><div class="inst-btn-label">Продать</div><div class="inst-btn-price" id="sp-ETH">—</div></button><button class="inst-btn-buy" onclick="trade('buy')"><div class="inst-btn-label">Купить</div><div class="inst-btn-price" id="bp-ETH">—</div></button></div><div id="rwarn9" class="inst-risk-warn"></div></div></div></div></div><div id="cprice" style="display:none"></div><div id="pchange" style="display:none"></div></div>
 <div class="screen" id="s-hist">
   <div class="header"><div class="logo"><svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px"><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" fill="#4E35C6" opacity="0.3"/><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" stroke="#4E35C6" stroke-width="2"/><path d="M14 20L18 24L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       История
@@ -1173,22 +1229,9 @@ function updRisk() {
   const lots = parseFloat(document.getElementById('lots').value || 0.1);
   const data = S.prices[sym];
   const wEl = document.getElementById("rwarn");
-  if(!data){ if(wEl) wEl.textContent = "⏳ Ожидание цены..."; return; }
-
-  const p = data.price;
-  const notional = calcNotional(inst, lots, p);
-  const margin = calcMargin(inst, lots, p);
-  const comm = calcCommission(lots);
   const sess = isMarketOpen(sym);
 
-  // Грубый «риск сделки» = ход 1% по цене (для предупреждения)
-  const risk = notional * 0.01;
-  const pct  = (risk / Math.max(1,S.bal) * 100).toFixed(1);
-  const color = pct > 3 ? "#ff8888" : "#ffcc44";
-
-  // Блокируем кнопки Buy/Sell для этого символа, если рынок закрыт
-  const bp = document.getElementById("bp-"+inst.htmlId);
-  const sp = document.getElementById("sp-"+inst.htmlId);
+  // Блок-кнопок если рынок закрыт
   const expBlk = document.querySelector("#exp-"+inst.htmlId);
   if(expBlk){
     expBlk.querySelectorAll(".inst-btn-buy, .inst-btn-sell").forEach(b => {
@@ -1199,17 +1242,19 @@ function updRisk() {
   }
 
   if(!wEl) return;
-  wEl.style.display = "block";
-  wEl.style.lineHeight = "1.5";
-  const sessLine = sess.open
-    ? `<span style="color:#7ee787">● Рынок открыт</span> • Плечо <b>1:${LEVERAGE}</b>`
-    : `<span style="color:#ff8888">● ${sess.reason || "Рынок закрыт"}</span> • Плечо <b>1:${LEVERAGE}</b>`;
-
-  wEl.innerHTML =
-    `<div>${sessLine}</div>` +
-    `<div>💼 Объём: <b>${notional.toFixed(2)}</b> • Маржа: <b>${margin.toFixed(2)}</b></div>` +
-    `<div>💸 Комиссия открытия: <b>${comm.toFixed(2)}</b></div>` +
-    `<div style="color:${color}">⚠️ Риск (1% хода): ~${risk.toFixed(2)} (${pct}% депо)</div>`;
+  const dotCls = sess.open ? "" : "off";
+  const sessLabel = sess.open ? "Рынок открыт" : (sess.reason || "Рынок закрыт");
+  let line = `<span class="pill"><span class="dot ${dotCls}"></span>${sessLabel}</span>`;
+  line += `<span class="pill">Плечо <b>1:${LEVERAGE}</b></span>`;
+  if(data){
+    const comm = calcCommission(lots);
+    const margin = calcMargin(inst, lots, data.price);
+    line += `<span class="pill">Маржа <b>$${margin.toFixed(2)}</b></span>`;
+    line += `<span class="pill">Комиссия <b>$${comm.toFixed(2)}</b></span>`;
+  } else {
+    line += `<span class="pill">⏳ Ожидание цены...</span>`;
+  }
+  wEl.innerHTML = line;
 }
 // ============ EXECUTE TRADE ============
 function trade(dir) {
@@ -1259,6 +1304,7 @@ function trade(dir) {
 
   updateDashboard();
   renderHistory();
+  updateAccountBar();
   if(_chart && _chartSym === sym) drawEntryLines();
   saveStateAfterAction();
 }
@@ -1292,6 +1338,7 @@ function closeTrade(tradeId) {
   S.bal = S.startBal + S.totalPnl;
   updateDashboard();
   renderHistory();
+  updateAccountBar();
   if(_chart && _chartSym === t.sym) drawEntryLines();
   saveStateAfterAction();
 }
@@ -1316,7 +1363,7 @@ function updateOpenPnl() {
   }
 }
 
-setInterval(updateOpenPnl, 5000);
+setInterval(()=>{ updateOpenPnl(); updateAccountBar(); }, 5000);
 
 // ============ RENDER OPEN POSITIONS (DASHBOARD) ============
 function renderOpenPositionsDash() {
@@ -2326,6 +2373,64 @@ async function _loadFSCandles(sym,tf){
     try{var syn=_buildCandleHistory(sym,tf);if(_fsCandleSeries){_fsCandleSeries.setData(syn);var vd=syn.map(function(c){return{time:c.time,value:c.volume||0,color:c.close>=c.open?'rgba(16,185,129,0.5)':'rgba(239,68,68,0.5)'};});if(_fsVolSeries)_fsVolSeries.setData(vd);_fsChart&&_fsChart.timeScale().fitContent();}}catch(e2){}
   }
 }
+
+// ============ ACCOUNT STATUS BAR ============
+function updateAccountBar(){
+  // Маржа = сумма margin открытых позиций
+  let usedMargin = 0, openPnl = 0;
+  for(const t of S.openTrades){
+    if(typeof t.margin === "number") usedMargin += t.margin;
+    if(typeof t.floatingPnl === "number") openPnl += t.floatingPnl;
+  }
+  const bal = S.bal;                 // баланс кошелька (после комиссий, без учёта плавающего PnL)
+  const equity = bal + openPnl;      // средства
+  const free = equity - usedMargin;  // свободные средства
+  const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v.toFixed(2); };
+  set("ab-bal", bal);
+  set("ab-eq", equity);
+  set("ab-free", free);
+  set("ab-mar", usedMargin);
+  set("ab-pnl-v", openPnl);
+  const pnlEl = document.getElementById("ab-pnl");
+  if(pnlEl){ pnlEl.classList.toggle("pos", openPnl > 0); pnlEl.classList.toggle("neg", openPnl < 0); }
+}
+
+// ============ INSTRUMENT INFO MODAL ============
+function openInstrInfo(){
+  const sym = S.asset; const inst = INSTRUMENTS[sym]; if(!inst) return;
+  const data = S.prices[sym] || {};
+  const lots = parseFloat((document.getElementById("lots")||{}).value || 0.1);
+  const px = data.price || 0;
+  const notional = px ? calcNotional(inst, lots, px) : 0;
+  const margin = px ? calcMargin(inst, lots, px) : 0;
+  const comm = calcCommission(lots);
+  const sess = isMarketOpen(sym);
+  const cat = ({forex:"Форекс",metals:"Металлы",indices:"Индексы",crypto:"Крипто"})[inst.cat] || inst.cat;
+  const sessText = sess.open ? "Открыт" : (sess.reason || "Закрыт");
+  const sessClass = sess.open ? "green" : "red";
+  const hours = ({fx:"Пн 02:03 – Пт 01:55 (GMT+5)",metal:"Ежедн. 03:01 – 02:00 (GMT+5)",us_idx:"Ежедн. 22:00 – 21:00 (GMT+5)","24/7":"24/7"})[inst.session] || "—";
+  const cs = inst.cat === "forex" ? `${inst.contractSize.toLocaleString()} ${inst.baseCcy}` : `${inst.contractSize} ${inst.baseCcy}`;
+  const rows = [
+    ["Категория", cat],
+    ["Размер контракта (1 лот)", cs],
+    ["Текущая цена", px ? px.toFixed(inst.dec) : "—"],
+    ["Объём при " + lots + " лот", "$" + notional.toFixed(2)],
+    ["Плечо", "1:" + LEVERAGE + " (маржа " + (100/LEVERAGE).toFixed(0) + "%)"],
+    ["Требуемая маржа", "$" + margin.toFixed(2)],
+    ["Комиссия открытия", "$" + comm.toFixed(2) + " (5$ × лот)"],
+    ["Торговые часы", hours],
+    ["Статус сессии", `<span class="spec-pill ${sessClass}">${sessText}</span>`]
+  ];
+  const body = rows.map(r => `<div class="spec-row"><span class="spec-key">${r[0]}</span><span class="spec-val">${r[1]}</span></div>`).join("");
+  document.getElementById("instr-modal-title").textContent = "Спецификация · " + inst.name;
+  document.getElementById("instr-modal-body").innerHTML = body;
+  document.getElementById("instr-modal").classList.add("show");
+}
+function closeInstrInfo(){ document.getElementById("instr-modal").classList.remove("show"); }
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeInstrInfo(); });
+
+
+setTimeout(()=>{ try{ updateAccountBar(); }catch(e){} }, 200);
 </script>
 <div id="inst-chart-holder" style="display:none;position:absolute;left:-9999px"></div>
 <div id="chart-fs-overlay" class="chart-fs-overlay">

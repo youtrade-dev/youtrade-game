@@ -1794,6 +1794,9 @@ function initChart(sym) {
   ro.observe(container);
 
   _loadRealCandles(sym, _chartTF);
+  // авто-обновление графика каждые 30 сек
+  if(window._chartReloadInt) clearInterval(window._chartReloadInt);
+  window._chartReloadInt = setInterval(()=>{ if(_chartSym && _chart && document.getElementById("s-trade").classList.contains("active")) _loadRealCandles(_chartSym, _chartTF); }, 30000);
 }
 
 function _getBinanceTF(tf) {
@@ -1826,51 +1829,105 @@ const _TD_KEY = 'a0817e6f3bd94d4b8a1a5e8c7f2d9e10';
 
 async function _loadRealCandles(sym, tf) {
   if(!_candleSeries) return;
+  const inst = INSTRUMENTS[sym]; if(!inst) return;
+  // Loader-плашка
+  let loader = document.getElementById("chart-loader");
+  if(!loader){
+    const c = document.getElementById("chart-cont");
+    if(c){ loader = document.createElement("div"); loader.id = "chart-loader"; loader.textContent = "⏳ Загрузка котировок..."; loader.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#9aa0a6;font-size:13px;pointer-events:none;z-index:5"; c.style.position = "relative"; c.appendChild(loader); }
+  }
+  const removeLoader = () => { const l = document.getElementById("chart-loader"); if(l) l.remove(); };
 
-  var container = document.getElementById('tv-chart');
-  var loadingEl = document.createElement('div');
-  loadingEl.id = 'chart-loading';
-  loadingEl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:12px;pointer-events:none;z-index:10;';
-  loadingEl.textContent = 'Loading...';
-  if(container) { var old = document.getElementById('chart-loading'); if(old) old.remove(); container.appendChild(loadingEl); }
-
-  var removeLoader = function() { var el = document.getElementById('chart-loading'); if(el) el.remove(); };
-
+  let candles = null;
   try {
-    var candles;
-    var binSym = _BINANCE_MAP[sym];
-    var tdSym = _TD_MAP[sym];
+    candles = await _fetchYahoo(sym, tf);
+  } catch(e){ console.warn("Yahoo failed for", sym, e.message); }
 
-    if(binSym) {
-      candles = await _fetchBinance(binSym, _getBinanceTF(tf));
-    } else if(tdSym) {
-      candles = await _fetchTwelveData(tdSym, tf);
-    }
-
-    removeLoader();
-
-    if(candles && candles.length > 0) {
-      _candleSeries.setData(candles);
-      var volData = candles.map(function(c) {
-        return { time: c.time, value: c.volume || 0,
-          color: c.close >= c.open ? 'rgba(38,166,154,0.5)' : 'rgba(239,83,80,0.5)' };
-      });
-      if(_volSeries) _volSeries.setData(volData);
-      _chart.timeScale().fitContent();
-    }
-  } catch(e) {
-    removeLoader();
-    console.warn('Chart error:', sym, e.message, '- using synthetic data');
+  // Crypto fallback — Binance Spot (для свежих real-time данных)
+  if((!candles || candles.length === 0) && (sym === "BTC-USD" || sym === "ETH-USD")){
     try {
-      var synCandles = _buildCandleHistory(sym, tf);
-      if(_candleSeries) {
+      const binSym = sym === "BTC-USD" ? "BTCUSDT" : "ETHUSDT";
+      candles = await _fetchBinance(binSym, _getBinanceTF(tf));
+    } catch(e){ console.warn("Binance fallback failed", e.message); }
+  }
+
+  removeLoader();
+
+  if(candles && candles.length > 0){
+    _candleSeries.setData(candles);
+    if(_volSeries){
+      const volData = candles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
+      _volSeries.setData(volData);
+    }
+    _chart.timeScale().fitContent();
+    drawEntryLines();
+
+    // Синхронизируем тикер S.prices с последней свечой (чтобы цена тика и свечи совпадали)
+    const last = candles[candles.length - 1];
+    if(last && last.close){
+      S.prices[sym] = S.prices[sym] || {};
+      S.prices[sym].price = last.close;
+      try { updatePriceDisplay && updatePriceDisplay(sym, last.close); } catch(e){}
+    }
+  } else {
+    // как последний резерв — синтетика
+    try {
+      const synCandles = _buildCandleHistory(sym, tf);
+      if(_candleSeries){
         _candleSeries.setData(synCandles);
-        var volData = synCandles.map(function(c){return{time:c.time,value:c.volume||0,color:c.close>=c.open?'rgba(16,185,129,0.5)':'rgba(239,68,68,0.5)'};});
-        if(_volSeries) _volSeries.setData(volData);
+        if(_volSeries){
+          const volData = synCandles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
+          _volSeries.setData(volData);
+        }
         _chart && _chart.timeScale().fitContent();
       }
-    } catch(e2) { console.warn('Synthetic fallback failed', e2.message); }
+    } catch(e2){ console.warn("Synthetic fallback failed", e2.message); }
   }
+}
+
+async function _fetchYahoo(sym, tf){
+  const intMap = { "1m":"1m", "5m":"5m", "15m":"15m", "1h":"60m", "4h":"60m", "1d":"1d" };
+  const rngMap = { "1m":"1d", "5m":"5d", "15m":"5d", "1h":"1mo", "4h":"3mo", "1d":"1y" };
+  const interval = intMap[tf] || "5m";
+  const range = rngMap[tf] || "5d";
+  const yUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=${interval}&range=${range}`;
+  const url = "https://corsproxy.io/?" + encodeURIComponent(yUrl);
+  const r = await fetch(url, { cache: "no-store" });
+  if(!r.ok) throw new Error("Yahoo " + r.status);
+  const j = await r.json();
+  const res = j.chart && j.chart.result && j.chart.result[0];
+  if(!res || !res.timestamp) throw new Error("Yahoo: empty result");
+  const ts = res.timestamp;
+  const q = res.indicators.quote[0] || {};
+  const inst = INSTRUMENTS[sym];
+  const dec = inst ? inst.dec : 5;
+  // Соберём свечи, отбрасывая null
+  const raw = [];
+  for(let i = 0; i < ts.length; i++){
+    const o = q.open && q.open[i], h = q.high && q.high[i], l = q.low && q.low[i], c = q.close && q.close[i];
+    if(o == null || h == null || l == null || c == null) continue;
+    raw.push({ time: ts[i], open: +o.toFixed(dec), high: +h.toFixed(dec), low: +l.toFixed(dec), close: +c.toFixed(dec), volume: (q.volume && q.volume[i]) || 0 });
+  }
+  // Если пользователь выбрал 4h — агрегируем 60m в 4h-бакеты
+  if(tf === "4h" && interval === "60m"){
+    const out = [];
+    let bucket = null;
+    for(const c of raw){
+      const bStart = Math.floor(c.time / 14400) * 14400; // 4ч = 14400 сек
+      if(!bucket || bucket.time !== bStart){
+        if(bucket) out.push(bucket);
+        bucket = { time: bStart, open: c.open, high: c.high, low: c.low, close: c.close, volume: c.volume };
+      } else {
+        bucket.high = Math.max(bucket.high, c.high);
+        bucket.low  = Math.min(bucket.low, c.low);
+        bucket.close = c.close;
+        bucket.volume += c.volume;
+      }
+    }
+    if(bucket) out.push(bucket);
+    return out;
+  }
+  return raw;
 }
 
 async function _fetchBinance(symbol, interval) {

@@ -631,14 +631,14 @@ nav{
 /* === ACCOUNT STATUS BAR (Trade screen) === */
 .acc-bar{display:flex;gap:6px;align-items:stretch;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:10px;margin:0 0 12px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .acc-bar::-webkit-scrollbar{display:none}
-.acc-cell{flex:1 1 0;min-width:96px;padding:6px 10px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border)}
+.acc-cell{flex:1 1 0;min-width:78px;padding:5px 8px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border)}
 .acc-cell:last-child{border-right:0}
-.acc-cell-label{font-size:11px;color:#9aa0a6;letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px;font-weight:500}
-.acc-cell-value{font-size:15px;font-weight:600;color:#e6e6e6;line-height:1.1;display:flex;align-items:baseline;gap:4px}
+.acc-cell-label{font-size:10px;color:#9aa0a6;letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px;font-weight:500;white-space:nowrap}
+.acc-cell-value{font-size:13.5px;font-weight:600;color:#e6e6e6;line-height:1.1;display:flex;align-items:baseline;gap:3px;white-space:nowrap}
 .acc-cell-value.pos{color:#7ee787}
 .acc-cell-value.neg{color:#ff8888}
 .acc-cell-ccy{font-size:10px;color:#9aa0a6;font-weight:500;letter-spacing:.4px}
-.acc-info-btn{flex:0 0 auto;align-self:center;width:34px;height:34px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--primary);font-weight:700;font-family:Inter,sans-serif;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:4px;transition:transform .12s,background .12s}
+.acc-info-btn{flex:0 0 auto;align-self:center;width:32px;height:32px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--primary);font-weight:700;font-family:Inter,sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:4px;transition:transform .12s,background .12s;position:sticky;right:6px}
 .acc-info-btn:hover{background:#1a1a22;transform:scale(1.05)}
 .acc-info-btn:active{transform:scale(.95)}
 

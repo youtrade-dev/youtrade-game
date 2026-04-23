@@ -1084,63 +1084,135 @@ function calcNotional(inst, lots, price){
 function calcMargin(inst, lots, price){ return calcNotional(inst, lots, price) / LEVERAGE; }
 
 // ============ MULTI-API PRICE FETCH ============
-async function fetchPrice(symbol) {
+// ============ MULTI-SOURCE PRICE FETCHER ============
+// Strategy per category (no proxy when possible):
+//   FX: fawazahmed currency-api via jsdelivr CDN (direct CORS)
+//   Metals (XAUUSD/XAGUSD): Bybit linear (direct CORS)
+//   Crypto (BTC/ETH): Binance (direct CORS)
+//   Indices (^GSPC/^IXIC): Yahoo via corsproxy.io (proxy required)
+window._priceCache = window._priceCache || { ts: 0, data: {} };
+window._fxCache = window._fxCache || { ts: 0, eur: null, gbp: null, jpy: null };
+
+async function _fetchFxBatch() {
+  const now = Date.now();
+  if (now - (window._fxCache.ts || 0) < 30000 && window._fxCache.eur) return window._fxCache;
+  const urls = [
+    'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json',
+    'https://latest.currency-api.pages.dev/v1/currencies/usd.json'
+  ];
+  for (const u of urls) {
+    try {
+      const r = await fetch(u);
+      if (!r.ok) continue;
+      const j = await r.json();
+      const usd = j && j.usd;
+      if (!usd) continue;
+      window._fxCache = { ts: now, eur: usd.eur, gbp: usd.gbp, jpy: usd.jpy };
+      return window._fxCache;
+    } catch (e) {}
+  }
+  return window._fxCache;
+}
+
+async function _fetchBybit(sym) {
   try {
-    const data = await _fetchYahooQuote(symbol);
-    if (data) return data;
-    // --- CRYPTO fallback via Binance (24/7) ---
-    if (symbol === 'BTC-USD' || symbol === 'ETH-USD') {
-      const pair = symbol === 'BTC-USD' ? 'BTCUSDT' : 'ETHUSDT';
-      const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=' + pair);
-      if (!r.ok) return null;
-      const d = await r.json();
-      const price = parseFloat(d.lastPrice);
-      const prev = parseFloat(d.openPrice);
-      return { price, prev, change: price - prev, changePct: ((price - prev) / prev) * 100 };
-    }
-    return null;
+    const r = await fetch('https://api.bybit.com/v5/market/tickers?category=linear&symbol=' + sym);
+    if (!r.ok) return null;
+    const j = await r.json();
+    const it = j && j.result && j.result.list && j.result.list[0];
+    if (!it) return null;
+    const price = parseFloat(it.lastPrice);
+    const prev = parseFloat(it.prevPrice24h);
+    if (!isFinite(price)) return null;
+    return { price, prev, change: price - prev, changePct: prev ? ((price - prev) / prev) * 100 : 0 };
   } catch (e) { return null; }
 }
 
-// Cached batch quote fetch for all 9 instruments via Yahoo chart endpoint (proxy)
-window._priceCache = window._priceCache || { ts: 0, data: {} };
-async function _fetchYahooQuote(symbol) {
-  const now = Date.now();
-  if (now - (window._priceCache.ts || 0) < 4000 && window._priceCache.data[symbol]) {
-    return window._priceCache.data[symbol];
-  }
-  if (window._priceCachePromise) {
-    await window._priceCachePromise;
-    return window._priceCache.data[symbol] || null;
-  }
-  window._priceCachePromise = (async () => {
-    const symbols = Object.keys(INSTRUMENTS);
-    const results = await Promise.all(symbols.map(async (s) => {
-      try {
-        const u = 'https://corsproxy.io/?' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/' + s + '?range=1d&interval=1m');
-        const r = await fetch(u);
-        if (!r.ok) return [s, null];
-        const j = await r.json();
-        const res = j.chart && j.chart.result && j.chart.result[0];
-        if (!res) return [s, null];
-        const meta = res.meta || {};
-        const closes = (res.indicators && res.indicators.quote && res.indicators.quote[0] && res.indicators.quote[0].close) || [];
-        let lastClose = null;
-        for (let i = closes.length - 1; i >= 0; i--) { if (closes[i] != null) { lastClose = closes[i]; break; } }
-        const price = lastClose != null ? lastClose : meta.regularMarketPrice;
-        const prev = meta.chartPreviousClose || meta.regularMarketPreviousClose || price;
-        if (price == null) return [s, null];
-        return [s, { price, prev, change: price - prev, changePct: ((price - prev) / prev) * 100 }];
-      } catch (e) { return [s, null]; }
-    }));
-    const data = {};
-    results.forEach(([k, v]) => { if (v) data[k] = v; });
-    window._priceCache = { ts: Date.now(), data };
-  })();
-  await window._priceCachePromise;
-  window._priceCachePromise = null;
-  return window._priceCache.data[symbol] || null;
+async function _fetchBinanceTicker(sym) {
+  try {
+    const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=' + sym);
+    if (!r.ok) return null;
+    const d = await r.json();
+    const price = parseFloat(d.lastPrice);
+    const prev = parseFloat(d.openPrice);
+    if (!isFinite(price)) return null;
+    return { price, prev, change: price - prev, changePct: prev ? ((price - prev) / prev) * 100 : 0 };
+  } catch (e) { return null; }
 }
+
+async function _fetchYahooViaProxy(symbol) {
+  const encoded = encodeURIComponent(symbol);
+  const target = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encoded + '?range=1d&interval=1m';
+  const proxies = [
+    'https://corsproxy.io/?',
+    'https://api.allorigins.win/raw?url=',
+    'https://api.codetabs.com/v1/proxy?quest='
+  ];
+  for (const p of proxies) {
+    try {
+      const r = await fetch(p + encodeURIComponent(target));
+      if (!r.ok) continue;
+      const txt = await r.text();
+      let j; try { j = JSON.parse(txt); } catch (e) { continue; }
+      const res = j && j.chart && j.chart.result && j.chart.result[0];
+      if (!res) continue;
+      const meta = res.meta || {};
+      const closes = (res.indicators && res.indicators.quote && res.indicators.quote[0] && res.indicators.quote[0].close) || [];
+      let lastClose = null;
+      for (let i = closes.length - 1; i >= 0; i--) { if (closes[i] != null) { lastClose = closes[i]; break; } }
+      const price = lastClose != null ? lastClose : meta.regularMarketPrice;
+      const prev = meta.chartPreviousClose || meta.regularMarketPreviousClose || price;
+      if (price == null) continue;
+      return { price, prev, change: price - prev, changePct: prev ? ((price - prev) / prev) * 100 : 0 };
+    } catch (e) {}
+  }
+  return null;
+}
+
+async function fetchPrice(symbol) {
+  try {
+    // FX
+    if (symbol === 'EURUSD=X' || symbol === 'GBPUSD=X' || symbol === 'USDJPY=X') {
+      const fx = await _fetchFxBatch();
+      let price = null;
+      if (symbol === 'EURUSD=X' && fx.eur) price = 1 / fx.eur;
+      else if (symbol === 'GBPUSD=X' && fx.gbp) price = 1 / fx.gbp;
+      else if (symbol === 'USDJPY=X' && fx.jpy) price = fx.jpy;
+      if (price != null && isFinite(price)) {
+        const prev = price * 0.9999;
+        return { price, prev, change: price - prev, changePct: ((price - prev) / prev) * 100 };
+      }
+      // FX fallback to Yahoo proxy
+      return await _fetchYahooViaProxy(symbol);
+    }
+    // Metals
+    if (symbol === 'GC=F') {
+      const r = await _fetchBybit('XAUUSDT');
+      if (r) return r;
+      return await _fetchYahooViaProxy(symbol);
+    }
+    if (symbol === 'SI=F') {
+      const r = await _fetchBybit('XAGUSDT');
+      if (r) return r;
+      return await _fetchYahooViaProxy(symbol);
+    }
+    // Crypto
+    if (symbol === 'BTC-USD' || symbol === 'ETH-USD') {
+      const pair = symbol === 'BTC-USD' ? 'BTCUSDT' : 'ETHUSDT';
+      const r = await _fetchBinanceTicker(pair);
+      if (r) return r;
+      return await _fetchYahooViaProxy(symbol);
+    }
+    // Indices: Yahoo via proxies only
+    if (symbol === '^GSPC' || symbol === '^IXIC') {
+      return await _fetchYahooViaProxy(symbol);
+    }
+    return await _fetchYahooViaProxy(symbol);
+  } catch (e) { return null; }
+}
+
+// Legacy compatibility: keep _fetchYahooQuote as alias
+async function _fetchYahooQuote(symbol) { return await fetchPrice(symbol); }
 async function loadCurrentPrice() {
   const sym = S.asset;
   const inst = INSTRUMENTS[sym];

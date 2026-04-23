@@ -1201,7 +1201,7 @@ async function refreshAllPrices() {
   if (typeof updateChartTick === 'function' && S.prices[S.asset]) updateChartTick(S.asset, S.prices[S.asset].price);
 }
 setInterval(refreshAllPrices, 5000);
-setTimeout(refreshAllPrices, 1000);
+setTimeout(refreshAllPrices, 200); setTimeout(refreshAllPrices, 1500);
 
 const _INST_MAP={'EURUSD=X':{row:'row-EURUSD',exp:'exp-EURUSD',lp:'lp-EURUSD',sp:'sp-EURUSD',bp:'bp-EURUSD', htmlId:'EURUSD'},'GBPUSD=X':{row:'row-GBPUSD',exp:'exp-GBPUSD',lp:'lp-GBPUSD',sp:'sp-GBPUSD',bp:'bp-GBPUSD', htmlId:'GBPUSD'},'USDJPY=X':{row:'row-USDJPY',exp:'exp-USDJPY',lp:'lp-USDJPY',sp:'sp-USDJPY',bp:'bp-USDJPY', htmlId:'USDJPY'},'GC=F':{row:'row-XAUUSD',exp:'exp-XAUUSD',lp:'lp-XAUUSD',sp:'sp-XAUUSD',bp:'bp-XAUUSD', htmlId:'XAUUSD'},'SI=F':{row:'row-XAGUSD',exp:'exp-XAGUSD',lp:'lp-XAGUSD',sp:'sp-XAGUSD',bp:'bp-XAGUSD', htmlId:'XAGUSD'},'^GSPC':{row:'row-SP500',exp:'exp-SP500',lp:'lp-SP500',sp:'sp-SP500',bp:'bp-SP500', htmlId:'SP500'},'^IXIC':{row:'row-NASDAQ',exp:'exp-NASDAQ',lp:'lp-NASDAQ',sp:'sp-NASDAQ',bp:'bp-NASDAQ', htmlId:'NASDAQ'},'BTC-USD':{row:'row-BTC',exp:'exp-BTC',lp:'lp-BTC',sp:'sp-BTC',bp:'bp-BTC', htmlId:'BTC'},'ETH-USD':{row:'row-ETH',exp:'exp-ETH',lp:'lp-ETH',sp:'sp-ETH',bp:'bp-ETH', htmlId:'ETH'}};
 let _activeKey2=null,_favs2=[];try{_favs2=JSON.parse(localStorage.getItem('yt_favs')||'[]');}catch(e){}
@@ -1269,17 +1269,22 @@ function updRisk() {
   wEl.innerHTML = line;
 }
 // ============ EXECUTE TRADE ============
-function trade(dir) {
+async function trade(dir) {
   const sym = S.asset;
   const inst = INSTRUMENTS[sym];
-  const data = S.prices[sym];
-  if(!data) { alert("Нет цены, попробуйте снова"); return; }
+  if (!inst) { alert('Инструмент не выбран'); return; }
+  let data = S.prices[sym];
+  if (!data || data.price == null) {
+    // Цена ещё не загружена — пробуем подтянуть прямо сейчас
+    try { data = await fetchPrice(sym); if (data) S.prices[sym] = data; } catch (e) {}
+  }
+  if (!data || data.price == null) { alert('Нет цены, попробуйте снова'); return; }
 
   // Проверка торговой сессии
   const sess = isMarketOpen(sym);
-  if(!sess.open){
-    const msg = sess.reason || "Рынок закрыт";
-    try { if(tg && tg.showAlert) tg.showAlert(msg); else alert(msg); } catch(e) { alert(msg); }
+  if (!sess.open) {
+    const msg = sess.reason || 'Рынок закрыт';
+    try { if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg); } catch (e) { alert(msg); }
     return;
   }
 
@@ -1293,7 +1298,7 @@ function trade(dir) {
   S.totalPnl = parseFloat((S.totalPnl - comm).toFixed(2));
   S.dayPnl = parseFloat((S.dayPnl - comm).toFixed(2));
 
-  const dir2 = (dir === "buy" || dir === "BUY") ? "BUY" : "SELL";
+  const dir2 = (dir === 'buy' || dir === 'BUY') ? 'BUY' : 'SELL';
   const nowTs = Date.now();
   const newTrade = {
     id: nowTs,
@@ -1310,14 +1315,14 @@ function trade(dir) {
   S.openTrades.push(newTrade);
   S.tradeCount++;
 
-  const arrow = dir2 === "BUY" ? "▲" : "▼";
+  const arrow = dir2 === 'BUY' ? '▲' : '▼';
   const msg = `${arrow} ${dir2} ${lots} лот ${S.assetName}\nЦена входа: ${entry.toFixed(inst.dec)}\nКомиссия: $${comm.toFixed(2)}`;
-  try { if(tg && tg.showAlert) tg.showAlert(msg); else alert(msg); } catch(e) { alert(msg); }
+  try { if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg); } catch (e) { alert(msg); }
 
   updateDashboard();
   renderHistory();
   updateAccountBar();
-  if(_chart && _chartSym === sym) drawEntryLines();
+  if (_chart && _chartSym === sym) drawEntryLines();
   saveStateAfterAction();
 }
 // ============ CLOSE TRADE ============

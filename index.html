@@ -1199,15 +1199,17 @@ function updRisk() {
   }
 
   if(!wEl) return;
+  wEl.style.display = "block";
+  wEl.style.lineHeight = "1.5";
   const sessLine = sess.open
     ? `<span style="color:#7ee787">● Рынок открыт</span> • Плечо <b>1:${LEVERAGE}</b>`
     : `<span style="color:#ff8888">● ${sess.reason || "Рынок закрыт"}</span> • Плечо <b>1:${LEVERAGE}</b>`;
 
   wEl.innerHTML =
-    sessLine + "<br>" +
-    `💼 Объём: <b>$${notional.toFixed(2)}</b> • Маржа: <b>$${margin.toFixed(2)}</b><br>` +
-    `💸 Комиссия открытия: <b>$${comm.toFixed(2)}</b><br>` +
-    `<span style="color:${color}">⚠️ Риск (1% хода): ~$${risk.toFixed(2)} (${pct}% депо)</span>`;
+    `<div>${sessLine}</div>` +
+    `<div>💼 Объём: <b>${notional.toFixed(2)}</b> • Маржа: <b>${margin.toFixed(2)}</b></div>` +
+    `<div>💸 Комиссия открытия: <b>${comm.toFixed(2)}</b></div>` +
+    `<div style="color:${color}">⚠️ Риск (1% хода): ~${risk.toFixed(2)} (${pct}% депо)</div>`;
 }
 // ============ EXECUTE TRADE ============
 function trade(dir) {

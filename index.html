@@ -683,6 +683,26 @@ nav{
   .acc-cell-label{font-size:8.5px}
   .acc-cell-value{font-size:10.5px}
 }
+
+/* Account metrics chooser */
+.acc-bar-wrap{position:relative}
+.acc-chooser-btn{min-width:28px;width:28px;padding:0;display:flex;align-items:center;justify-content:center;background:transparent;border:0;color:#9aa0a6;cursor:pointer;border-radius:8px}
+.acc-chooser-btn:hover{color:#e6e6e6;background:rgba(255,255,255,.05)}
+.acc-chooser-btn svg{display:block}
+.acc-chooser-btn.open svg{transform:rotate(180deg);transition:transform .15s}
+.acc-chooser-panel{position:absolute;right:6px;top:calc(100% + 4px);background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:8px 6px;min-width:200px;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.acc-chooser-panel[hidden]{display:none}
+.acc-chooser-title{font-size:10px;color:#9aa0a6;letter-spacing:.4px;text-transform:uppercase;padding:4px 8px 6px;font-weight:500}
+.acc-chooser-row{display:flex;align-items:center;gap:10px;padding:8px 8px;border-radius:8px;cursor:pointer;font-size:14px;color:#e6e6e6}
+.acc-chooser-row:hover{background:rgba(255,255,255,.04)}
+.acc-chooser-row input[type="checkbox"]{width:18px;height:18px;accent-color:#4E35C6;flex-shrink:0;cursor:pointer}
+.acc-chooser-row span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc-cell[data-hidden="1"]{display:none!important}
+@media (max-width: 480px){
+  .acc-chooser-btn{min-width:22px;width:22px}
+  .acc-chooser-panel{min-width:180px}
+  .acc-chooser-row{font-size:13px;padding:7px 8px}
+}
 </style>
 
 <script>
@@ -690,10 +710,10 @@ nav{
   try {
     var u = new URL(location.href);
     if (!u.searchParams.has('_yt')) {
-      var marker = 'yt_build_seen_'+ 't202604241151';
+      var marker = 'yt_build_seen_'+ 't202604241220';
       if (!sessionStorage.getItem(marker)) {
         sessionStorage.setItem(marker, '1');
-        u.searchParams.set('_yt', 't202604241151');
+        u.searchParams.set('_yt', 't202604241220');
         location.replace(u.toString());
         return;
       }
@@ -872,14 +892,22 @@ nav{
 <!-- TRADE SCREEN -->
 <div class="screen" id="s-trade"><div class="trade-screen-inner"><div class="header"><div class="logo"><svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px"><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" fill="#4E35C6" opacity="0.3"/><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" stroke="#4E35C6" stroke-width="2"/><path d="M14 20L18 24L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Торговля
-    <span id="yt-build" style="margin-left:8px;font-size:10px;opacity:0.45;font-weight:400;letter-spacing:0.5px">t202604241151</span></div></div><div class="acc-bar" id="acc-bar">
-  <div class="acc-cell"><div class="acc-cell-label">Прибыль</div><div class="acc-cell-value" id="ab-pnl"><span id="ab-pnl-v">0.00</span><span class="acc-cell-ccy">USD</span></div></div>
-  <div class="acc-cell"><div class="acc-cell-label">Средства</div><div class="acc-cell-value"><span id="ab-eq">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
-  <div class="acc-cell"><div class="acc-cell-label">Баланс</div><div class="acc-cell-value"><span id="ab-bal">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
-  <div class="acc-cell"><div class="acc-cell-label">Свободно</div><div class="acc-cell-value"><span id="ab-free">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
-  <div class="acc-cell"><div class="acc-cell-label">Маржа</div><div class="acc-cell-value"><span id="ab-mar">0.00</span><span class="acc-cell-ccy">USD</span></div></div>
-  <button class="acc-info-btn" id="ab-info-btn" onclick="openInstrInfo()" title="Спецификация инструмента">i</button>
+    <span id="yt-build" style="margin-left:8px;font-size:10px;opacity:0.45;font-weight:400;letter-spacing:0.5px">t202604241220</span></div></div><div class="acc-bar-wrap" style="position:relative"><div class="acc-bar" id="acc-bar">
+  <div class="acc-cell" data-metric="pnl"><div class="acc-cell-label">Прибыль</div><div class="acc-cell-value" id="ab-pnl"><span id="ab-pnl-v">0.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <div class="acc-cell" data-metric="eq"><div class="acc-cell-label">Средства</div><div class="acc-cell-value"><span id="ab-eq">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <div class="acc-cell" data-metric="bal"><div class="acc-cell-label">Баланс</div><div class="acc-cell-value"><span id="ab-bal">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <div class="acc-cell" data-metric="free"><div class="acc-cell-label">Свободно</div><div class="acc-cell-value"><span id="ab-free">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <div class="acc-cell" data-metric="mar"><div class="acc-cell-label">Маржа</div><div class="acc-cell-value"><span id="ab-mar">0.00</span><span class="acc-cell-ccy">USD</span></div></div>
+  <button type="button" class="acc-chooser-btn" id="acc-chooser-btn" aria-label="Настроить показатели"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
 </div>
+<div class="acc-chooser-panel" id="acc-chooser-panel" hidden>
+  <div class="acc-chooser-title">Показывать</div>
+  <label class="acc-chooser-row"><input type="checkbox" data-metric="pnl"><span>Прибыль</span></label>
+  <label class="acc-chooser-row"><input type="checkbox" data-metric="eq"><span>Средства</span></label>
+  <label class="acc-chooser-row"><input type="checkbox" data-metric="bal"><span>Баланс</span></label>
+  <label class="acc-chooser-row"><input type="checkbox" data-metric="free"><span>Свободные средства</span></label>
+  <label class="acc-chooser-row"><input type="checkbox" data-metric="mar"><span>Маржа</span></label>
+</div></div>
 <div class="modal-back" id="instr-modal" onclick="if(event.target===this)closeInstrInfo()">
   <div class="modal-card" role="dialog" aria-modal="true">
     <div class="modal-head">
@@ -2655,5 +2683,56 @@ setTimeout(()=>{ try{ updateAccountBar(); }catch(e){} }, 200);
   </button>
 </div>
 </div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'yt.accBar.metrics';
+  const DEFAULTS = ['pnl','eq','bal'];
+  const ALL = ['pnl','eq','bal','free','mar'];
+  function load(){
+    try { const s = localStorage.getItem(STORAGE_KEY); if(s){ const a = JSON.parse(s); if(Array.isArray(a)) return a.filter(k => ALL.includes(k)); } } catch(e){}
+    return DEFAULTS.slice();
+  }
+  function save(arr){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch(e){} }
+  function apply(selected){
+    document.querySelectorAll('#acc-bar .acc-cell[data-metric]').forEach(el => {
+      const m = el.getAttribute('data-metric');
+      if (selected.includes(m)) el.removeAttribute('data-hidden');
+      else el.setAttribute('data-hidden','1');
+    });
+  }
+  function init(){
+    const btn = document.getElementById('acc-chooser-btn');
+    const panel = document.getElementById('acc-chooser-panel');
+    if (!btn || !panel) return;
+    let selected = load();
+    apply(selected);
+    panel.querySelectorAll('input[type="checkbox"][data-metric]').forEach(cb => {
+      cb.checked = selected.includes(cb.getAttribute('data-metric'));
+      cb.addEventListener('change', () => {
+        const m = cb.getAttribute('data-metric');
+        if (cb.checked){ if (!selected.includes(m)) selected.push(m); }
+        else { selected = selected.filter(x => x !== m); }
+        save(selected);
+        apply(selected);
+      });
+    });
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !panel.hasAttribute('hidden');
+      if (isOpen){ panel.setAttribute('hidden',''); btn.classList.remove('open'); }
+      else { panel.removeAttribute('hidden'); btn.classList.add('open'); }
+    });
+    document.addEventListener('click', (e) => {
+      if (panel.hasAttribute('hidden')) return;
+      if (!panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+        panel.setAttribute('hidden',''); btn.classList.remove('open');
+      }
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 </body>
 </html>

@@ -667,6 +667,23 @@ nav{
 .inst-risk-warn .pill .dot{width:7px;height:7px;border-radius:50%;background:#7ee787;box-shadow:0 0 6px rgba(126,231,135,.6)}
 .inst-risk-warn .pill .dot.off{background:#ff8888;box-shadow:0 0 6px rgba(255,136,136,.6)}
 </style>
+
+<script>
+(function(){
+  try {
+    var u = new URL(location.href);
+    if (!u.searchParams.has('_yt')) {
+      var marker = 'yt_build_seen_'+ 't202604240624';
+      if (!sessionStorage.getItem(marker)) {
+        sessionStorage.setItem(marker, '1');
+        u.searchParams.set('_yt', 't202604240624');
+        location.replace(u.toString());
+        return;
+      }
+    }
+  } catch(e){}
+})();
+</script>
 </head><body>
 <div class="app">
 
@@ -838,7 +855,7 @@ nav{
 <!-- TRADE SCREEN -->
 <div class="screen" id="s-trade"><div class="trade-screen-inner"><div class="header"><div class="logo"><svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px"><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" fill="#4E35C6" opacity="0.3"/><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" stroke="#4E35C6" stroke-width="2"/><path d="M14 20L18 24L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Торговля
-    </div></div><div class="acc-bar" id="acc-bar">
+    <span id="yt-build" style="margin-left:8px;font-size:10px;opacity:0.45;font-weight:400;letter-spacing:0.5px">t202604240624</span></div></div><div class="acc-bar" id="acc-bar">
   <div class="acc-cell"><div class="acc-cell-label">Прибыль</div><div class="acc-cell-value" id="ab-pnl"><span id="ab-pnl-v">0.00</span><span class="acc-cell-ccy">USD</span></div></div>
   <div class="acc-cell"><div class="acc-cell-label">Средства</div><div class="acc-cell-value"><span id="ab-eq">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
   <div class="acc-cell"><div class="acc-cell-label">Баланс</div><div class="acc-cell-value"><span id="ab-bal">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>

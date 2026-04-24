@@ -1032,50 +1032,45 @@ const INSTRUMENTS = {
 
 // --- Торговые сессии (GMT+5, по спецификации YOUTRADE) ---
 // Возвращает {open:bool, nextOpen:Date|null, reason:string}
-function _gmt5Now(){ const d = new Date(); return new Date(d.getTime() + (5*60 - (-d.getTimezoneOffset()))*60000); }
+// --- Торговые часы (строго в UTC, по спецификации TradingView) ---
 function _hm(d){ return d.getUTCHours()*60 + d.getUTCMinutes(); }
+function _fmtTime(h,m){ return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0"); }
+// Forex/Metals/US indices закрываются в пятницу и открываются в воскресенье (по UTC).
+function _closedFx(d){ return {open:false, reason:"Forex закрыт • откроется в Вс 22:00 UTC"}; }
+function _closedMetal(d){ return {open:false, reason:"Металлы закрыты • Вс 22:00 UTC"}; }
+function _closedUsIdx(d){ return {open:false, reason:"Индексы закрыты • Вс 22:00 UTC"}; }
+
 function isMarketOpen(sym){
-  const inst = INSTRUMENTS[sym]; if(!inst) return {open:true};
-  if(inst.session === '24/7') return {open:true, reason:'24/7'};
-  // GMT+5 текущее время как UTC-эквивалент
-  const d = new Date(Date.now() + 5*60*60000);
-  const dow = d.getUTCDay();      // 0=Sun ... 6=Sat
-  const minutes = d.getUTCHours()*60 + d.getUTCMinutes();
-  if(inst.session === 'fx'){
-    // Forex: пятница close 01:55, суббота закрыто, воскресенье open 02:03
+  const inst = INSTRUMENTS[sym];
+  if(!inst) return {open:false, reason:"Неизвестный инструмент"};
+  if(inst.session === "24/7") return {open:true, reason:"24/7"};
+  const d = new Date();
+  const dow = d.getUTCDay(); // 0=Sun .. 6=Sat
+  const m = _hm(d);
+  if(inst.session === "fx"){
+    // Вс 22:00 UTC → Пт 22:00 UTC непрерывно
     if(dow === 6) return _closedFx(d);
-    if(dow === 5 && minutes >= 1*60+55) return _closedFx(d);
-    if(dow === 0 && minutes < 2*60+3) return _closedFx(d);
+    if(dow === 5 && m >= 22*60) return _closedFx(d);
+    if(dow === 0 && m < 22*60) return _closedFx(d);
     return {open:true};
   }
-  if(inst.session === 'metal'){
-    // Металлы: ежедневный технический разрыв 02:00-03:01, friday close 01:55, sunday open 03:01
+  if(inst.session === "metal"){
+    // Вс 22:00 UTC → Пт 21:00 UTC, daily break 21:00–22:00 UTC
     if(dow === 6) return _closedMetal(d);
-    if(dow === 5 && minutes >= 1*60+55) return _closedMetal(d);
-    if(dow === 0 && minutes < 3*60+1) return _closedMetal(d);
-    if(minutes >= 2*60 && minutes < 3*60+1) return {open:false, reason:`Тех. перерыв до ${_fmtTime(3,1)}`};
+    if(dow === 5 && m >= 21*60) return _closedMetal(d);
+    if(dow === 0 && m < 22*60) return _closedMetal(d);
+    if(m >= 21*60 && m < 22*60) return {open:false, reason:`Тех. перерыв до ${_fmtTime(22,0)} UTC`};
     return {open:true};
   }
-  if(inst.session === 'us_idx'){
-    // US индексы: friday close 20:55, ежедневно 21:00-22:00 перерыв, weekend закрыто
+  if(inst.session === "us_idx"){
+    // CME E-mini: Вс 22:00 UTC → Пт 21:00 UTC, daily break 21:00–22:00 UTC
     if(dow === 6) return _closedUsIdx(d);
-    if(dow === 5 && minutes >= 20*60+55) return _closedUsIdx(d);
-    if(dow === 0 && minutes < 22*60) return _closedUsIdx(d);
-    if(minutes >= 21*60 && minutes < 22*60) return {open:false, reason:`Перерыв сессии до ${_fmtTime(22,0)}`};
+    if(dow === 5 && m >= 21*60) return _closedUsIdx(d);
+    if(dow === 0 && m < 22*60) return _closedUsIdx(d);
+    if(m >= 21*60 && m < 22*60) return {open:false, reason:`Перерыв сессии до ${_fmtTime(22,0)} UTC`};
     return {open:true};
   }
   return {open:true};
-}
-function _fmtTime(h,m){ return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0"); }
-function _closedFx(d){
-  // следующее открытие — воскресенье 02:03 GMT+5
-  return {open:false, reason:"Forex закрыт • откроется в Вс 02:03 (GMT+5)"};
-}
-function _closedMetal(d){
-  return {open:false, reason:"Металлы закрыты • Вс 03:01 (GMT+5)"};
-}
-function _closedUsIdx(d){
-  return {open:false, reason:"US индексы закрыты • Вс 22:00 (GMT+5)"};
 }
 
 // --- Расчёт комиссии и требуемой маржи ---

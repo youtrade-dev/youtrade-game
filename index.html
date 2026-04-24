@@ -1661,7 +1661,24 @@ async function trade(dir) {
   S.tradeCount++;
 
   const arrow = dir2 === 'BUY' ? '▲' : '▼';
-  const msg = `${arrow} ${dir2} ${lots} лот ${S.assetName}\nЦена входа: ${entry.toFixed(inst.dec)}\nКомиссия: $${comm.toFixed(2)}`;
+  const msg = `${arrow} ${dir2} ${lots} лот ${S.assetName}\
+// Функция для преобразования OHLC данных в формат линейного графика  
+function convertDataForChart(data, chartType) {
+  if (chartType === 'line' && data && data.length > 0) {
+    return data.map(function(item) {
+      return { time: item.time, value: item.close || item.value || 0 };
+    });
+  }
+  return data;
+}
+
+function convertUpdateForChart(data, chartType) {
+  if (chartType === 'line' && data) {
+    return { time: data.time, value: data.close || data.value || 0 };
+  }
+  return data;
+}
+nЦена входа: ${entry.toFixed(inst.dec)}\nКомиссия: $${comm.toFixed(2)}`;
   try { if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg); } catch (e) { alert(msg); }
 
   updateDashboard();
@@ -2232,7 +2249,8 @@ async function _loadRealCandles(sym, tf) {
   removeLoader();
 
   if(candles && candles.length > 0){
-    _candleSeries.setData(candles);
+    var chartType = localStorage.getItem('yt.chartType') || 'candlestick';
+_candleSeries.setData(convertDataForChart(candles, chartType));
     if(_volSeries){
       const totalVol = candles.reduce((s,c) => s + (c.volume||0), 0);
       if(totalVol > 0){
@@ -2259,7 +2277,8 @@ async function _loadRealCandles(sym, tf) {
     try {
       const synCandles = _buildCandleHistory(sym, tf);
       if(_candleSeries){
-        _candleSeries.setData(synCandles);
+        var chartType = localStorage.getItem('yt.chartType') || 'candlestick';
+_candleSeries.setData(convertDataForChart(synCandles, chartType));
         if(_volSeries){
           const volData = synCandles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
           _volSeries.setData(volData);
@@ -2457,7 +2476,8 @@ function updateChartTick(sym, price) {
     var newCandle = { time: now, open: prev, high: Math.max(prev,val), low: Math.min(prev,val), close: val };
     arr.push(newCandle);
     if(arr.length > 300) arr.shift();
-    _candleSeries.update(newCandle);
+    var chartType = localStorage.getItem('yt.chartType') || 'candlestick';
+_candleSeries.update(convertUpdateForChart(newCandle, chartType));
   }
   drawEntryLines();
 }
@@ -2797,12 +2817,14 @@ async function _loadFSCandles(sym,tf){
     else if(tdSym)candles=await _fetchTwelveData(tdSym,tf);
     removeLoad();
     if(candles&&candles.length>0){
-      _fsCandleSeries.setData(candles);
+      var chartType = localStorage.getItem('yt.chartType') || 'candlestick';
+_fsCandleSeries.setData(convertDataForChart(candles, chartType));
       var volData=candles.map(function(c){return{time:c.time,value:c.volume||0,color:c.close>=c.open?'rgba(38,166,154,0.5)':'rgba(239,83,80,0.5)'};});
       if(_fsVolSeries)_fsVolSeries.setData(volData);
       _fsChart.timeScale().fitContent();
       // update inline chart too
-      if(_candleSeries){_candleSeries.setData(candles);if(_volSeries)_volSeries.setData(volData);_chart&&_chart.timeScale().fitContent();}
+      if(_candleSeries){var chartType = localStorage.getItem('yt.chartType') || 'candlestick';
+_candleSeries.setData(convertDataForChart(candles, chartType));if(_volSeries)_volSeries.setData(volData);_chart&&_chart.timeScale().fitContent();}
       // update prices
       var last=candles[candles.length-1];
       var inst=INSTRUMENTS[sym];var dec=inst?inst.dec:5;var spread=inst?inst.pip*2:0;
@@ -2812,7 +2834,8 @@ async function _loadFSCandles(sym,tf){
     }
   }catch(e){
     removeLoad();
-    try{var syn=_buildCandleHistory(sym,tf);if(_fsCandleSeries){_fsCandleSeries.setData(syn);var vd=syn.map(function(c){return{time:c.time,value:c.volume||0,color:c.close>=c.open?'rgba(16,185,129,0.5)':'rgba(239,68,68,0.5)'};});if(_fsVolSeries)_fsVolSeries.setData(vd);_fsChart&&_fsChart.timeScale().fitContent();}}catch(e2){}
+    try{var syn=_buildCandleHistory(sym,tf);if(_fsCandleSeries){var chartType = localStorage.getItem('yt.chartType') || 'candlestick';
+_fsCandleSeries.setData(convertDataForChart(syn, chartType));var vd=syn.map(function(c){return{time:c.time,value:c.volume||0,color:c.close>=c.open?'rgba(16,185,129,0.5)':'rgba(239,68,68,0.5)'};});if(_fsVolSeries)_fsVolSeries.setData(vd);_fsChart&&_fsChart.timeScale().fitContent();}}catch(e2){}
   }
 }
 

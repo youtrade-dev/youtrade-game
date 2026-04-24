@@ -703,6 +703,25 @@ nav{
   .acc-chooser-panel{min-width:180px}
   .acc-chooser-row{font-size:13px;padding:7px 8px}
 }
+
+/* Open trade: X close icon on the right side */
+.hist-item{position:relative}
+.hist-x-close{position:absolute;top:6px;right:6px;width:26px;height:26px;padding:0;border:0;background:rgba(255,255,255,.04);color:#9aa0a6;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s,color .12s;z-index:2}
+.hist-x-close:hover{background:rgba(238,68,68,.15);color:#ee4444}
+.hist-x-close:active{transform:scale(.94)}
+.hist-x-close svg{display:block}
+.hist-right{padding-right:30px}
+.hist-actions{display:flex;justify-content:flex-end;margin:0 0 10px 0}
+.hist-actions[hidden]{display:none}
+.hist-close-all-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:600;color:#e6e6e6;background:linear-gradient(135deg,#4E35C6 0%,#6a4dff 100%);border:0;border-radius:10px;cursor:pointer;box-shadow:0 4px 12px rgba(78,53,198,.35);transition:transform .12s,box-shadow .12s}
+.hist-close-all-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(78,53,198,.5)}
+.hist-close-all-btn:active{transform:translateY(0)}
+.hist-close-all-btn svg{display:block;flex-shrink:0}
+@media (max-width: 480px){
+  .hist-x-close{width:24px;height:24px;top:5px;right:5px}
+  .hist-right{padding-right:28px}
+  .hist-close-all-btn{padding:7px 12px;font-size:12.5px}
+}
 </style>
 
 <script>
@@ -710,10 +729,10 @@ nav{
   try {
     var u = new URL(location.href);
     if (!u.searchParams.has('_yt')) {
-      var marker = 'yt_build_seen_'+ 't202604241220';
+      var marker = 'yt_build_seen_'+ 't202604241245';
       if (!sessionStorage.getItem(marker)) {
         sessionStorage.setItem(marker, '1');
-        u.searchParams.set('_yt', 't202604241220');
+        u.searchParams.set('_yt', 't202604241245');
         location.replace(u.toString());
         return;
       }
@@ -892,7 +911,7 @@ nav{
 <!-- TRADE SCREEN -->
 <div class="screen" id="s-trade"><div class="trade-screen-inner"><div class="header"><div class="logo"><svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px"><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" fill="#4E35C6" opacity="0.3"/><path d="M20 4L36 12V20C36 28.837 28.837 36.4 20 38C11.163 36.4 4 28.837 4 20V12L20 4Z" stroke="#4E35C6" stroke-width="2"/><path d="M14 20L18 24L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Торговля
-    <span id="yt-build" style="margin-left:8px;font-size:10px;opacity:0.45;font-weight:400;letter-spacing:0.5px">t202604241220</span></div></div><div class="acc-bar-wrap" style="position:relative"><div class="acc-bar" id="acc-bar">
+    <span id="yt-build" style="margin-left:8px;font-size:10px;opacity:0.45;font-weight:400;letter-spacing:0.5px">t202604241245</span></div></div><div class="acc-bar-wrap" style="position:relative"><div class="acc-bar" id="acc-bar">
   <div class="acc-cell" data-metric="pnl"><div class="acc-cell-label">Прибыль</div><div class="acc-cell-value" id="ab-pnl"><span id="ab-pnl-v">0.00</span><span class="acc-cell-ccy">USD</span></div></div>
   <div class="acc-cell" data-metric="eq"><div class="acc-cell-label">Средства</div><div class="acc-cell-value"><span id="ab-eq">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
   <div class="acc-cell" data-metric="bal"><div class="acc-cell-label">Баланс</div><div class="acc-cell-value"><span id="ab-bal">10000.00</span><span class="acc-cell-ccy">USD</span></div></div>
@@ -930,7 +949,7 @@ nav{
     </div>
   </div>
   <div class="content">
-    <div class="history-wrap" id="history-list">
+    <div class="hist-actions" id="hist-actions" hidden><button type="button" class="hist-close-all-btn" id="hist-close-all-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg><span>Зафиксировать все</span></button></div><div class="history-wrap" id="history-list">
       <div class="empty-state">Нет сделок</div>
     </div>
   </div>
@@ -1694,9 +1713,8 @@ function renderHistory() {
     const entryExit = isOpen 
       ? `Вход: ${t.entry.toFixed(inst ? inst.dec : 5)} · ${t.openTime}`
       : `Вход: ${t.entry.toFixed(inst ? inst.dec : 5)} → ${t.exit ? t.exit.toFixed(inst ? inst.dec : 5) : '?'} · ${t.closeTime}`;
-    
-    const closeBtn = isOpen ? `<div style="font-size:9px;color:var(--text2);margin-top:2px;cursor:pointer" onclick="closeTradeConfirm(${t.id})">Закрыть ×</div>` : '';
-    
+    const closeBtn = '';
+    const xCloseBtn = isOpen ? `<button type="button" class="hist-x-close" title="Закрыть позицию" onclick="closeTradeConfirm(${t.id})" aria-label="Закрыть"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>` : '';
     return `<div class="hist-item">
       <div class="hist-left">
         <div class="h-sym">${t.name}${statusBadge}</div>
@@ -1704,7 +1722,7 @@ function renderHistory() {
         <div class="h-det">${entryExit}</div>
         ${closeBtn}
       </div>
-      <div class="hist-right">
+      <div class="hist-right">${xCloseBtn}
         <div class="h-pnl" style="color:${col}">${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}$</div>
         <div class="h-time">${isOpen ? t.openTime : t.closeTime}</div>
       </div>
@@ -2729,6 +2747,51 @@ setTimeout(()=>{ try{ updateAccountBar(); }catch(e){} }, 200);
         panel.setAttribute('hidden',''); btn.classList.remove('open');
       }
     });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+<script>
+(function(){
+  function visible(){
+    const btn = document.getElementById('hist-actions');
+    if (!btn) return;
+    const hasOpen = (window.S && Array.isArray(S.openTrades) && S.openTrades.length > 0);
+    const onOpenFilter = (window.S && (S.histFilter === 'open' || S.histFilter === 'all'));
+    if (hasOpen && onOpenFilter) btn.removeAttribute('hidden');
+    else btn.setAttribute('hidden','');
+  }
+  function closeAllOpen(){
+    if (!window.S || !Array.isArray(S.openTrades) || !S.openTrades.length) return;
+    const n = S.openTrades.length;
+    const ask = 'Зафиксировать все ' + n + ' открытых ' + (n === 1 ? 'позицию' : (n < 5 ? 'позиции' : 'позиций')) + '?';
+    const go = () => {
+      const ids = S.openTrades.map(x => x.id);
+      ids.forEach(id => { try { closeTrade(id); } catch(e){} });
+      if (typeof renderHistory === 'function') renderHistory();
+      if (typeof updateAccountBar === 'function') updateAccountBar();
+      visible();
+    };
+    if (window.tg && typeof tg.showConfirm === 'function') {
+      tg.showConfirm(ask, (ok) => { if (ok) go(); });
+    } else {
+      if (confirm(ask)) go();
+    }
+  }
+  function init(){
+    const btn = document.getElementById('hist-close-all-btn');
+    if (btn) btn.addEventListener('click', closeAllOpen);
+    if (typeof window.renderHistory === 'function'){
+      const orig = window.renderHistory;
+      window.renderHistory = function(){
+        const r = orig.apply(this, arguments);
+        visible();
+        return r;
+      };
+    }
+    visible();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

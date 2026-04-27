@@ -3736,24 +3736,25 @@ body.light-theme #themeToggleBtn {
   function getLang() {
     try { return localStorage.getItem(KEY) || 'ru'; } catch(e) { return 'ru'; }
   }
-  function setLang(l) {
-    try { localStorage.setItem(KEY, l); } catch(e){}
-    if (l === 'ru') {
-      // Restore originals
-      document.querySelectorAll('[data-i18n-orig]').forEach(function(el){
-        var orig = el.getAttribute('data-i18n-orig');
-        if (orig != null) {
-          var nodes = el.childNodes;
-          for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].nodeType === 3 && nodes[i].nodeValue.trim()) {
-              nodes[i].nodeValue = nodes[i].nodeValue.replace(nodes[i].nodeValue.trim(), orig);
-              break;
-            }
+  function restoreOriginals() {
+    document.querySelectorAll('[data-i18n-orig]').forEach(function(el){
+      var orig = el.getAttribute('data-i18n-orig');
+      if (orig != null) {
+        var nodes = el.childNodes;
+        for (var i = 0; i < nodes.length; i++) {
+          if (nodes[i].nodeType === 3 && nodes[i].nodeValue.trim()) {
+            nodes[i].nodeValue = nodes[i].nodeValue.replace(nodes[i].nodeValue.trim(), orig);
+            break;
           }
         }
-      });
-    } else {
-      applyAll();
+      }
+    });
+  }
+  function setLang(l) {
+    try { localStorage.setItem(KEY, l); } catch(e){}
+    restoreOriginals();
+    if (l !== 'ru') {
+      setTimeout(applyAll, 30);
     }
     updateSwitcher();
   }

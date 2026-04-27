@@ -8,5 +8,167 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <title>YouTrade GAME</title>
 
+          <!-- Система переводов -->
+          <script>
+                        const translations = {
+                                          ru: {
+                                                                title: "YouTrade GAME",
+                                                                balance: "БАЛАНС",
+                                                                initialBalance: "НАЧАЛЬНЫЙ<br>БАЛАНС",
+                                                                currentPhase: "ТЕКУЩАЯ ФАЗА",
+                                                                nextPhase: "СЛЕДУЮЩАЯ",
+                                                                tradingGoals: "ЦЕЛИ ТОРГОВЛИ",
+                                profitTarget: "Целевой профит",
+                                                                inProgress: "В работе",
+                                                                tradingDays: "Торговые дни",
+                                                                maxDailyLoss: "Макс. дневной убыток",
+                                                                passed: "Пройдено",
+                                                                untilUpdate: "до обновления",
+                                                                maxLoss: "Максимальный убыток",
+                                                                account: "СЧЁТ",
+                                                                trading: "ТОРГОВЛЯ",
+                                                                history: "ИСТОРИЯ", 
+                                                                top: "ТОП",
+                                                                rates: "ТАРИФЫ",
+                                                                days: "дней",
+                                                                overall: "всего",
+                                                                funded: "Funded"
+                                          },
+                                          en: {
+                                                                title: "YouTrade GAME",
+                                                                balance: "BALANCE",
+                                                                initialBalance: "INITIAL<br>BALANCE", 
+                                                                currentPhase: "CURRENT PHASE",
+                                                                nextPhase: "NEXT",
+                                                                tradingGoals: "TRADING GOALS",
+                                                                profitTarget: "Profit Target",
+                                                                inProgress: "In Progress",
+                                                                tradingDays: "Trading Days",
+                                                                maxDailyLoss: "Max Daily Loss",
+                                                                passed: "Passed",
+                                                                untilUpdate: "until update",
+                                                                maxLoss: "Maximum Loss",
+                                                                account: "ACCOUNT",
+                                                                trading: "TRADING", 
+                                                                history: "HISTORY",
+                                                                top: "TOP",
+                                                                rates: "RATES",
+                                                                days: "days",
+                                                                overall: "overall",
+                                                                funded: "Funded"
+                                          },
+                                          ua: {
+                                                                title: "YouTrade GAME",
+                                                                balance: "БАЛАНС",
+                                                                initialBalance: "ПОЧАТКОВИЙ<br>БАЛАНС",
+                                                                currentPhase: "ПОТОЧНА ФАЗА", 
+                                                                nextPhase: "НАСТУПНА",
+                                                                tradingGoals: "ЦІЛІ ТОРГІВЛІ",
+                                                                profitTarget: "Цільовий прибуток",
+                                                                inProgress: "В роботі",
+                                                                tradingDays: "Торгові дні",
+                                                                maxDailyLoss: "Макс. денна втрата",
+                                                                passed: "Пройдено",
+                                                                untilUpdate: "до оновлення", 
+                                                                maxLoss: "Максимальна втрата",
+                                                                account: "РАХУНОК",
+                                                                trading: "ТОРГІВЛЯ",
+                                                                history: "ІСТОРІЯ",
+                                                                top: "ТОП", 
+                                                                rates: "ТАРИФИ",
+                                                                days: "днів",
+                                                                overall: "загалом",
+                                                                funded: "Funded"
+                                          }
+                        };
+
+                        let currentLang = localStorage.getItem('language') || 'ru';
+
+                        function t(key) {
+                                          return translations[currentLang][key] || key;
+                        }
+
+                        function switchLanguage(lang) {
+                                          currentLang = lang;
+                                          localStorage.setItem('language', lang);
+                                          updateTexts();
+                        }
+
+                        // Инициализация при загрузке
+                        document.addEventListener('DOMContentLoaded', function() {
+                                          updateTexts();
+                        });
+          </script>
+
+          <!-- Добавить CSS для переключателя языков -->
+          <style>
+                        .language-switcher {
+                                          position: fixed;
+                                          top: 20px;
+                                          right: 20px;
+                                          z-index: 1000;
+                                          display: flex;
+                                          gap: 5px;
+                                          background: rgba(0, 0, 0, 0.8);
+                                          padding: 8px 12px;
+                                          border-radius: 20px;
+                                          backdrop-filter: blur(10px);
+                        }
+                        .language-switcher button {
+                                          background: none;
+                                          border: none;
+                                          padding: 4px 8px;
+                                          border-radius: 12px;
+                                          cursor: pointer;
+                                          transition: all 0.3s;
+                                          font-size: 16px;
+                                          opacity: 0.6;
+                        }
+                        .language-switcher button:hover {
+                                          opacity: 0.8;
+                                          transform: scale(1.1);
+                        }
+                        .language-switcher button.active {
+                                          opacity: 1;
+                                          background: rgba(255, 255, 255, 0.2);
+                        }
+                    </style>
+</head>head>
+
+      <body>
+                <!-- Переключатель языков -->
+                <div class="language-switcher">
+                              <button onclick="switchLanguage('ru')" class="active" id="lang-ru">🇷🇺</button>button>
+                              <button onclick="switchLanguage('en')" id="lang-en">🇺🇸</button>button>
+                              <button onclick="switchLanguage('ua')" id="lang-ua">🇺🇦</button>button>
+                </div>div>
+
+                <script>
+                              // Обновить функцию switchLanguage для активного класса
+                              function switchLanguage(lang) {
+                                                currentLang = lang;
+                                                localStorage.setItem('language', lang);
+
+                                                // Обновить активную кнопку
+                                                document.querySelectorAll('.language-switcher button').forEach(btn => {
+                                                                      btn.classList.remove('active');
+                                                });
+                                                document.getElementById('lang-' + lang).classList.add('active');
+
+                                                updateTexts();
+                              }
+                </script>
+      </body>
+          </style>
+
+                        function updateTexts() {
+                                          document.querySelectorAll('[data-translate]').forEach(element => {
+                                                                const key = element.getAttribute('data-translate');
+                                                                element.innerHTML = t(key);
+                                          });
+                        }
+          </script>
+          </script>
+
       <!-- Иконки приложения -->
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ff9500'/><stop offset='100%25' stop-color='%23ffb347'/></linearGradient></defs><rect width='100' height='100' rx='20' fill='url(%23grad)'/><text x='50' y='65' text-anchor='middle' fill='white' font-size='60' font-family='Arial,sans-serif' font-weight='bold'>Y</text></svg>"><link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='grad2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ff9500'/><stop offset='100%25' stop-color='%23ffb347'/></linearGradient></defs><rect width='100' height='100' rx='20' fill='url(%23grad2)'/><text x='50' y='65' text-anchor='middle' fill='white' font-size='60' font-family='Arial,sans-serif' font-weight='bold'>Y</text></svg>">

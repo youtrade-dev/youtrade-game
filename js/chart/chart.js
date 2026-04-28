@@ -138,10 +138,12 @@ export function _buildCandleHistory(sym, tf) {
   var BASE = {
     'GC=F': 3300, 'SI=F': 33.5,
     '^GSPC': 5480, '^IXIC': 17800, 'NQ=F': 19800,
-    'EURUSD=X': 1.085, 'GBPUSD=X': 1.265, 'USDJPY=X': 149.5,
+    'EURUSD=X': 1.17, 'GBPUSD=X': 1.355, 'USDJPY=X': 159.3,
     'BTC-USD': 94000, 'ETH-USD': 3200
   };
-  var base = BASE[sym] || S.prices[sym]?.price || 1;
+  // Prefer a real observed price over the hard-coded BASE — keeps the synthetic seed
+  // from drifting stale across years. BASE is only the cold-start fallback.
+  var base = (S.prices[sym] && S.prices[sym].price) || BASE[sym] || 1;
   var candles = [];
   var price = base * (0.985 + Math.random() * 0.03);
   var vol = base > 1000 ? 50 : base > 100 ? 5 : base > 1 ? 1 : 100;
@@ -178,10 +180,22 @@ export function updateChartTick(sym, price) {
   var key = sym + '_' + _chartTF;
   if(!_candleData[key]) _candleData[key] = _buildCandleHistory(sym, _chartTF);
   var arr = _candleData[key];
+  // Absolute sanity: per-instrument hard ranges. Catches genuinely corrupted upstream
+  // (wrong-symbol responses, decimal-point drift) regardless of historical context.
+  // These bounds are wide enough to survive a decade of real market movement.
+  var SANITY = {
+    'EURUSD=X': [0.7, 1.6], 'GBPUSD=X': [0.9, 1.9], 'USDJPY=X': [80, 200],
+    'GC=F': [800, 6000], 'SI=F': [10, 80],
+    '^GSPC': [1500, 12000], '^IXIC': [4000, 35000], 'NQ=F': [4000, 40000],
+    'BTC-USD': [10000, 250000], 'ETH-USD': [500, 15000]
+  };
+  var sanity = SANITY[sym];
+  if (sanity && (val < sanity[0] || val > sanity[1])) return;
+
   // Outlier guard: per-category max per-tick deviation from previous close.
   // Real per-tick movement (5s polling): FX <0.05%, metals <0.1%, indices <0.1%, crypto <1%.
-  // Thresholds are 10× a fast-news realistic move — anything past them is a bad-proxy artifact
-  // (cached response from a different symbol, malformed JSON, stale candle from years ago).
+  // Only applied when arr already holds REAL candle history (synced from _loadRealCandles)
+  // — never against a synthetic baseline.
   var inst = INSTRUMENTS[sym];
   var session = inst && inst.session;
   var MAX_DELTA = { 'fx': 0.005, 'metal': 0.008, 'us_idx': 0.008, '24/7': 0.05 };
@@ -258,6 +272,11 @@ export async function _loadRealCandles(sym, tf) {
 
   if(candles && candles.length > 0){
     _candleSeries.setData(candles);
+    // Sync the in-memory _candleData cache with the real history we just rendered.
+    // Without this, updateChartTick keeps comparing live ticks against the stale
+    // synthetic baseline produced by _buildCandleHistory, and the per-category
+    // outlier guard silently drops every legitimate tick forever.
+    _candleData[sym + '_' + tf] = candles.slice(-300);
     if(_volSeries){
       const totalVol = candles.reduce((s,c) => s + (c.volume||0), 0);
       if(totalVol > 0){

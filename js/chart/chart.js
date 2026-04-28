@@ -15,6 +15,9 @@ let _candleSeries = null;
 let _volSeries = null;
 let _chartSym = null;
 let _chartTF = '1m';
+// Last (sym + '_' + tf) we ran fitContent() for. Used to suppress the auto-fit on
+// subsequent reloads of the SAME symbol/TF so the user's pan/zoom is preserved.
+let _lastFitKey = null;
 
 var _tfSeconds = {
   '1m': 60, '5m': 300, '15m': 900, '1h': 3600, '4h': 14400, '1d': 86400
@@ -63,6 +66,8 @@ export function initChart(sym) {
   if(typeof LightweightCharts === 'undefined') return;
 
   if(_chart) { try { _chart.remove(); } catch(e){} _chart = null; }
+  // Fresh chart instance means the next _loadRealCandles MUST re-fit the view.
+  _lastFitKey = null;
 
   _chart = LightweightCharts.createChart(container, {
     width: container.clientWidth,
@@ -288,7 +293,13 @@ export async function _loadRealCandles(sym, tf) {
         _volSeries.applyOptions({visible: false});
       }
     }
-    _chart.timeScale().fitContent();
+    // Only fit on first load OR when the (symbol, timeframe) just changed.
+    // Subsequent 30s background reloads preserve the user's pan/zoom.
+    var fitKey = sym + '_' + tf;
+    if (_lastFitKey !== fitKey) {
+      _chart.timeScale().fitContent();
+      _lastFitKey = fitKey;
+    }
     drawEntryLines();
 
     // Синхронизируем тикер S.prices с последней свечой (чтобы цена тика и свечи совпадали)
@@ -308,7 +319,11 @@ export async function _loadRealCandles(sym, tf) {
           const volData = synCandles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
           _volSeries.setData(volData);
         }
-        _chart && _chart.timeScale().fitContent();
+        var fitKey2 = sym + '_' + tf;
+        if (_lastFitKey !== fitKey2) {
+          _chart && _chart.timeScale().fitContent();
+          _lastFitKey = fitKey2;
+        }
       }
     } catch(e2){ console.warn("Synthetic fallback failed", e2.message); }
   }

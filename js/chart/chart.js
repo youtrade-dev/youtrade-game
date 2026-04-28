@@ -178,15 +178,19 @@ export function updateChartTick(sym, price) {
   var key = sym + '_' + _chartTF;
   if(!_candleData[key]) _candleData[key] = _buildCandleHistory(sym, _chartTF);
   var arr = _candleData[key];
-  // Outlier guard: reject ticks > 25% off the previous candle's close.
-  // No real instrument we trade moves that much in one polling interval; this filters
-  // wrong-symbol responses and malformed JSON from public CORS proxies before they
-  // contaminate the candle's high/low/close.
+  // Outlier guard: per-category max per-tick deviation from previous close.
+  // Real per-tick movement (5s polling): FX <0.05%, metals <0.1%, indices <0.1%, crypto <1%.
+  // Thresholds are 10× a fast-news realistic move — anything past them is a bad-proxy artifact
+  // (cached response from a different symbol, malformed JSON, stale candle from years ago).
+  var inst = INSTRUMENTS[sym];
+  var session = inst && inst.session;
+  var MAX_DELTA = { 'fx': 0.005, 'metal': 0.008, 'us_idx': 0.008, '24/7': 0.05 };
+  var maxDelta = MAX_DELTA[session] || 0.02;
   if (arr.length > 0) {
     var lastClose = arr[arr.length - 1].close;
     if (lastClose > 0) {
-      var ratio = val / lastClose;
-      if (ratio < 0.75 || ratio > 1.25) return;
+      var delta = Math.abs(val - lastClose) / lastClose;
+      if (delta > maxDelta) return;
     }
   }
   if(arr.length > 0 && arr[arr.length - 1].time === now) {

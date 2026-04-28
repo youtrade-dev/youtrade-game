@@ -168,6 +168,8 @@ export function _buildCandleHistory(sym, tf) {
 
 export function updateChartTick(sym, price) {
   if(!_chart || _chartSym !== sym) return;
+  // Guard: reject non-finite / non-positive ticks (bad proxy responses, network garbage).
+  if (typeof price !== 'number' || !isFinite(price) || price <= 0) return;
   var tfSec = _tfSeconds[_chartTF] || 60;
   var now = Math.floor(Date.now() / 1000);
   now = Math.floor(now / tfSec) * tfSec;
@@ -176,6 +178,17 @@ export function updateChartTick(sym, price) {
   var key = sym + '_' + _chartTF;
   if(!_candleData[key]) _candleData[key] = _buildCandleHistory(sym, _chartTF);
   var arr = _candleData[key];
+  // Outlier guard: reject ticks > 25% off the previous candle's close.
+  // No real instrument we trade moves that much in one polling interval; this filters
+  // wrong-symbol responses and malformed JSON from public CORS proxies before they
+  // contaminate the candle's high/low/close.
+  if (arr.length > 0) {
+    var lastClose = arr[arr.length - 1].close;
+    if (lastClose > 0) {
+      var ratio = val / lastClose;
+      if (ratio < 0.75 || ratio > 1.25) return;
+    }
+  }
   if(arr.length > 0 && arr[arr.length - 1].time === now) {
     // Update current candle
     var c = arr[arr.length - 1];

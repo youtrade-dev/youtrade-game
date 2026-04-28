@@ -1,10 +1,10 @@
 // Price loading + display + main 5s refresh loop.
 
 import { S } from "../state.js";
-import { INSTRUMENTS } from "../config.js";
+import { INSTRUMENTS, _INST_MAP } from "../config.js";
 import { _getDecimals } from "../util.js";
 import { fetchPrice } from "../api/price.js";
-import { getActiveKey2 } from "../state.js";
+import { getActiveKey2, setActiveKey2 } from "../state.js";
 import { updateChartTick } from "../chart/chart.js";
 
 export async function loadCurrentPrice() {
@@ -18,8 +18,8 @@ export async function loadCurrentPrice() {
   if(data) {
     S.prices[sym] = data;
     updatePriceDisplay();
-    updRisk();
-    updateOpenPnl();
+    window.updRisk();
+    window.updateOpenPnl();
     updateChartTick(sym, data.price);
   } else {
     var _cpe2=document.getElementById('cprice'); if(_cpe2) _cpe2.textContent = 'Нет данных';    var _pc3=document.getElementById('pchange'); if(_pc3) _pc3.textContent = 'Проверьте соединение';
@@ -59,12 +59,12 @@ export async function refreshAllPrices() {
   const arr = Array.from(syms);
   await Promise.all(arr.map(s => fetchPrice(s).then(d => { if (d) S.prices[s] = d; })));
   if (typeof updatePriceDisplay === 'function' && S.prices[S.asset]) updatePriceDisplay();
-  if (typeof updRisk === 'function') updRisk();
-  if (typeof updateOpenPnl === 'function') updateOpenPnl();
+  if (typeof updRisk === 'function') window.updRisk();
+  if (typeof updateOpenPnl === 'function') window.updateOpenPnl();
   if (typeof updateAccountBar === 'function') window.updateAccountBar();
-  if (typeof _updateListPrices === 'function') _updateListPrices();
+  if (typeof _updateListPrices === 'function') window._updateListPrices();
   if (typeof updateChartTick === 'function' && S.prices[S.asset]) updateChartTick(S.asset, S.prices[S.asset].price);
 }
 
-export function _updateListPrices(){Object.entries(INSTRUMENTS).forEach(function(kv){var key=kv[0],inst=kv[1],data=S.prices[key];if(!data||!data.price)return;var ids=_INST_MAP[key];if(!ids)return;var lpEl=document.getElementById(ids.lp);if(lpEl){var prev=parseFloat(lpEl.dataset.prev)||0,p=data.price;lpEl.textContent=p.toFixed(inst.dec);if(prev&&p>prev){lpEl.classList.add('up');lpEl.classList.remove('dn');}else if(prev&&p<prev){lpEl.classList.add('dn');lpEl.classList.remove('up');}lpEl.dataset.prev=p;}if(setActiveKey2(==key){var spread=inst.pip*2,sp=document.getElementById(ids.sp),bp=document.getElementById(ids.bp));if(sp)sp.textContent=(data.price-spread).toFixed(inst.dec);if(bp)bp.textContent=(data.price+spread).toFixed(inst.dec);}});}
+export async function _updateListPrices(){Object.entries(INSTRUMENTS).forEach(function(kv){var key=kv[0],inst=kv[1],data=S.prices[key];if(!data||!data.price)return;var ids=_INST_MAP[key];if(!ids)return;var lpEl=document.getElementById(ids.lp);if(lpEl){var prev=parseFloat(lpEl.dataset.prev)||0,p=data.price;lpEl.textContent=p.toFixed(inst.dec);if(prev&&p>prev){lpEl.classList.add('up');lpEl.classList.remove('dn');}else if(prev&&p<prev){lpEl.classList.add('dn');lpEl.classList.remove('up');}lpEl.dataset.prev=p;}if(getActiveKey2()===key){var spread=inst.pip*2,sp=document.getElementById(ids.sp),bp=document.getElementById(ids.bp);if(sp)sp.textContent=(data.price-spread).toFixed(inst.dec);if(bp)bp.textContent=(data.price+spread).toFixed(inst.dec);}});}
 

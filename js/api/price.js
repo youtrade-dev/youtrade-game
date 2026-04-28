@@ -4,7 +4,7 @@ import { S } from "../state.js";
 import { isMarketOpen } from "../market-hours.js";
 import { _fetchBinanceTicker } from "./binance.js";
 import { _fetchBybit } from "./bybit.js";
-import { _fetchYahooViaProxy, _fetchYahooQuote } from "./yahoo.js";
+import { _fetchYahooViaProxy,  } from "./yahoo.js";
 import { _fetchFxBatch } from "./fx.js";
 
 export async function fetchPrice(symbol) {

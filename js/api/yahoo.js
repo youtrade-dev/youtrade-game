@@ -1,3 +1,5 @@
+import { INSTRUMENTS } from "../config.js";
+
 // Yahoo Finance via public CORS proxies (corsproxy.io / allorigins.win / codetabs.com).
 
 export function _getYahooInterval(tf) {
@@ -36,8 +38,6 @@ export async function _fetchYahooViaProxy(symbol) {
   }
   return null;
 }
-
-export async function _fetchYahooQuote(symbol) { return await fetchPrice(symbol); }
 
 export async function _fetchYahoo(sym, tf){
   const intMap = { "1m":"1m", "5m":"5m", "15m":"15m", "1h":"60m", "4h":"60m", "1d":"1d" };

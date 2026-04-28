@@ -1,3 +1,5 @@
+import { INSTRUMENTS } from "./config.js";
+
 // Generic formatting helpers.
 
 export function _hm(d){ return d.getUTCHours()*60 + d.getUTCMinutes(); }

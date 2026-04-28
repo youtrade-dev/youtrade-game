@@ -22,7 +22,7 @@ import {
   updateDashboard, renderHistory, setHistFilter,
 } from "./trading/dashboard.js";
 import {
-  trade, adjLot, closeTradeConfirm,
+  trade, adjLot, closeTradeConfirm, updRisk, updateOpenPnl, renderOpenPositionsDash,
 } from "./trading/orders.js";
 
 import { setup as setupAccBar } from "./ui/acc-bar.js";
@@ -45,6 +45,7 @@ Object.assign(window, {
   openInstrInfo,
   // patchable by IIFE wrappers (must exist on window before setup* runs)
   updateAccountBar, _updateListPrices, renderHistory,
+  updRisk, updateOpenPnl, renderOpenPositionsDash, updateDashboard, chalRender,
 });
 
 function boot() {

@@ -1,5 +1,8 @@
+if (typeof window !== 'undefined' && !window._fxCache) window._fxCache = { ts: 0 };
+
 // FX batch from currency-api (jsdelivr/pages.dev) + TwelveData candles.
-import { _TD_MAP } from "../config.js";
+import { INSTRUMENTS, _TD_MAP } from "../config.js";
+import { _getYahooInterval, _getYahooRange } from "./yahoo.js";
 
 export async function _fetchFxBatch() {
   const now = Date.now();

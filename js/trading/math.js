@@ -1,3 +1,5 @@
+import { LEVERAGE, COMM_PER_LOT } from "../config.js";
+
 // Trade math: commission, notional, margin.
 
 export function calcCommission(lots){ return Math.round(COMM_PER_LOT * lots * 100) / 100; }

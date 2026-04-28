@@ -9,7 +9,7 @@ try {
         sessionStorage.setItem(marker, '1');
         u.searchParams.set('_yt', 't202604241340');
         location.replace(u.toString());
-        return;
+        // navigation begins; remaining work is moot
       }
     }
   } catch(e){}

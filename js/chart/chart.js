@@ -15,9 +15,45 @@ let _candleSeries = null;
 let _volSeries = null;
 let _chartSym = null;
 let _chartTF = '1m';
-// Last (sym + '_' + tf) we ran fitContent() for. Used to suppress the auto-fit on
-// subsequent reloads of the SAME symbol/TF so the user's pan/zoom is preserved.
-let _lastFitKey = null;
+
+// Series options pulled out so we can recreate the series on every reload.
+// (Council 2026-04-28: stale CandlestickSeries reuse + mixed setData/update was
+// the root cause of iteration-to-iteration non-determinism — the "isolated
+// bottom-right candle" was the diagnostic signature of a single non-colliding
+// timestamp surviving lightweight-charts' internal time-index dedup.)
+const CANDLE_OPTS = {
+  upColor: '#26a69a',
+  downColor: '#ef5350',
+  borderUpColor: '#26a69a',
+  borderDownColor: '#ef5350',
+  wickUpColor: '#26a69a',
+  wickDownColor: '#ef5350'
+};
+const VOL_OPTS = {
+  priceFormat: { type: 'volume' },
+  priceScaleId: 'vol'
+};
+
+function _rebuildSeries() {
+  if (!_chart) return;
+  try { if (_candleSeries) _chart.removeSeries(_candleSeries); } catch(e){}
+  try { if (_volSeries) _chart.removeSeries(_volSeries); } catch(e){}
+  _candleSeries = _chart.addCandlestickSeries(CANDLE_OPTS);
+  _volSeries = _chart.addHistogramSeries(VOL_OPTS);
+  _chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
+}
+
+// Sort by time ascending, drop duplicate timestamps (keep last write).
+// lightweight-charts requires strictly-increasing time keys; collisions cause
+// silent dedup with order-dependent survivors.
+function _normalizeCandles(arr) {
+  if (!Array.isArray(arr) || arr.length === 0) return [];
+  const byTime = new Map();
+  for (const c of arr) {
+    if (c && typeof c.time === 'number' && isFinite(c.time)) byTime.set(c.time, c);
+  }
+  return Array.from(byTime.values()).sort((a, b) => a.time - b.time);
+}
 
 var _tfSeconds = {
   '1m': 60, '5m': 300, '15m': 900, '1h': 3600, '4h': 14400, '1d': 86400
@@ -65,9 +101,7 @@ export function initChart(sym) {
   container.innerHTML = '';
   if(typeof LightweightCharts === 'undefined') return;
 
-  if(_chart) { try { _chart.remove(); } catch(e){} _chart = null; }
-  // Fresh chart instance means the next _loadRealCandles MUST re-fit the view.
-  _lastFitKey = null;
+  if(_chart) { try { _chart.remove(); } catch(e){} _chart = null; _candleSeries = null; _volSeries = null; }
 
   _chart = LightweightCharts.createChart(container, {
     width: container.clientWidth,
@@ -101,22 +135,9 @@ export function initChart(sym) {
     }
   });
 
-  _candleSeries = _chart.addCandlestickSeries({
-    upColor: '#26a69a',
-    downColor: '#ef5350',
-    borderUpColor: '#26a69a',
-    borderDownColor: '#ef5350',
-    wickUpColor: '#26a69a',
-    wickDownColor: '#ef5350'
-  });
-
-  _volSeries = _chart.addHistogramSeries({
-    priceFormat: { type: 'volume' },
-    priceScaleId: 'vol'
-  });
-  _chart.priceScale('vol').applyOptions({
-    scaleMargins: { top: 0.85, bottom: 0 }
-  });
+  _candleSeries = _chart.addCandlestickSeries(CANDLE_OPTS);
+  _volSeries = _chart.addHistogramSeries(VOL_OPTS);
+  _chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
 
   var ro = new ResizeObserver(function() {
     if(_chart && container) {
@@ -276,16 +297,20 @@ export async function _loadRealCandles(sym, tf) {
   removeLoader();
 
   if(candles && candles.length > 0){
-    _candleSeries.setData(candles);
+    // Normalize: sort ascending by time, drop duplicate timestamps. lightweight-charts
+    // silently dedups collisions with order-dependent survivors — the source of the
+    // "isolated bottom-right candle" symptom.
+    const clean = _normalizeCandles(candles);
+    // Tear down the candle + volume series before reseeding. Reusing a dirty series
+    // across reloads is what produced inconsistent renders for the same input.
+    _rebuildSeries();
+    _candleSeries.setData(clean);
     // Sync the in-memory _candleData cache with the real history we just rendered.
-    // Without this, updateChartTick keeps comparing live ticks against the stale
-    // synthetic baseline produced by _buildCandleHistory, and the per-category
-    // outlier guard silently drops every legitimate tick forever.
-    _candleData[sym + '_' + tf] = candles.slice(-300);
+    _candleData[sym + '_' + tf] = clean.slice(-300);
     if(_volSeries){
-      const totalVol = candles.reduce((s,c) => s + (c.volume||0), 0);
+      const totalVol = clean.reduce((s,c) => s + (c.volume||0), 0);
       if(totalVol > 0){
-        const volData = candles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
+        const volData = clean.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
         _volSeries.setData(volData);
         _volSeries.applyOptions({visible: true});
       } else {
@@ -293,13 +318,13 @@ export async function _loadRealCandles(sym, tf) {
         _volSeries.applyOptions({visible: false});
       }
     }
-    // Only fit on first load OR when the (symbol, timeframe) just changed.
-    // Subsequent 30s background reloads preserve the user's pan/zoom.
-    var fitKey = sym + '_' + tf;
-    if (_lastFitKey !== fitKey) {
-      _chart.timeScale().fitContent();
-      _lastFitKey = fitKey;
-    }
+    // Always fitContent after setData. The previous _lastFitKey gating preserved the
+    // user's zoom across background reloads, but with the series now being torn down
+    // and recreated each reload, the surviving viewport pointed at timestamps that no
+    // longer existed in the new series — producing visually-inconsistent renders for
+    // identical data. (Re-introduce a smarter zoom-preserve in a follow-up PR with a
+    // regression harness.)
+    _chart.timeScale().fitContent();
     drawEntryLines();
 
     // Синхронизируем тикер S.prices с последней свечой (чтобы цена тика и свечи совпадали)
@@ -310,21 +335,17 @@ export async function _loadRealCandles(sym, tf) {
       try { updatePriceDisplay && updatePriceDisplay(sym, last.close); } catch(e){}
     }
   } else {
-    // как последний резерв — синтетика
+    // Synthetic fallback — same teardown discipline.
     try {
-      const synCandles = _buildCandleHistory(sym, tf);
-      if(_candleSeries){
-        _candleSeries.setData(synCandles);
-        if(_volSeries){
-          const volData = synCandles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
-          _volSeries.setData(volData);
-        }
-        var fitKey2 = sym + '_' + tf;
-        if (_lastFitKey !== fitKey2) {
-          _chart && _chart.timeScale().fitContent();
-          _lastFitKey = fitKey2;
-        }
+      const synCandles = _normalizeCandles(_buildCandleHistory(sym, tf));
+      _rebuildSeries();
+      _candleSeries.setData(synCandles);
+      _candleData[sym + '_' + tf] = synCandles.slice(-300);
+      if(_volSeries){
+        const volData = synCandles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
+        _volSeries.setData(volData);
       }
+      _chart && _chart.timeScale().fitContent();
     } catch(e2){ console.warn("Synthetic fallback failed", e2.message); }
   }
 }

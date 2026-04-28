@@ -8,6 +8,9 @@ import { saveStateAfterAction } from "../state.js";
 import { tg } from "../telegram.js";
 import { drawEntryLines } from "../chart/chart.js";
 import { getChart, getChartSym } from "../chart/chart.js";
+import { isMarketOpen } from "../market-hours.js";
+import { fetchPrice } from "../api/price.js";
+import { updateDashboard } from "./dashboard.js";
 
 export function adjLot(dir) {
   const inp = document.getElementById('lots');

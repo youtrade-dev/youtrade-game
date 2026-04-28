@@ -25,7 +25,7 @@ function nextResetUtc(nowMs){
       }
     } catch(e){}
     try { localStorage.setItem('yt.lastDailyReset', String(Date.now())); } catch(e){}
-    try { if (typeof updateDashboard === 'function') updateDashboard(); } catch(e){}
+    try { if (typeof window.updateDashboard === 'function') window.updateDashboard(); } catch(e){}
     try { if (typeof updateAccountBar === 'function') window.updateAccountBar(); } catch(e){}
   }
   function ensureCatchUp(){

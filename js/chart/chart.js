@@ -8,7 +8,7 @@ import { INSTRUMENTS, LEVERAGE } from "../config.js";
 import { _hm, _fmtTime, _getDecimals } from "../util.js";
 import { fetchPrice } from "../api/price.js";
 import { _fetchYahoo } from "../api/yahoo.js";
-import { _fetchBinance } from "../api/binance.js";
+import { _fetchBinance, _getBinanceTF } from "../api/binance.js";
 
 let _chart = null;
 let _candleSeries = null;

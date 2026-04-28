@@ -1,9 +1,13 @@
 // Fullscreen chart overlay. Created on demand, destroyed on close.
 
 import { S } from "../state.js";
-import { INSTRUMENTS } from "../config.js";
+import { INSTRUMENTS, _BINANCE_MAP, _TD_MAP } from "../config.js";
 import { _fmtTime } from "../util.js";
-import { getCandleSeries, getChart, getChartSym, getChartTF, setChartTF } from "./chart.js";
+import {
+  getCandleSeries, getChart, getChartSym, getChartTF, setChartTF,
+  getVolSeries, _buildCandleHistory,
+} from "./chart.js";
+import { _getBinanceTF } from "../api/binance.js";
 import { _fetchBinance } from "../api/binance.js";
 import { _fetchTwelveData } from "../api/fx.js";
 
@@ -59,7 +63,7 @@ export function closeFullChart(){
 }
 
 export function setFSTF(tf,btn){
-  getChartTF()=tf;
+  setChartTF(tf);
   document.querySelectorAll('.chart-fs-tf-bar .tf').forEach(function(b){b.classList.remove('active');});
   if(btn)btn.classList.add('active');
   // also sync inline TF buttons

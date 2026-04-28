@@ -1,11 +1,14 @@
 // Screen navigation, asset selection, instrument-info modal, account bar.
 
 import { S } from "../state.js";
-import { INSTRUMENTS } from "../config.js";
+import { INSTRUMENTS, _INST_MAP, LEVERAGE } from "../config.js";
 import { _getDecimals, escapeHtml } from "../util.js";
 import { getActiveKey2, setActiveKey2 } from "../state.js";
-import { setChartTF, initChart } from "../chart/chart.js";
+import { setChartTF, initChart, _buildChartWrap } from "../chart/chart.js";
 import { loadCurrentPrice, updatePriceDisplay } from "./prices.js";
+import { isMarketOpen } from "../market-hours.js";
+import { calcCommission, calcMargin, calcNotional } from "../trading/math.js";
+import { chalRender } from "../challenge/challenge.js";
 
 export function selAsset(btn, sym, name) {
   document.querySelectorAll('.at').forEach(b => b.classList.remove('active'));
@@ -16,7 +19,7 @@ export function selAsset(btn, sym, name) {
   initChart(sym);
 }
 
-export function selAsset2(key,name,cat,rowEl){var ids=_INST_MAP[key];if(!ids)return;if(getActiveKey2()&&getActiveKey2()!==key){var pi=_INST_MAP[getActiveKey2()];if(pi){var pe=document.getElementById(pi.exp),pr=document.getElementById(pi.row);if(pe)pe.style.display='none';if(pr)pr.classList.remove('active');}}var expEl=document.getElementById(ids.exp),rowDiv=document.getElementById(ids.row);if(!expEl)return;var isOpen=expEl.style.display!=='none';if(isOpen){expEl.style.display='none';if(rowDiv)rowDiv.classList.remove('active');setActiveKey2(null);var cw=document.getElementById('inst-chart-wrap');if(cw){var holder=document.getElementById('inst-chart-holder');if(holder)holder.appendChild(cw);}}else{expEl.style.display='block';if(rowDiv)rowDiv.classList.add('active');setActiveKey2(key);S.asset=key;S.assetName=name;var inst=INSTRUMENTS[key];if(inst){var data=S.prices[key];if(data&&data.price){var spread=inst.pip*2,sp=document.getElementById(ids.sp),bp=document.getElementById(ids.bp);if(sp)sp.textContent=(data.price-spread).toFixed(inst.dec);if(bp)bp.textContent=(data.price+spread).toFixed(inst.dec);}updRisk();}loadCurrentPrice();var cw2=document.getElementById('inst-chart-wrap');if(!cw2){cw2=_buildChartWrap();}var bar=expEl.querySelector('.inst-expand-bar');if(bar)expEl.insertBefore(cw2,bar);_chartTF='5m';initChart(key);}}
+export function selAsset2(key,name,cat,rowEl){var ids=_INST_MAP[key];if(!ids)return;if(getActiveKey2()&&getActiveKey2()!==key){var pi=_INST_MAP[getActiveKey2()];if(pi){var pe=document.getElementById(pi.exp),pr=document.getElementById(pi.row);if(pe)pe.style.display='none';if(pr)pr.classList.remove('active');}}var expEl=document.getElementById(ids.exp),rowDiv=document.getElementById(ids.row);if(!expEl)return;var isOpen=expEl.style.display!=='none';if(isOpen){expEl.style.display='none';if(rowDiv)rowDiv.classList.remove('active');setActiveKey2(null);var cw=document.getElementById('inst-chart-wrap');if(cw){var holder=document.getElementById('inst-chart-holder');if(holder)holder.appendChild(cw);}}else{expEl.style.display='block';if(rowDiv)rowDiv.classList.add('active');setActiveKey2(key);S.asset=key;S.assetName=name;var inst=INSTRUMENTS[key];if(inst){var data=S.prices[key];if(data&&data.price){var spread=inst.pip*2,sp=document.getElementById(ids.sp),bp=document.getElementById(ids.bp);if(sp)sp.textContent=(data.price-spread).toFixed(inst.dec);if(bp)bp.textContent=(data.price+spread).toFixed(inst.dec);}window.updRisk();}loadCurrentPrice();var cw2=document.getElementById('inst-chart-wrap');if(!cw2){cw2=_buildChartWrap();}var bar=expEl.querySelector('.inst-expand-bar');if(bar)expEl.insertBefore(cw2,bar);setChartTF('5m');initChart(key);}}
 
 export function toggleFav(key,starId,ev){if(ev){ev.stopPropagation();ev.preventDefault();}var star=document.getElementById(starId);if(!star)return;var idx=_favs2.indexOf(key);if(idx>=0){_favs2.splice(idx,1);star.classList.remove('fav');star.textContent='\u2606';}else{_favs2.push(key);star.classList.add('fav');star.textContent='\u2605';}try{localStorage.setItem('yt_favs',JSON.stringify(_favs2));}catch(e){}}
 

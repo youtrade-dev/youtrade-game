@@ -1,4 +1,5 @@
 // Application state, persistence (localStorage + Telegram CloudStorage),
+import { tg } from "./telegram.js";
 // and LRU candle cache (replaces direct _candleData object access).
 
 export const S = {
@@ -124,8 +125,8 @@ export function resetAccount() {
   S.totalPnl = 0;
   S.tradeCount = 0;
   S.day = 1;
-  updateDashboard();
-  renderOpenPositionsDash();
+  window.updateDashboard();
+  window.renderOpenPositionsDash();
   window.renderHistory();
   saveState();
   alert('Счёт сброшен! Баланс: $10 000');

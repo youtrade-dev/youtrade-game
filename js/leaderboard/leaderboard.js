@@ -1,6 +1,7 @@
 // Bot-leaderboard simulation: random bots, periodic ticks, render.
 
 import { S } from "../state.js";
+import { _tradeWord, _dayWord } from "../util.js";
 
 let _lbBots = null;
 let _lbTotal = 0;

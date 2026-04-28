@@ -43,14 +43,30 @@ function _rebuildSeries() {
   _chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
 }
 
-// Sort by time ascending, drop duplicate timestamps (keep last write).
-// lightweight-charts requires strictly-increasing time keys; collisions cause
-// silent dedup with order-dependent survivors.
-function _normalizeCandles(arr) {
+// Per-instrument absolute price range. Used by both the live-tick guard in
+// updateChartTick AND the historical-candle filter in _normalizeCandles, so
+// a bad Yahoo OHLC entry can't bypass validation by arriving via setData.
+const SANITY = {
+  'EURUSD=X': [0.7, 1.6], 'GBPUSD=X': [0.9, 1.9], 'USDJPY=X': [80, 200],
+  'GC=F': [800, 6000], 'SI=F': [10, 80],
+  '^GSPC': [1500, 12000], '^IXIC': [4000, 35000], 'NQ=F': [4000, 40000],
+  'BTC-USD': [10000, 250000], 'ETH-USD': [500, 15000]
+};
+
+// Sort by time ascending, drop duplicate timestamps (keep last write), and
+// filter out OHLC entries outside the per-instrument SANITY range so that
+// upstream-corrupted historical candles (e.g. Yahoo returning a low=1.11
+// silver bar mid-series) cannot reach _candleSeries.setData().
+function _normalizeCandles(arr, sym) {
   if (!Array.isArray(arr) || arr.length === 0) return [];
+  const sanity = SANITY[sym];
+  const inRange = sanity ? (v) => typeof v === 'number' && isFinite(v) && v >= sanity[0] && v <= sanity[1]
+                         : (v) => typeof v === 'number' && isFinite(v) && v > 0;
   const byTime = new Map();
   for (const c of arr) {
-    if (c && typeof c.time === 'number' && isFinite(c.time)) byTime.set(c.time, c);
+    if (!c || typeof c.time !== 'number' || !isFinite(c.time)) continue;
+    if (!inRange(c.open) || !inRange(c.high) || !inRange(c.low) || !inRange(c.close)) continue;
+    byTime.set(c.time, c);
   }
   return Array.from(byTime.values()).sort((a, b) => a.time - b.time);
 }
@@ -206,15 +222,8 @@ export function updateChartTick(sym, price) {
   var key = sym + '_' + _chartTF;
   if(!_candleData[key]) _candleData[key] = _buildCandleHistory(sym, _chartTF);
   var arr = _candleData[key];
-  // Absolute sanity: per-instrument hard ranges. Catches genuinely corrupted upstream
-  // (wrong-symbol responses, decimal-point drift) regardless of historical context.
-  // These bounds are wide enough to survive a decade of real market movement.
-  var SANITY = {
-    'EURUSD=X': [0.7, 1.6], 'GBPUSD=X': [0.9, 1.9], 'USDJPY=X': [80, 200],
-    'GC=F': [800, 6000], 'SI=F': [10, 80],
-    '^GSPC': [1500, 12000], '^IXIC': [4000, 35000], 'NQ=F': [4000, 40000],
-    'BTC-USD': [10000, 250000], 'ETH-USD': [500, 15000]
-  };
+  // Absolute sanity: shared with _normalizeCandles so live ticks and historical
+  // candles use the same per-instrument hard ranges.
   var sanity = SANITY[sym];
   if (sanity && (val < sanity[0] || val > sanity[1])) return;
 
@@ -300,7 +309,7 @@ export async function _loadRealCandles(sym, tf) {
     // Normalize: sort ascending by time, drop duplicate timestamps. lightweight-charts
     // silently dedups collisions with order-dependent survivors — the source of the
     // "isolated bottom-right candle" symptom.
-    const clean = _normalizeCandles(candles);
+    const clean = _normalizeCandles(candles, sym);
     // Tear down the candle + volume series before reseeding. Reusing a dirty series
     // across reloads is what produced inconsistent renders for the same input.
     _rebuildSeries();
@@ -337,7 +346,7 @@ export async function _loadRealCandles(sym, tf) {
   } else {
     // Synthetic fallback — same teardown discipline.
     try {
-      const synCandles = _normalizeCandles(_buildCandleHistory(sym, tf));
+      const synCandles = _normalizeCandles(_buildCandleHistory(sym, tf), sym);
       _rebuildSeries();
       _candleSeries.setData(synCandles);
       _candleData[sym + '_' + tf] = synCandles.slice(-300);

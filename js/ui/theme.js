@@ -12,6 +12,8 @@ var KEY = 'yt_theme';
     if (btn) btn.textContent = (theme === 'light') ? '🌙' : '☀️';
     btn && btn.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
     btn && btn.setAttribute('title', theme === 'light' ? 'Тёмная тема' : 'Светлая тема');
+    // Notify listeners (chart re-styles itself, etc.)
+    try { document.dispatchEvent(new CustomEvent('yt:theme', { detail: { theme } })); } catch(e){}
   }
   function getTheme(){
     try { return localStorage.getItem(KEY) || 'dark'; } catch(e) { return 'dark'; }

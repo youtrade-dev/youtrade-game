@@ -22,20 +22,20 @@ export async function fetchPrice(symbol) {
   } catch(e) {}
 
   try {
-    // FX
+    // FX — primary: currency-api (one fast jsdelivr CDN call, no CORS proxies);
+    // fallback: Yahoo via the 3 public CORS proxies (often slow/rate-limited).
     if (symbol === 'EURUSD=X' || symbol === 'GBPUSD=X' || symbol === 'USDJPY=X') {
-      // PRIMARY: Yahoo (минутные тики), fallback ниже на currency-api
-      try { const yh = await _fetchYahooViaProxy(symbol); if (yh && isFinite(yh.price) && yh.price > 0) return yh; } catch(e){}
-      const fx = await _fetchFxBatch();
-      let price = null;
-      if (symbol === 'EURUSD=X' && fx.eur) price = 1 / fx.eur;
-      else if (symbol === 'GBPUSD=X' && fx.gbp) price = 1 / fx.gbp;
-      else if (symbol === 'USDJPY=X' && fx.jpy) price = fx.jpy;
-      if (price != null && isFinite(price)) {
-        const prev = price * 0.9999;
-        return { price, prev, change: price - prev, changePct: ((price - prev) / prev) * 100 };
-      }
-      // FX fallback to Yahoo proxy
+      try {
+        const fx = await _fetchFxBatch();
+        let price = null;
+        if (symbol === 'EURUSD=X' && fx && fx.eur) price = 1 / fx.eur;
+        else if (symbol === 'GBPUSD=X' && fx && fx.gbp) price = 1 / fx.gbp;
+        else if (symbol === 'USDJPY=X' && fx && fx.jpy) price = fx.jpy;
+        if (price != null && isFinite(price) && price > 0) {
+          const prev = price * 0.9999;
+          return { price, prev, change: price - prev, changePct: ((price - prev) / prev) * 100 };
+        }
+      } catch(e){}
       return await _fetchYahooViaProxy(symbol);
     }
     // Metals

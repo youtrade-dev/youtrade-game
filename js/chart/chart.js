@@ -15,6 +15,9 @@ let _candleSeries = null;
 let _volSeries = null;
 let _chartSym = null;
 let _chartTF = '1m';
+// Skip fitContent on background 30s reloads. Safe now that the rebuild keeps
+// the time domain consistent across reloads.
+let _lastFitKey = null;
 
 // Series options pulled out so we can recreate the series on every reload.
 // (Council 2026-04-28: stale CandlestickSeries reuse + mixed setData/update was
@@ -33,6 +36,31 @@ const VOL_OPTS = {
   priceFormat: { type: 'volume' },
   priceScaleId: 'vol'
 };
+
+function _themeOpts() {
+  const light = typeof document !== 'undefined' && document.body && document.body.classList.contains('light-theme');
+  return light ? {
+    layout: { background: { color: '#ffffff' }, textColor: '#1a1a2e' },
+    grid:   { vertLines: { color: '#e5e7ee' }, horzLines: { color: '#e5e7ee' } },
+    crosshair: { vertLine: { color: '#9aa0a6', labelBackgroundColor: '#1a1a2e' },
+                 horzLine: { color: '#9aa0a6', labelBackgroundColor: '#1a1a2e' } },
+    rightPriceScale: { borderColor: '#d8dbe8' },
+    timeScale: { borderColor: '#d8dbe8' }
+  } : {
+    layout: { background: { color: '#0d1117' }, textColor: '#d1d4dc' },
+    grid:   { vertLines: { color: '#1e2230' }, horzLines: { color: '#1e2230' } },
+    crosshair: { vertLine: { color: '#758696', labelBackgroundColor: '#2b2b43' },
+                 horzLine: { color: '#758696', labelBackgroundColor: '#2b2b43' } },
+    rightPriceScale: { borderColor: '#2a2a4a' },
+    timeScale: { borderColor: '#2a2a4a' }
+  };
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('yt:theme', () => {
+    if (_chart) try { _chart.applyOptions(_themeOpts()); } catch(e){}
+  });
+}
 
 function _rebuildSeries() {
   if (!_chart) return;
@@ -101,38 +129,17 @@ export function initChart(sym) {
   container.innerHTML = '';
   if(typeof LightweightCharts === 'undefined') return;
 
-  if(_chart) { try { _chart.remove(); } catch(e){} _chart = null; _candleSeries = null; _volSeries = null; }
+  if(_chart) { try { _chart.remove(); } catch(e){} _chart = null; _candleSeries = null; _volSeries = null; _lastFitKey = null; }
 
+  const themeOpts = _themeOpts();
   _chart = LightweightCharts.createChart(container, {
     width: container.clientWidth,
     height: container.clientHeight || 300,
-    layout: {
-      background: { color: '#0d1117' },
-      textColor: '#d1d4dc',
-      fontSize: 12,
-      fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif'
-    },
-    grid: {
-      vertLines: { color: '#1e2230', style: 1 },
-      horzLines: { color: '#1e2230', style: 1 }
-    },
-    crosshair: {
-      mode: LightweightCharts.CrosshairMode.Normal,
-      vertLine: { color: '#758696', labelBackgroundColor: '#2b2b43' },
-      horzLine: { color: '#758696', labelBackgroundColor: '#2b2b43' }
-    },
-    rightPriceScale: {
-      borderColor: '#2a2a4a',
-      scaleMargins: { top: 0.08, bottom: 0.15 }
-    },
-    timeScale: {
-      borderColor: '#2a2a4a',
-      timeVisible: true,
-      secondsVisible: false,
-      rightOffset: 5,
-      barSpacing: 8,
-      minBarSpacing: 3
-    }
+    layout: { ...themeOpts.layout, fontSize: 12, fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif' },
+    grid: { vertLines: { ...themeOpts.grid.vertLines, style: 1 }, horzLines: { ...themeOpts.grid.horzLines, style: 1 } },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal, ...themeOpts.crosshair },
+    rightPriceScale: { ...themeOpts.rightPriceScale, scaleMargins: { top: 0.08, bottom: 0.15 } },
+    timeScale: { ...themeOpts.timeScale, timeVisible: true, secondsVisible: false, rightOffset: 5, barSpacing: 8, minBarSpacing: 3 }
   });
 
   _candleSeries = _chart.addCandlestickSeries(CANDLE_OPTS);
@@ -318,13 +325,8 @@ export async function _loadRealCandles(sym, tf) {
         _volSeries.applyOptions({visible: false});
       }
     }
-    // Always fitContent after setData. The previous _lastFitKey gating preserved the
-    // user's zoom across background reloads, but with the series now being torn down
-    // and recreated each reload, the surviving viewport pointed at timestamps that no
-    // longer existed in the new series — producing visually-inconsistent renders for
-    // identical data. (Re-introduce a smarter zoom-preserve in a follow-up PR with a
-    // regression harness.)
-    _chart.timeScale().fitContent();
+    const fitKey = sym + '_' + tf;
+    if (_lastFitKey !== fitKey) { _chart.timeScale().fitContent(); _lastFitKey = fitKey; }
     drawEntryLines();
 
     // Синхронизируем тикер S.prices с последней свечой (чтобы цена тика и свечи совпадали)
@@ -345,7 +347,8 @@ export async function _loadRealCandles(sym, tf) {
         const volData = synCandles.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? "rgba(38,166,154,0.5)" : "rgba(239,83,80,0.5)" }));
         _volSeries.setData(volData);
       }
-      _chart && _chart.timeScale().fitContent();
+      const fitKey2 = sym + '_' + tf;
+      if (_chart && _lastFitKey !== fitKey2) { _chart.timeScale().fitContent(); _lastFitKey = fitKey2; }
     } catch(e2){ console.warn("Synthetic fallback failed", e2.message); }
   }
 }

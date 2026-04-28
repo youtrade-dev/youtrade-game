@@ -32,7 +32,9 @@ export async function _fetchYahooViaProxy(symbol) {
       for (let i = closes.length - 1; i >= 0; i--) { if (closes[i] != null) { lastClose = closes[i]; break; } }
       const price = lastClose != null ? lastClose : meta.regularMarketPrice;
       const prev = meta.chartPreviousClose || meta.regularMarketPreviousClose || price;
-      if (price == null) continue;
+      if (price == null || typeof price !== 'number' || !isFinite(price) || price <= 0) continue;
+      // Symbol consistency check: proxies sometimes return cached data for a different symbol.
+      if (meta.symbol && meta.symbol !== symbol) continue;
       return { price, prev, change: price - prev, changePct: prev ? ((price - prev) / prev) * 100 : 0 };
     } catch (e) {}
   }

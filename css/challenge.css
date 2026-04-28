@@ -1,0 +1,75 @@
+/* Phase 0 split — extracted from index.html. Do not edit by hand mid-merge. */
+
+/* === CHALLENGE SCREEN === */
+.chal-wrap{padding:12px 12px 16px;display:flex;flex-direction:column;gap:14px}
+.chal-hero{
+  background:linear-gradient(135deg,rgba(78,53,198,0.25),rgba(16,185,129,0.08));
+  border:1px solid rgba(78,53,198,0.4);
+  border-radius:16px;
+  padding:18px 16px 14px;
+  text-align:center;
+}
+.chal-hero-title{font-size:19px;font-weight:800;color:var(--text);margin-bottom:3px;letter-spacing:-0.3px}
+.chal-hero-sub{font-size:12px;color:var(--text2);line-height:1.4}
+.chal-hero-badges{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.chal-badge{background:rgba(78,53,198,0.18);border:1px solid rgba(78,53,198,0.3);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--primary)}
+.chal-badge.green{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3);color:var(--green)}
+/* Plan tabs */
+.chal-plan-tabs{display:flex;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:4px}
+.chal-plan-tab{flex:1;padding:7px 4px;border:none;border-radius:9px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);transition:all .2s;text-align:center}
+.chal-plan-tab.active{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(78,53,198,0.4)}
+/* Balance selector */
+.chal-section-title{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.chal-bal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.chal-bal-btn{
+  padding:10px 4px;
+  border:1px solid var(--border2);
+  border-radius:10px;
+  background:var(--bg2);
+  color:var(--text);
+  font-size:13px;font-weight:700;
+  cursor:pointer;
+  transition:all .15s;
+  text-align:center;
+  position:relative;
+}
+.chal-bal-btn.active{border-color:var(--primary);background:rgba(78,53,198,0.15);color:var(--primary)}
+.chal-bal-btn.best::after{content:'★';position:absolute;top:-6px;right:4px;font-size:10px;color:#f59e0b;background:var(--bg);padding:0 2px}
+/* Conditions table */
+.chal-cond-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.chal-cond-header{display:grid;gap:0;border-bottom:1px solid var(--border)}
+.chal-cond-row{display:flex;align-items:center;border-bottom:1px solid var(--border)}
+.chal-cond-row:last-child{border-bottom:none}
+.chal-cond-cell{flex:1;padding:9px 10px;font-size:12px;text-align:center}
+.chal-cond-cell:first-child{flex:1.5;text-align:left;color:var(--text2);font-size:11px}
+.chal-cond-col-head{flex:1;padding:8px 10px;font-size:10px;font-weight:700;text-align:center;color:var(--text2);text-transform:uppercase;letter-spacing:.3px;background:var(--bg3)}
+.chal-cond-col-head:first-child{flex:1.5;text-align:left}
+.chal-cval-green{color:var(--green);font-weight:700}
+.chal-cval-red{color:var(--red);font-weight:700}
+.chal-cval-bold{color:var(--text);font-weight:700}
+.chal-cval-muted{color:var(--text3)}
+/* Price card */
+.chal-price-card{
+  background:linear-gradient(135deg,rgba(78,53,198,0.15),rgba(78,53,198,0.05));
+  border:1px solid rgba(78,53,198,0.35);
+  border-radius:14px;
+  padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.chal-price-label{font-size:12px;color:var(--text2);margin-bottom:3px}
+.chal-price-name{font-size:14px;font-weight:700;color:var(--text)}
+.chal-price-val{font-size:26px;font-weight:800;color:var(--primary)}
+.chal-price-note{font-size:10px;color:var(--text3);margin-top:2px;text-align:right}
+/* Buy button */
+.btn-buy-chal{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--primary);color:#fff;
+  border-radius:14px;padding:15px 20px;
+  font-size:15px;font-weight:700;text-decoration:none;cursor:pointer;
+  transition:all .2s;border:none;letter-spacing:-.2px;
+  box-shadow:0 4px 20px rgba(78,53,198,0.4);
+}
+.btn-buy-chal:hover{background:var(--primary-hover);box-shadow:0 6px 24px rgba(78,53,198,0.5)}
+.btn-buy-chal:active{transform:scale(0.97)}
+.chal-footer-note{text-align:center;font-size:11px;color:var(--text3);padding:0 8px}
+

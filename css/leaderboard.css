@@ -1,0 +1,71 @@
+/* Phase 0 split — extracted from index.html. Do not edit by hand mid-merge. */
+
+/* === LEADERBOARD === */
+.lead-wrap{padding:8px 12px}
+.lead-item{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.lead-rank{
+  width:28px;height:28px;
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;
+  flex-shrink:0;
+}
+.lead-rank.gold{background:rgba(245,158,11,0.2);color:var(--gold);border:1px solid rgba(245,158,11,0.3)}
+.lead-rank.silver{background:rgba(156,163,175,0.15);color:#d1d5db;border:1px solid rgba(156,163,175,0.2)}
+.lead-rank.bronze{background:rgba(180,120,60,0.15);color:#cd7f32;border:1px solid rgba(180,120,60,0.25)}
+.lead-rank.normal{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border)}
+.lead-name{font-size:13px;font-weight:600;flex:1}
+.lead-pct{font-size:13px;font-weight:700;color:var(--green)}
+
+/* === LEADERBOARD === */
+.leader-wrap{padding:8px 12px}
+.my-rank{
+  background:linear-gradient(135deg,rgba(78,53,198,0.2),rgba(16,185,129,0.1));
+  border:1px solid rgba(78,53,198,0.35);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.my-rank .sl{font-size:11px;color:var(--text2)}
+.my-rank .sv{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-0.5px}
+.my-rank .g{font-size:13px;font-weight:600;color:var(--green)}
+.leader-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 12px;
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.rank-badge{
+  width:28px;height:28px;
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;
+  flex-shrink:0;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  color:var(--text3);
+}
+.rank-badge.gold{background:rgba(245,158,11,0.2);color:var(--gold);border-color:rgba(245,158,11,0.3)}
+.rank-badge.silver{background:rgba(156,163,175,0.15);color:#d1d5db;border-color:rgba(156,163,175,0.25)}
+.rank-badge.bronze{background:rgba(180,120,60,0.15);color:#cd7f32;border-color:rgba(180,120,60,0.25)}
+.leader-info{flex:1}
+.leader-name{font-size:13px;font-weight:600;color:var(--text)}
+.leader-stat{font-size:11px;color:var(--text3);margin-top:2px}
+.leader-pnl{font-size:14px;font-weight:700;color:var(--green)}
+

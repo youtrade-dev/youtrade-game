@@ -5,8 +5,8 @@ import { S } from "../state.js";
 
 function getLimits(){
     var startBal = (typeof S !== 'undefined' && S.startBal) ? S.startBal : 10000;
-    var dayLim = (typeof DAY_LIMIT !== 'undefined') ? DAY_LIMIT : (startBal * 0.05);
-    var maxLim = (typeof MAX_DD !== 'undefined') ? MAX_DD : (startBal * 0.10);
+    var dayLim = (typeof DAY_LIMIT !== 'undefined') ? DAY_LIMIT : (startBal * 0.02);
+    var maxLim = (typeof MAX_DD !== 'undefined') ? MAX_DD : (startBal * 0.03);
     return {startBal: startBal, dayLim: dayLim, maxLim: maxLim};
   }
   function showBlockBanner(reason){

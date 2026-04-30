@@ -11,8 +11,8 @@ export function updateDashboard() {
   const maxDrop = Math.max(startBal - bal, 0);
   const goalPct = Math.max(totalPnl / startBal * 100, 0);
   const GOAL_TARGET = startBal * 0.08;
-  const DAY_LIMIT = 500;
-  const MAX_DD = 1000;
+  const DAY_LIMIT = 200;
+  const MAX_DD = 300;
 
   // Balance card
   document.getElementById('bal').textContent = '$' + bal.toFixed(2);
